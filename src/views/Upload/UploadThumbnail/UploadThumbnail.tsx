@@ -141,10 +141,7 @@ export default function UploadThumbnail() {
 					<span>{language.thumbnailDescription}</span>
 				</S.Header>
 				<S.Body>
-					<S.Select
-						disabled={uploadReducer.uploadActive}
-						onClick={() => fileInputRef.current.click()}
-					>
+					<S.Select disabled={uploadReducer.uploadActive} onClick={() => fileInputRef.current.click()}>
 						<ReactSVG src={ASSETS.image} />
 						<span>{language.uploadThumbnail}</span>
 					</S.Select>

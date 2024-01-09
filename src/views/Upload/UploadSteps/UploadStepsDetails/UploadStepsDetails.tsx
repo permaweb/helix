@@ -41,18 +41,10 @@ export default function UploadStepsDetails() {
 			return;
 		}
 
-		const isDataValid =
-			uploadReducer.data.title &&
-			uploadReducer.data.description &&
-			!invalidTitle.status;
+		const isDataValid = uploadReducer.data.title && uploadReducer.data.description && !invalidTitle.status;
 
 		dispatch(uploadActions.setStepDisabled(!isDataValid));
-	}, [
-		validatingTitle,
-		uploadReducer.data.title,
-		uploadReducer.data.description,
-		invalidTitle.status,
-	]);
+	}, [validatingTitle, uploadReducer.data.title, uploadReducer.data.description, invalidTitle.status]);
 
 	React.useEffect(() => {
 		const timeoutId = setTimeout(() => {
