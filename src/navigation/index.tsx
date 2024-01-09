@@ -1,0 +1,134 @@
+import React from 'react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { ReactSVG } from 'react-svg';
+
+import { IconButton } from 'components/atoms/IconButton';
+import { Search } from 'components/molecules/Search';
+import { ASSETS, STYLING, URLS } from 'helpers/config';
+import { NavPathType } from 'helpers/types';
+import * as windowUtils from 'helpers/window';
+import { checkWindowCutoff, checkWindowResize } from 'helpers/window';
+import { useArweaveProvider } from 'providers/ArweaveProvider';
+import { useLanguageProvider } from 'providers/LanguageProvider';
+import { WalletConnect } from 'wallet/WalletConnect';
+import { CloseHandler } from 'wrappers/CloseHandler';
+
+import * as S from './styles';
+
+export default function Navigation() {
+	const location = useLocation();
+	const navigate = useNavigate();
+
+	const arProvider = useArweaveProvider();
+
+	const languageProvider = useLanguageProvider();
+	const language = languageProvider.object[languageProvider.current];
+
+	const [panelOpen, setPanelOpen] = React.useState<boolean>(false);
+	const [_desktop, setDesktop] = React.useState(checkWindowCutoff(parseInt(STYLING.cutoffs.initial)));
+
+	function handleWindowResize() {
+		if (checkWindowCutoff(parseInt(STYLING.cutoffs.initial))) {
+			setDesktop(true);
+		} else {
+			setDesktop(false);
+		}
+	}
+
+	checkWindowResize(handleWindowResize);
+
+	const NAV_PATHS: NavPathType[] = [
+		{ path: URLS.base, label: language.home, icon: ASSETS.landing },
+		{ path: URLS.upload, label: language.upload, icon: ASSETS.upload },
+	];
+
+	React.useEffect(() => {
+		if (panelOpen) windowUtils.hideDocumentBody();
+		else windowUtils.showDocumentBody();
+	}, [panelOpen]);
+
+	function getNavItems(useFlex: boolean) {
+		const Wrapper = useFlex ? S.BNavItemFlex : S.BNavItem;
+		return (
+			<>
+				{NAV_PATHS.map((element: NavPathType, index: number) => {
+					return (
+						<Wrapper
+							key={index}
+							active={
+								element.basePath
+									? location.pathname.includes(element.basePath) && location.pathname.includes(arProvider.walletAddress)
+									: element.path === location.pathname
+							}
+						>
+							<Link to={element.path} onClick={() => (useFlex ? setPanelOpen(false) : {})}>
+								<ReactSVG src={element.icon} />
+								<span>{element.label}</span>
+							</Link>
+						</Wrapper>
+					);
+				})}
+			</>
+		);
+	}
+
+	function getMenu() {
+		return (
+			<S.MFlex>
+				<S.MWrapper>
+					<IconButton
+						src={ASSETS.menu}
+						type={'primary'}
+						handlePress={() => setPanelOpen(!panelOpen)}
+						dimensions={{ wrapper: 32.5, icon: 21.5 }}
+					/>
+				</S.MWrapper>
+				<S.LWrapper>
+					<Link to={URLS.base} onClick={() => setPanelOpen(false)}>
+						<ReactSVG src={ASSETS.logo} />
+					</Link>
+				</S.LWrapper>
+			</S.MFlex>
+		);
+	}
+
+	return (
+		<>
+			<S.Wrapper>
+				{getMenu()}
+				<S.SEWrapper>
+					<S.SWrapper>
+						<Search />
+					</S.SWrapper>
+					<S.EWrapper>
+						<S.AWrapper>
+							<IconButton
+								src={ASSETS.upload}
+								type={'primary'}
+								handlePress={() => navigate(URLS.upload)}
+								dimensions={{ wrapper: 32.5, icon: 25 }}
+								tooltip={language.upload}
+								useBottomToolTip
+								active={true}
+							/>
+						</S.AWrapper>
+						<WalletConnect />
+					</S.EWrapper>
+				</S.SEWrapper>
+			</S.Wrapper>
+			<S.BWrapper>{getNavItems(false)}</S.BWrapper>
+			{panelOpen && (
+				<div className={'overlay'}>
+					<S.PWrapper>
+						<CloseHandler active={panelOpen} disabled={!panelOpen} callback={() => setPanelOpen(false)}>
+							<S.PMenu>
+								{getMenu()}
+								<S.BFlexWrapper>{getNavItems(true)}</S.BFlexWrapper>
+							</S.PMenu>
+						</CloseHandler>
+					</S.PWrapper>
+				</div>
+			)}
+		</>
+	);
+}
