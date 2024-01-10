@@ -37,8 +37,8 @@ export const LWrapper = styled.div`
 	margin: 0 0 0 42.5px;
 	svg {
 		height: fit-content;
-		height: 23.5px;
-		width: 23.5px;
+		height: 21.5px;
+		width: 21.5px;
 		fill ${(props) => props.theme.colors.icon.primary.fill};
 		&:hover {
 			opacity: 0.85;

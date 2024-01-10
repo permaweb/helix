@@ -20,9 +20,7 @@ export const Header = styled.div`
 	}
 `;
 
-export const Body = styled.div`
-	margin: 20px 0 0 0;
-`;
+export const Body = styled.div``;
 
 export const DDataWrapper = styled.div`
 	margin: auto;

@@ -138,7 +138,6 @@ export default function UploadThumbnail() {
 			<S.Wrapper>
 				<S.Header>
 					<p>{language.thumbnail}</p>
-					<span>{language.thumbnailDescription}</span>
 				</S.Header>
 				<S.Body>
 					<S.Select disabled={uploadReducer.uploadActive} onClick={() => fileInputRef.current.click()}>

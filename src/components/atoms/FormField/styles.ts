@@ -20,7 +20,9 @@ export const TWrapper = styled.div`
 	align-items: center;
 	padding: 0 2.5px 0 0;
 	button {
-		margin: 0 !important;
+		svg {
+			margin: 0 0 1.5px 0;
+		}
 	}
 `;
 
@@ -31,8 +33,9 @@ export const Label = styled.label`
 `;
 
 export const Tooltip = styled.div`
+	padding: 0 20px 20px 20px;
 	p {
-		font-size: ${(props) => props.theme.typography.size.small};
+		font-size: ${(props) => props.theme.typography.size.xSmall};
 		line-height: 1.5;
 		color: ${(props) => props.theme.colors.font.primary};
 	}

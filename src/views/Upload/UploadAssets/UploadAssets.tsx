@@ -224,14 +224,16 @@ export default function UploadAssets() {
 
 	function handleFileChange(e: any) {
 		if (e.target.files && e.target.files.length) {
-			let updatedData = [...e.target.files].map((file: any) => {
+			let newFiles = Array.from(e.target.files).map((file) => {
 				return { file: file, title: '', description: '' };
 			});
 
-			updatedData = updatedData.filter(
-				(newFile) =>
+			newFiles = newFiles.filter(
+				(newFile: any) =>
 					!uploadReducer.data.contentList.some((existingFile: any) => existingFile.file.name === newFile.file.name)
 			);
+
+			const updatedData = [...uploadReducer.data.contentList, ...newFiles];
 
 			dispatch(
 				uploadActions.setUpload([
@@ -342,7 +344,11 @@ export default function UploadAssets() {
 							setCursorUpdated(!cursorUpdated);
 						}}
 						cursors={{
-							next: currentSelectedData.length < SEQUENCE_ITERATION ? null : 'next',
+							next:
+								currentSelectedData.length < SEQUENCE_ITERATION ||
+								sequence.end + 1 >= uploadReducer.data.contentList.length
+									? null
+									: 'next',
 							previous: sequence.start <= 0 ? null : 'prev',
 						}}
 						showNoResults={false}

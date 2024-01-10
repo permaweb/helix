@@ -8,6 +8,7 @@ import { useLanguageProvider } from 'providers/LanguageProvider';
 import { RootState } from 'store';
 import * as uploadActions from 'store/upload/actions';
 
+import { UploadBanner } from '../UploadBanner';
 import { UploadThumbnail } from '../UploadThumbnail';
 import { uploadChecksPassed } from '..';
 
@@ -102,6 +103,7 @@ export default function UploadSteps(props: IProps) {
 				<UploadStepsProgress />
 			</S.PWrapper>
 			<S.SWrapper>{getCurrentStepComponent()}</S.SWrapper>
+			<UploadBanner />
 			<UploadThumbnail />
 			<S.AWrapper>
 				<Button

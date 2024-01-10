@@ -9,9 +9,9 @@ export const Wrapper = styled.div<{
 	min-width: ${(props) => `${props.dimensions.wrapper.toString()}px`};
 	height: ${(props) => `${props.dimensions.wrapper.toString()}px`};
 	width: ${(props) => `${props.dimensions.wrapper.toString()}px`};
-	background: ${(props) =>
-		props.hasOwner ? props.theme.colors.icon.alt2.active : props.theme.colors.container.alt1.background};
+	background: ${(props) => props.theme.colors.icon.alt2.active};
 	border-radius: 50%;
+	border: 1px solid ${(props) => props.theme.colors.border.primary};
 	overflow: hidden;
 	display: flex;
 	justify-content: center;
@@ -65,7 +65,6 @@ export const Wrapper = styled.div<{
         }
         &:hover {
             cursor: pointer;
-            border: none;
         }
     `
 			: ''}

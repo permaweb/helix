@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { STYLING } from 'helpers/config';
 
 export const Wrapper = styled.div`
-	margin: 20px 0 0 0;
+	margin: 40px 0 0 0;
 	input {
 		display: none;
 	}
@@ -41,8 +41,8 @@ export const Body = styled.div`
 `;
 
 export const Select = styled.button`
-	height: 95px;
-	width: 170px;
+	height: 150px;
+	width: 100%;
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
@@ -83,8 +83,8 @@ export const Select = styled.button`
 `;
 
 export const TWrapper = styled.button<{ active: boolean }>`
-	height: 95px;
-	width: 170px;
+	height: 150px;
+	width: 100%;
 	border-radius: ${STYLING.dimensions.radius.alt2};
 	overflow: hidden;
 	outline: 2.25px solid ${(props) => (props.active ? props.theme.colors.border.alt1 : 'transparent')};
@@ -93,7 +93,7 @@ export const TWrapper = styled.button<{ active: boolean }>`
 	img {
 		height: 100%;
 		width: 100%;
-		object-fit: contain;
+		object-fit: cover;
 		background: ${(props) => props.theme.colors.container.alt3.background};
 		border-radius: ${STYLING.dimensions.radius.alt2};
 	}
@@ -110,7 +110,7 @@ export const MWrapper = styled.div`
 	video {
 		max-height: 330px !important;
 		width: 100% !important;
-		object-fit: contain;
+		object-fit: cover;
 		background: ${(props) => props.theme.colors.container.alt3.background};
 		border-radius: ${STYLING.dimensions.radius.primary};
 	}

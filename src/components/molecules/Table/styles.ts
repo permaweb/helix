@@ -37,7 +37,6 @@ export const HeaderFlex = styled.div`
 `;
 export const Body = styled.div`
 	width: 100%;
-	box-shadow: 0 5px 15px 0 ${(props) => props.theme.colors.shadow.primary};
 	margin: 0 0 20px 0;
 	display: flex;
 	flex-direction: column;
@@ -46,6 +45,9 @@ export const Body = styled.div`
 	scrollbar-width: none;
 	::-webkit-scrollbar {
 		width: 0px;
+	}
+	@media (max-width: ${STYLING.cutoffs.initial}) {
+		overflow: auto;
 	}
 `;
 

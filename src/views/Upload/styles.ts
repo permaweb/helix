@@ -31,6 +31,10 @@ export const UWrapper = styled.div`
 	}
 `;
 
+export const TWrapper = styled.div`
+	margin: 40px 0 0 0;
+`;
+
 export const SWrapper = styled.div`
 	width: 625px;
 	@media (max-width: ${STYLING.cutoffs.initial}) {

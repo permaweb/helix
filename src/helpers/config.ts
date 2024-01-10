@@ -135,7 +135,7 @@ export const TAGS = {
 	values: {
 		ansVersion: 'ANS-110',
 		appVersion: 'Odysee-v0.0.2',
-		collection: 'Collection',
+		collection: 'Test-Collection',
 		comment: 'comment',
 		contractManifest:
 			'{"evaluationOptions":{"sourceType":"redstone-sequencer","allowBigInt":true,"internalWrites":true,"unsafeClient":"skip","useConstructor":true}}',
@@ -155,6 +155,8 @@ export const TAGS = {
 export const ASSET_CONTRACT = {
 	src: 'Of9pi--Gj7hCTawhgxOwbuWnFI1h24TTgO5pw8ENJNQ',
 };
+
+export const TRADE_SOURCES = [ASSET_CONTRACT.src, 'h9v17KHV4SXwdW2-JHU6a23f6R0YtbXZJJht8LfP8QM'];
 
 function createURLs() {
 	const base = `/`;
@@ -188,6 +190,7 @@ export const CURSORS = {
 export const PAGINATORS = {
 	default: 100,
 	version: 8,
+	assetTable: 10,
 };
 
 export const GATEWAYS = {

@@ -1,16 +1,19 @@
 import { getGQLData, getProfiles } from 'gql';
 
 import { ASSET_TITLE_PREFIX, ASSETS, DEFAULT_THUMBNAIL, GATEWAYS, PAGINATORS, STORAGE, TAGS } from 'helpers/config';
+import { getBalancesEndpoint } from 'helpers/endpoints';
 import {
 	AGQLResponseType,
 	AssetGQLResponseType,
 	AssetType,
+	BalanceType,
 	CursorEnum,
 	GQLNodeResponseType,
 	LicenseValueType,
 	ProfileType,
 	TagType,
 	UDLType,
+	UserBalancesType,
 } from 'helpers/types';
 import { getTagValue } from 'helpers/utils';
 
@@ -38,6 +41,29 @@ export async function getAssetById(args: { id: string; gateway: string }): Promi
 	} catch (e: any) {
 		console.error(e);
 		return null;
+	}
+}
+
+export async function getAssetIdsByUser(args: { walletAddress: string }): Promise<string[]> {
+	try {
+		const result: any = await fetch(getBalancesEndpoint(args.walletAddress));
+		if (result.status === 200) {
+			const balances = ((await result.json()) as UserBalancesType).balances;
+
+			const assetIds = balances
+				.filter((balance: BalanceType) => {
+					return balance.balance && parseInt(balance.balance) !== 0;
+				})
+				.map((balance: BalanceType) => {
+					return balance.contract_tx_id;
+				});
+
+			return assetIds;
+		} else {
+			return [];
+		}
+	} catch (e: any) {
+		return [];
 	}
 }
 
@@ -227,13 +253,13 @@ export function getLicenseValuePayment(value: string): LicenseValueType {
 	return payment;
 }
 
-export async function checkDuplicateAsset(args: { title: string; gateway: string }): Promise<boolean> {
+export async function checkDuplicateTitle(args: { title: string; gateway: string }): Promise<boolean> {
 	const gqlResponse: AGQLResponseType = await getGQLData({
 		gateway: args.gateway,
 		ids: null,
 		tagFilters: [
 			{ name: TAGS.keys.ans110.title, values: [args.title] },
-			{ name: TAGS.keys.appVersion, values: [TAGS.values.appVersion] },
+			{ name: TAGS.keys.dataProtocol, values: [TAGS.values.collection] },
 		],
 		owners: null,
 		cursor: null,

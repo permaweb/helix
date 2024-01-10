@@ -16,13 +16,12 @@ import { useLanguageProvider } from 'providers/LanguageProvider';
 import { RootState } from 'store';
 import * as uploadActions from 'store/upload/actions';
 
+import { AssetsTable } from '../../components/organisms/AssetsTable';
+
 import * as S from './styles';
 import { UploadAssets } from './UploadAssets';
 import { UploadSteps } from './UploadSteps';
 
-// TODO: banner
-// TODO: existing assets
-// TODO: reselecting files not working
 export default function Upload() {
 	const dispatch = useDispatch();
 
@@ -66,7 +65,7 @@ export default function Upload() {
 			dispatch(uploadActions.setUploadActive(true));
 
 			let index = 0;
-			let assetList: string[] = [];
+			let uploadedAssetsList: string[] = [];
 			for (const data of uploadReducer.data.contentList) {
 				setUploadIndex(index + 1);
 
@@ -97,7 +96,7 @@ export default function Upload() {
 				try {
 					let initStateAssetJson: any = {
 						balances: {
-							[arProvider.walletAddress]: 1,
+							[arProvider.walletAddress]: Number(uploadReducer.data.contentTokens),
 						},
 						title: title,
 						description: description,
@@ -135,8 +134,25 @@ export default function Upload() {
 
 					const contractResponse = await createContract({ assetId: txResponse.data.id });
 
-					if (contractResponse) assetList.push(contractResponse);
+					if (contractResponse) uploadedAssetsList.push(contractResponse);
 					setUploadPercentage(0);
+				} catch (e: any) {
+					console.error(e);
+				}
+			}
+
+			let bannerTx: any = null;
+			if (uploadReducer.data.banner) {
+				try {
+					const bannerContentType = getDataURLContentType(uploadReducer.data.banner);
+					const base64Data = getBase64Data(uploadReducer.data.banner);
+					const uint8ArrayData = base64ToUint8Array(base64Data);
+
+					bannerTx = await createTransaction({
+						content: uint8ArrayData,
+						contentType: bannerContentType,
+						tags: [{ name: TAGS.keys.contentType, value: bannerContentType }],
+					});
 				} catch (e: any) {
 					console.error(e);
 				}
@@ -187,8 +203,7 @@ export default function Upload() {
 					{ name: TAGS.keys.contentType, value: CONTENT_TYPES.json },
 					{ name: TAGS.keys.initState, value: initStateCollectionJson },
 					{ name: TAGS.keys.creator, value: arProvider.walletAddress },
-					// { name: TAGS.keys.dataProtocol, value: TAGS.values.collection },
-					{ name: TAGS.keys.dataProtocol, value: 'Test-Collection' },
+					{ name: TAGS.keys.dataProtocol, value: TAGS.values.collection },
 					{
 						name: TAGS.keys.smartweaveAppName,
 						value: TAGS.values.smartweaveAppName,
@@ -218,19 +233,15 @@ export default function Upload() {
 					},
 				];
 
+				if (bannerTx) collectionTags.push({ name: TAGS.keys.banner, value: bannerTx });
 				if (thumbnailTx) collectionTags.push({ name: TAGS.keys.thumbnail, value: thumbnailTx });
 				if (uploadReducer.data.collectionCode)
 					collectionTags.push({ name: TAGS.keys.collectionCode, value: uploadReducer.data.collectionCode });
 
 				// TODO: collection tag
-				// const data = JSON.stringify({
-				//   type: TAGS.values.collection,
-				//   items: assetList,
-				// });
-
 				const collectionData = JSON.stringify({
-					type: 'Test-Collection',
-					items: assetList,
+					type: TAGS.values.collection,
+					items: [...uploadedAssetsList, ...uploadReducer.data.idList],
 				});
 
 				const collectionResult = await irys.upload(collectionData as any, { tags: collectionTags } as any);
@@ -248,13 +259,26 @@ export default function Upload() {
 		}
 	}
 
+	function handleClear() {
+		if (collectionResponse) {
+			setCollectionResponse(null);
+			dispatch(uploadActions.clearUpload());
+		}
+		if (collectionResponseError) setCollectionResponseError(null);
+	}
+
 	return (
 		<>
 			<S.Wrapper>
-				<h4>{language.createACollection}</h4>
+				<div className={'max-view-wrapper'}>
+					<h4>{language.createACollection}</h4>
+				</div>
 				<S.UploadWrapper className={'max-view-wrapper'}>
 					<S.UWrapper>
 						<UploadAssets />
+						<S.TWrapper>
+							<AssetsTable />
+						</S.TWrapper>
 					</S.UWrapper>
 					<S.SWrapper>
 						<UploadSteps handleUpload={handleUpload} />
@@ -289,14 +313,7 @@ export default function Upload() {
 							<span>{collectionResponse ? language.collectionUploadedInfo : collectionResponseError}</span>
 						</S.MInfo>
 						<S.MActions>
-							<Button
-								type={'primary'}
-								label={language.close}
-								handlePress={() =>
-									collectionResponse ? setCollectionResponse(null) : setCollectionResponseError(null)
-								}
-								noMinWidth
-							/>
+							<Button type={'primary'} label={language.close} handlePress={handleClear} noMinWidth />
 							{collectionResponse && (
 								<Button
 									type={'alt1'}
@@ -322,8 +339,8 @@ export function uploadChecksPassed(arProvider: any, uploadReducer: any) {
 		uploadReducer.data.description &&
 		uploadReducer.data.topics &&
 		uploadReducer.data.topics.length &&
-		uploadReducer.data.contentList &&
-		uploadReducer.data.contentList.length
+		((uploadReducer.data.contentList && uploadReducer.data.contentList.length) ||
+			(uploadReducer.data.idList && uploadReducer.data.idList.length))
 	);
 }
 

@@ -21,7 +21,7 @@ const DEFAULT = {
 	neutralA6: '#FAFAFA',
 	overlay1: 'rgba(0, 0, 0, 0.5)',
 	primary1: '#379574',
-	primary2: '#42B38B',
+	primary2: '#12D791',
 	semiTransparent1: 'rgba(0, 0, 0, 0.575)',
 	semiTransparent2: 'rgba(0, 0, 0, 0.45)',
 	semiTransparent3: 'rgba(0, 0, 0, 0.65)',
@@ -126,6 +126,7 @@ export const defaultTheme: DefaultTheme = {
 			alt1: DEFAULT.neutralA4,
 			alt2: DEFAULT.neutral7,
 			alt3: DEFAULT.neutral5,
+			alt4: DEFAULT.neutral1,
 		},
 		form: {
 			background: DEFAULT.neutral1,
@@ -161,8 +162,8 @@ export const defaultTheme: DefaultTheme = {
 				disabled: DEFAULT.neutral3,
 			},
 			alt2: {
-				fill: DEFAULT.neutral1,
-				active: DEFAULT.neutralA1,
+				fill: DEFAULT.neutralA1,
+				active: DEFAULT.neutral2,
 				disabled: DEFAULT.neutral3,
 			},
 			alt3: {
@@ -175,8 +176,8 @@ export const defaultTheme: DefaultTheme = {
 			active: DEFAULT.primary2,
 		},
 		link: {
-			color: DEFAULT.primary2,
-			active: DEFAULT.primary1,
+			color: DEFAULT.neutralA1,
+			active: DEFAULT.neutralA1,
 		},
 		loader: {
 			primary: DEFAULT.primary2,

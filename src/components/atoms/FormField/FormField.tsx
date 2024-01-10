@@ -38,7 +38,7 @@ export default function FormField(props: IProps) {
 							active={false}
 							src={ASSETS.info}
 							handlePress={() => setShowTooltip(!showTooltip)}
-							sm
+							dimensions={{ wrapper: 22.5, icon: 13.5 }}
 						/>
 					)}
 				</S.TWrapper>

@@ -2,7 +2,7 @@ import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { ReactSVG } from 'react-svg';
 
-import { checkDuplicateAsset } from 'gql';
+import { checkDuplicateTitle } from 'gql';
 
 import { Button } from 'components/atoms/Button';
 import { FormField } from 'components/atoms/FormField';
@@ -45,13 +45,16 @@ export default function UploadStepsDetails() {
 			uploadReducer.data.title &&
 			uploadReducer.data.description &&
 			uploadReducer.data.topics.length &&
-			!invalidTitle.status;
+			!invalidTitle.status &&
+			!getInvalidContentTokens().status &&
+			!getInvalidDescription().status;
 
 		dispatch(uploadActions.setStepDisabled(!isDataValid));
 	}, [
 		validatingTitle,
 		uploadReducer.data.title,
 		uploadReducer.data.description,
+		uploadReducer.data.contentTokens,
 		uploadReducer.data.topics,
 		invalidTitle.status,
 	]);
@@ -71,8 +74,8 @@ export default function UploadStepsDetails() {
 	async function handleTitleCheck() {
 		if (uploadReducer.data.title) {
 			setValidatingTitle(true);
-			if (await checkDuplicateAsset({ title: uploadReducer.data.title, gateway: GATEWAYS.arweave })) {
-				setInvalidTitle({ status: true, message: language.assetExists });
+			if (await checkDuplicateTitle({ title: uploadReducer.data.title, gateway: GATEWAYS.arweave })) {
+				setInvalidTitle({ status: true, message: language.collectionExists });
 			} else {
 				setInvalidTitle({ status: false, message: null });
 			}
@@ -80,7 +83,7 @@ export default function UploadStepsDetails() {
 		}
 	}
 
-	function handleInputChange(e: any, field: 'title' | 'description' | 'collectionCode') {
+	function handleInputChange(e: any, field: 'title' | 'description' | 'collectionCode' | 'contentTokens') {
 		dispatch(
 			uploadActions.setUpload([
 				{
@@ -129,6 +132,16 @@ export default function UploadStepsDetails() {
 		return { status: false, message: null };
 	}
 
+	function getInvalidContentTokens() {
+		if (Number(uploadReducer.data.contentTokens) <= 0 || Number(uploadReducer.data.contentTokens) > 1000000) {
+			return {
+				status: true,
+				message: language.invalidContentTokens,
+			};
+		}
+		return { status: false, message: null };
+	}
+
 	return (
 		<>
 			<S.Wrapper className={'border-wrapper-alt2'}>
@@ -147,6 +160,16 @@ export default function UploadStepsDetails() {
 					onChange={(e: any) => handleInputChange(e, 'description')}
 					disabled={false}
 					invalid={getInvalidDescription()}
+					required
+				/>
+				<FormField
+					type={'number'}
+					label={language.contentTokens}
+					value={uploadReducer.data.contentTokens}
+					onChange={(e: any) => handleInputChange(e, 'contentTokens')}
+					disabled={false}
+					invalid={getInvalidContentTokens()}
+					tooltip={language.contentTokensInfo}
 					required
 				/>
 				<FormField

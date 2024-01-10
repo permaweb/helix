@@ -42,12 +42,6 @@ export default function UploadStepsChecks() {
 			<S.Wrapper>
 				<S.InfoHeader>
 					<span>{language.details}</span>
-					<Button
-						type={'alt2'}
-						label={language.previewContent}
-						handlePress={() => setShowPlayer(true)}
-						disabled={!uploadReducer.data.content}
-					/>
 				</S.InfoHeader>
 				<S.InfoWrapper className={'border-wrapper-alt1'}>
 					<S.InfoLine>
@@ -73,6 +67,23 @@ export default function UploadStepsChecks() {
 							</S.TWrapper>
 						</S.InfoLine>
 					)}
+				</S.InfoWrapper>
+				<S.InfoHeader>
+					<span>{language.assets}</span>
+				</S.InfoHeader>
+				<S.InfoWrapper className={'border-wrapper-alt1'}>
+					<S.InfoLine>
+						<span>{language.toUpload}</span>
+						<p>{`(${uploadReducer.data.contentList.length})`}</p>
+					</S.InfoLine>
+					<S.InfoLine>
+						<span>{language.existingAssets}</span>
+						<p>{`(${uploadReducer.data.idList.length})`}</p>
+					</S.InfoLine>
+					<S.InfoLine>
+						<span>{language.totalAssets}</span>
+						<p>{`(${uploadReducer.data.contentList.length + uploadReducer.data.idList.length})`}</p>
+					</S.InfoLine>
 				</S.InfoWrapper>
 				{uploadReducer.data.hasLicense && (
 					<AssetInfoLicense
