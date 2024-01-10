@@ -14,6 +14,7 @@ export const PWrapper = styled.div`
 	align-items: center;
 	span {
 		color: ${(props) => props.theme.colors.font.primary};
+		font-family: ${(props) => props.theme.typography.family.alt1};
 		font-size: ${(props) => props.theme.typography.size.xSmall};
 		font-weight: ${(props) => props.theme.typography.weight.xBold};
 		display: block;

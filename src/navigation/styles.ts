@@ -35,14 +35,28 @@ export const MWrapper = styled.div`
 
 export const LWrapper = styled.div`
 	margin: 0 0 0 42.5px;
-	svg {
-		height: fit-content;
-		height: 21.5px;
-		width: 21.5px;
-		fill ${(props) => props.theme.colors.icon.primary.fill};
+	a {
+		display: flex;
+		align-items: center;
+		text-decoration: none !important;
+		padding: 7.5px 14.5px 5px 10px;
 		&:hover {
 			opacity: 0.85;
 		}
+	}
+	svg {
+		height: fit-content;
+		height: 17.5px;
+		width: 17.5px;
+		fill ${(props) => props.theme.colors.icon.primary.fill};
+	}
+	span {
+		color: ${(props) => props.theme.colors.font.primary};
+		font-family: ${(props) => props.theme.typography.family.alt1};
+		font-size: ${(props) => props.theme.typography.size.small};
+		font-weight: ${(props) => props.theme.typography.weight.xxBold};
+		display: block;
+		margin: -2.5px 0 0 5px;
 	}
 	@media (max-width: ${STYLING.cutoffs.initial}) {
 		margin: 0 0 0 15px;

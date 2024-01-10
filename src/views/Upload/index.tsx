@@ -22,6 +22,7 @@ import * as S from './styles';
 import { UploadAssets } from './UploadAssets';
 import { UploadSteps } from './UploadSteps';
 
+// TODO: collection code
 export default function Upload() {
 	const dispatch = useDispatch();
 
@@ -88,8 +89,8 @@ export default function Upload() {
 
 				const dateTime = new Date().getTime().toString();
 
-				const title = data.title ?? `${uploadReducer.data.title} #${index + 1}`;
-				const description = data.description ?? uploadReducer.data.description;
+				const title = data.title ? data.title : `${uploadReducer.data.title} #${index + 1}`;
+				const description = data.description ? data.description : uploadReducer.data.description;
 				const type = data.file.type;
 
 				try {
@@ -127,6 +128,9 @@ export default function Upload() {
 
 					if (uploadReducer.data.hasLicense && uploadReducer.data.license)
 						assetTags.push(...buildLicenseTags(uploadReducer.data.license));
+
+					if (uploadReducer.data.collectionCode)
+						assetTags.push({ name: TAGS.keys.collectionCode, value: uploadReducer.data.collectionCode });
 
 					const buffer = await fileToBuffer(data.file);
 					const txResponse = await uploader.uploadData(buffer as any, { tags: assetTags } as any);
@@ -234,8 +238,6 @@ export default function Upload() {
 
 				if (bannerTx) collectionTags.push({ name: TAGS.keys.banner, value: bannerTx });
 				if (thumbnailTx) collectionTags.push({ name: TAGS.keys.thumbnail, value: thumbnailTx });
-				if (uploadReducer.data.collectionCode)
-					collectionTags.push({ name: TAGS.keys.collectionCode, value: uploadReducer.data.collectionCode });
 
 				// TODO: collection tag
 				const collectionData = JSON.stringify({
@@ -304,7 +306,7 @@ export default function Upload() {
 			)}
 			{(collectionResponse || collectionResponseError) && (
 				<Modal
-					header={collectionResponse ? language.assetUploaded : language.errorOccurred}
+					header={collectionResponse ? language.collectionCreated : language.errorOccurred}
 					handleClose={() => setCollectionResponse(null)}
 				>
 					<S.MWrapper>

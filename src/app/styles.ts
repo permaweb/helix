@@ -62,7 +62,6 @@ export const GlobalStyle = createGlobalStyle`
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     box-sizing: border-box;
-    
     scrollbar-color: transparent transparent;
 
     ::-webkit-scrollbar-track {
@@ -82,6 +81,10 @@ export const GlobalStyle = createGlobalStyle`
       border: 3.5px solid transparent;
       background-clip: padding-box;
     } 
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: ${(props) => props.theme.typography.family.alt1};
   }
 
   p, span, button, a, b, li, input, textarea {

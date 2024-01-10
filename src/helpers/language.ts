@@ -32,6 +32,7 @@ export const language = {
 		close: `Close`,
 		collections: `Collections`,
 		collectionCode: `Collection code`,
+		collectionCreated: `Collection created`,
 		collectionDetails: `Collection details`,
 		collectionExists: `A collection with this title already exists`,
 		collectionUploadedInfo: `Your collection has been created ! You can view it directly in BazAR by clicking View collection below.`,

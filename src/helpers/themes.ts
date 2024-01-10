@@ -217,6 +217,7 @@ export const defaultTheme: DefaultTheme = {
 	typography: {
 		family: {
 			primary: `'Inter', sans-serif`,
+			alt1: `'Space Grotesk', sans-serif`,
 		},
 		size: {
 			xxxSmall: '12px',

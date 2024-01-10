@@ -59,14 +59,15 @@ export async function createContract(args: { assetId: string }) {
 			});
 
 			if (gqlResponse && gqlResponse.data.length) {
-				logValue(`Fetched Transaction`, gqlResponse.data[0].node.id, 0);
+				logValue(`Fetched transaction`, gqlResponse.data[0].node.id, 0);
 				fetchedAssetId = gqlResponse.data[0].node.id;
 			} else {
-				logValue(`Transaction Not Found`, args.assetId, 0);
+				logValue(`Transaction not found`, args.assetId, 0);
 			}
 		}
 
 		const { contractTxId } = await warp.register(fetchedAssetId, CONTRACT_CONFIG.node as any);
+		logValue(`Deployed contract`, contractTxId, 0);
 		return contractTxId;
 	} catch (e: any) {
 		logValue(`Error deploying contract - Asset ID`, args.assetId, 1);
@@ -81,7 +82,7 @@ export async function createContract(args: { assetId: string }) {
 			for (let i = 0; i < retries; i++) {
 				await new Promise((r) => setTimeout(r, 2000));
 				try {
-					log(`Retrying Warp ...`, null);
+					log(`Retrying warp ...`, null);
 					const { contractTxId } = await warp.register(args.assetId, CONTRACT_CONFIG.node as any);
 					log(`Retry succeeded`, 0);
 					return contractTxId;

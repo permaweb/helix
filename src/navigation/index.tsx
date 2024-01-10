@@ -83,9 +83,10 @@ export default function Navigation() {
 						dimensions={{ wrapper: 32.5, icon: 21.5 }}
 					/>
 				</S.MWrapper>
-				<S.LWrapper>
+				<S.LWrapper className={'border-wrapper-primary'}>
 					<Link to={URLS.base} onClick={() => setPanelOpen(false)}>
 						<ReactSVG src={ASSETS.logo} />
+						<span>Helix</span>
 					</Link>
 				</S.LWrapper>
 			</S.MFlex>

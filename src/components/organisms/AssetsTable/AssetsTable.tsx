@@ -116,8 +116,6 @@ export default function AssetsTable(props: { useIdAction: boolean }) {
 		})();
 	}, [currentTableCursor]);
 
-	console.log(assets);
-
 	function handleId(id: string) {
 		let ids: string[];
 		const index = uploadReducer.data.idList.indexOf(id);
