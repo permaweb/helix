@@ -36,19 +36,18 @@ export default function Upload() {
 	const [collectionResponse, setCollectionResponse] = React.useState<string | null>(null);
 	const [collectionResponseError, setCollectionResponseError] = React.useState<string | null>(null);
 
-	// TODO: add
-	// React.useEffect(() => {
-	// 	const handleBeforeUnload = (e: any) => {
-	// 		e.preventDefault();
-	// 		e.returnValue = '';
-	// 	};
+	React.useEffect(() => {
+		const handleBeforeUnload = (e: any) => {
+			e.preventDefault();
+			e.returnValue = '';
+		};
 
-	// 	window.addEventListener('beforeunload', handleBeforeUnload);
+		window.addEventListener('beforeunload', handleBeforeUnload);
 
-	// 	return () => {
-	// 		window.removeEventListener('beforeunload', handleBeforeUnload);
-	// 	};
-	// }, [uploadReducer]);
+		return () => {
+			window.removeEventListener('beforeunload', handleBeforeUnload);
+		};
+	}, [uploadReducer]);
 
 	React.useEffect(() => {
 		if (!arProvider.wallet) dispatch(uploadActions.setUploadDisabled(true));
@@ -277,7 +276,7 @@ export default function Upload() {
 					<S.UWrapper>
 						<UploadAssets />
 						<S.TWrapper>
-							<AssetsTable />
+							<AssetsTable useIdAction={true} />
 						</S.TWrapper>
 					</S.UWrapper>
 					<S.SWrapper>

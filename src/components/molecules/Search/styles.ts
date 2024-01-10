@@ -152,7 +152,7 @@ export const AContentLink = styled(AContent)`
 `;
 
 export const AInfo = styled.div`
-	width: calc(100% - 205px);
+	width: 90%;
 	display: flex;
 `;
 

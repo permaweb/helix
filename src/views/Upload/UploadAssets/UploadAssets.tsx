@@ -285,7 +285,7 @@ export default function UploadAssets() {
 			fileName: {
 				width: '70%',
 				align: 'left' as AlignType,
-				display: language.assetTitle,
+				display: language.title,
 			},
 			description: {
 				width: '15%',

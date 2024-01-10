@@ -16,7 +16,7 @@ import * as uploadActions from 'store/upload/actions';
 
 import * as S from './styles';
 
-export default function AssetsTable() {
+export default function AssetsTable(props: { useIdAction: boolean }) {
 	const dispatch = useDispatch();
 
 	const uploadReducer = useSelector((state: RootState) => state.uploadReducer);
@@ -40,8 +40,8 @@ export default function AssetsTable() {
 	const firstRecordIndex = lastRecordIndex - recordsPerPage;
 
 	React.useEffect(() => {
-		if (assets) {
-			setCurrentRecords(assets ? assets.slice(firstRecordIndex, lastRecordIndex) : null);
+		if (assets !== null) {
+			setCurrentRecords(assets.length ? assets.slice(firstRecordIndex, lastRecordIndex) : []);
 		}
 	}, [assets]);
 
@@ -92,7 +92,7 @@ export default function AssetsTable() {
 				const index = parseInt(currentTableCursor.match(/\d+/)[0], 10);
 				if (index !== null) {
 					try {
-						const fetchedAssets = await getGQLData({
+						const assetsResponse = await getGQLData({
 							gateway: GATEWAYS.arweave,
 							ids: groupIndex[index].ids,
 							tagFilters: null,
@@ -101,17 +101,22 @@ export default function AssetsTable() {
 							reduxCursor: null,
 							cursorObjectKey: CursorEnum.IdGQL,
 						});
-
-						if (fetchedAssets && fetchedAssets.data && fetchedAssets.data.length) {
-							setAssets(fetchedAssets.data);
+						if (assetsResponse) {
+							setAssets(assetsResponse.data);
 						}
 					} catch (e: any) {
 						console.error(e);
 					}
+				} else {
+					setAssets([]);
 				}
+			} else {
+				setAssets([]);
 			}
 		})();
 	}, [currentTableCursor]);
+
+	console.log(assets);
 
 	function handleId(id: string) {
 		let ids: string[];
@@ -145,23 +150,29 @@ export default function AssetsTable() {
 	}
 
 	function getTableHeader() {
-		return {
-			assetTitle: {
-				width: '85%',
-				align: 'left' as AlignType,
-				display: language.assetTitle,
-			},
-			select: {
+		const header: any = {};
+		header.assetTitle = {
+			width: props.useIdAction ? '85%' : '100%',
+			align: 'left' as AlignType,
+			display: language.title,
+		};
+
+		if (props.useIdAction) {
+			header.select = {
 				width: '15%',
 				align: 'center' as AlignType,
 				display: language.select,
-			},
-		};
+			};
+		}
+
+		return header;
 	}
 
 	function getTableData() {
 		if (currentRecords && currentRecords.length) {
 			return currentRecords.map((element: GQLNodeResponseType) => {
+				const data: any = {};
+
 				const titleTag = getTagValue(element.node.tags, TAGS.keys.ans110.title);
 				const title = titleTag !== STORAGE.none ? titleTag : formatAddress(element.node.id, false);
 
@@ -172,23 +183,26 @@ export default function AssetsTable() {
 					idChecked = uploadReducer.data.idList.includes(element.node.id);
 				}
 
+				data.assetTitle = (
+					<a href={REDIRECTS.bazar.asset(element.node.id)} target={'_blank'}>
+						<p>{title}</p>
+					</a>
+				);
+
+				if (props.useIdAction) {
+					data.select = (
+						<S.CWrapper>
+							<Checkbox
+								checked={idChecked}
+								handleSelect={() => handleId(element.node.id)}
+								disabled={!TRADE_SOURCES.includes(contractSrc)}
+							/>
+						</S.CWrapper>
+					);
+				}
+
 				return {
-					data: {
-						assetTitle: (
-							<a href={REDIRECTS.bazar.asset(element.node.id)} target={'_blank'}>
-								<p>{title}</p>
-							</a>
-						),
-						select: (
-							<S.CWrapper>
-								<Checkbox
-									checked={idChecked}
-									handleSelect={() => handleId(element.node.id)}
-									disabled={!TRADE_SOURCES.includes(contractSrc)}
-								/>
-							</S.CWrapper>
-						),
-					},
+					data: data,
 					active: false,
 					viewed: false,
 				};
@@ -205,41 +219,51 @@ export default function AssetsTable() {
 			);
 		}
 		if (loading) return <Loader sm relative />;
-		if (currentRecords && currentRecords.length) {
-			const currentIndex = parseInt(currentTableCursor.match(/\d+/)[0], 10);
-			const currentIndexDisplay = currentIndex * PAGINATORS.assetTable;
+		if (currentRecords !== null) {
+			if (currentRecords.length) {
+				const currentIndex = parseInt(currentTableCursor.match(/\d+/)[0], 10);
+				const currentIndexDisplay = currentIndex * PAGINATORS.assetTable;
 
-			return (
-				<>
-					<Table
-						title={`${language.assets} (${idCount})`}
-						action={null}
-						header={getTableHeader()}
-						data={getTableData()}
-						recordsPerPage={PAGINATORS.assetTable}
-						showPageNumbers={false}
-						handleCursorFetch={(cursor: string | null) => setCurrentTableCursor(cursor)}
-						cursors={{
-							next: getPaginatorAction('next'),
-							previous: getPaginatorAction('prev'),
-						}}
-						showNoResults={false}
-					/>
-					<S.TMessage>
-						<span>{`${language.showingAssets}: ${currentIndexDisplay + 1} - ${
-							currentIndexDisplay + PAGINATORS.assetTable
-						}`}</span>
-					</S.TMessage>
-				</>
-			);
+				return (
+					<>
+						<Table
+							title={`${language.assets} (${idCount})`}
+							action={null}
+							header={getTableHeader()}
+							data={getTableData()}
+							recordsPerPage={PAGINATORS.assetTable}
+							showPageNumbers={false}
+							handleCursorFetch={(cursor: string | null) => setCurrentTableCursor(cursor)}
+							cursors={{
+								next: getPaginatorAction('next'),
+								previous: getPaginatorAction('prev'),
+							}}
+							showNoResults={false}
+						/>
+						<S.TMessage>
+							<span>{`${language.showingAssets}: ${currentIndexDisplay + 1} - ${
+								currentIndexDisplay + PAGINATORS.assetTable
+							}`}</span>
+						</S.TMessage>
+					</>
+				);
+			} else {
+				return (
+					<S.MWrapper>
+						<span>{language.noAssets}</span>
+					</S.MWrapper>
+				);
+			}
 		}
 	}
 
 	return (
 		<S.Wrapper>
-			<S.Header>
-				<h4>{language.chooseExistingAssets}</h4>
-			</S.Header>
+			{props.useIdAction && (
+				<S.Header>
+					<h4>{language.chooseExistingAssets}</h4>
+				</S.Header>
+			)}
 			<S.Body>{getAssets()}</S.Body>
 		</S.Wrapper>
 	);

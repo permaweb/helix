@@ -1,5 +1,4 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 import { ReactSVG } from 'react-svg';
 
 import { search } from 'gql';
@@ -7,10 +6,9 @@ import { search } from 'gql';
 import { IconButton } from 'components/atoms/IconButton';
 import { Loader } from 'components/atoms/Loader';
 import { Portal } from 'components/atoms/Portal';
-import { ASSETS, DOM, STYLING, URLS } from 'helpers/config';
-import { getTxEndpoint } from 'helpers/endpoints';
+import { ASSETS, DOM, REDIRECTS, STYLING } from 'helpers/config';
 import { AssetType } from 'helpers/types';
-import { formatTime, getCreatorLabel, getRelativeDate } from 'helpers/utils';
+import { getCreatorLabel, getRelativeDate } from 'helpers/utils';
 import { checkWindowCutoff, checkWindowResize } from 'helpers/window';
 import { useLanguageProvider } from 'providers/LanguageProvider';
 import { CloseHandler } from 'wrappers/CloseHandler';
@@ -203,38 +201,18 @@ export default function Search() {
 	);
 }
 
-// TODO: search redirect
 function Asset(props: { asset: AssetType | null; handleClear: () => void }) {
-	const assetRedirect = props.asset ? `${URLS.asset}${props.asset.id}` : null;
-	const profileRedirect = props.asset ? URLS.profileChannel(props.asset.creator.walletAddress) : null;
+	const assetRedirect = props.asset ? REDIRECTS.bazar.asset(props.asset.id) : null;
+	const profileRedirect = props.asset ? REDIRECTS.bazar.profile(props.asset.creator.walletAddress) : null;
 
 	return (
 		<S.AWrapper>
-			{props.asset && (
-				<S.AContentLink>
-					<Link to={assetRedirect} onClick={props.handleClear} />
-				</S.AContentLink>
-			)}
-			<S.AContent>
-				{props.asset ? (
-					<>
-						<img src={getTxEndpoint(props.asset.thumbnail)} />
-						{props.asset.contentLength && (
-							<S.VLength className={'info-text'}>
-								<span>{formatTime(props.asset.contentLength)}</span>
-							</S.VLength>
-						)}
-					</>
-				) : (
-					<Loader placeholder />
-				)}
-			</S.AContent>
 			<S.AInfo>
 				<S.AInfo1>
 					{props.asset ? (
-						<Link to={assetRedirect} onClick={props.handleClear}>
+						<a href={assetRedirect} onClick={props.handleClear} target={'_blank'}>
 							<p>{props.asset.title}</p>
-						</Link>
+						</a>
 					) : (
 						<S.ATLoader>
 							<Loader placeholder />
@@ -243,9 +221,9 @@ function Asset(props: { asset: AssetType | null; handleClear: () => void }) {
 					<S.AInfoFlex>
 						{props.asset ? (
 							<>
-								<Link to={profileRedirect} onClick={props.handleClear}>
+								<a href={profileRedirect} onClick={props.handleClear} target={'_blank'}>
 									{getCreatorLabel(props.asset.creator)}
-								</Link>
+								</a>
 								<span>{` · ${getRelativeDate(props.asset.dateCreated)}`}</span>
 							</>
 						) : (

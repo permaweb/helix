@@ -10,19 +10,10 @@ function getHeight(height: number | undefined) {
 	}
 }
 
-function getWidth(noMinWidth: boolean | undefined, width: number | undefined, fullWidth: boolean | undefined) {
+function getWidth(_noMinWidth: boolean | undefined, _width: number | undefined, fullWidth: boolean | undefined) {
 	if (fullWidth) {
 		return `100%`;
-	}
-	if (width) {
-		return `${width.toString()}px`;
-	} else {
-		if (noMinWidth) {
-			return 'fit-content';
-		} else {
-			return STYLING.dimensions.button.width;
-		}
-	}
+	} else return 'fit-content';
 }
 
 export const Tooltip = styled.div<{ useBottom: boolean }>`

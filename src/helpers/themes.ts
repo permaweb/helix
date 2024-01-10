@@ -22,7 +22,7 @@ const DEFAULT = {
 	overlay1: 'rgba(0, 0, 0, 0.5)',
 	primary1: '#379574',
 	primary2: '#12D791',
-	semiTransparent1: 'rgba(0, 0, 0, 0.575)',
+	semiTransparent1: 'rgba(0, 0, 0, 0.85)',
 	semiTransparent2: 'rgba(0, 0, 0, 0.45)',
 	semiTransparent3: 'rgba(0, 0, 0, 0.65)',
 	semiTransparent4: '#AEAEAE45',

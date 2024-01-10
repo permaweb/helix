@@ -1,6 +1,6 @@
 import { getGQLData, getProfiles, structureAsset } from 'gql';
 
-import { ASSET_TITLE_PREFIX, GATEWAYS, TAGS } from 'helpers/config';
+import { GATEWAYS, TAGS } from 'helpers/config';
 import { AGQLResponseType, AssetGQLResponseType, AssetType, CursorEnum, GQLNodeResponseType } from 'helpers/types';
 import { checkAddress, getTagValue } from 'helpers/utils';
 
@@ -13,12 +13,11 @@ export async function search(args: { term: string; cursor: string | null }): Pro
 	};
 	try {
 		const addressCheck = checkAddress(args.term);
-		const value = addressCheck ? args.term.replace(ASSET_TITLE_PREFIX, '') : args.term;
 
 		const gqlResponse: AGQLResponseType = await getGQLData({
 			gateway: GATEWAYS.goldsky,
 			ids: addressCheck ? [args.term] : null,
-			tagFilters: addressCheck ? null : [{ name: TAGS.keys.ans110.title, values: [value], match: 'FUZZY_OR' }],
+			tagFilters: addressCheck ? null : [{ name: TAGS.keys.ans110.title, values: [args.term], match: 'FUZZY_OR' }],
 			owners: null,
 			cursor: args.cursor,
 			reduxCursor: null,
