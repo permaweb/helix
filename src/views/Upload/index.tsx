@@ -22,7 +22,6 @@ import * as S from './styles';
 import { UploadAssets } from './UploadAssets';
 import { UploadSteps } from './UploadSteps';
 
-// TODO: collection code
 export default function Upload() {
 	const dispatch = useDispatch();
 
@@ -201,7 +200,6 @@ export default function Upload() {
 
 				initStateCollectionJson = JSON.stringify(initStateCollectionJson);
 
-				// TODO: collection tag
 				const collectionTags: TagType[] = [
 					{ name: TAGS.keys.contentType, value: CONTENT_TYPES.json },
 					{ name: TAGS.keys.initState, value: initStateCollectionJson },
@@ -239,7 +237,6 @@ export default function Upload() {
 				if (bannerTx) collectionTags.push({ name: TAGS.keys.banner, value: bannerTx });
 				if (thumbnailTx) collectionTags.push({ name: TAGS.keys.thumbnail, value: thumbnailTx });
 
-				// TODO: collection tag
 				const collectionData = JSON.stringify({
 					type: TAGS.values.collection,
 					items: [...uploadedAssetsList, ...uploadReducer.data.idList],

@@ -135,7 +135,7 @@ export const TAGS = {
 	values: {
 		ansVersion: 'ANS-110',
 		appVersion: 'Odysee-v0.0.2',
-		collection: 'Test-Collection',
+		collection: 'Collection',
 		comment: 'comment',
 		contractManifest:
 			'{"evaluationOptions":{"sourceType":"redstone-sequencer","allowBigInt":true,"internalWrites":true,"unsafeClient":"skip","useConstructor":true}}',
