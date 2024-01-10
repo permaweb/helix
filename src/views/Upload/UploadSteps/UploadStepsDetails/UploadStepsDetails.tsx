@@ -41,10 +41,20 @@ export default function UploadStepsDetails() {
 			return;
 		}
 
-		const isDataValid = uploadReducer.data.title && uploadReducer.data.description && !invalidTitle.status;
+		const isDataValid =
+			uploadReducer.data.title &&
+			uploadReducer.data.description &&
+			uploadReducer.data.topics.length &&
+			!invalidTitle.status;
 
 		dispatch(uploadActions.setStepDisabled(!isDataValid));
-	}, [validatingTitle, uploadReducer.data.title, uploadReducer.data.description, invalidTitle.status]);
+	}, [
+		validatingTitle,
+		uploadReducer.data.title,
+		uploadReducer.data.description,
+		uploadReducer.data.topics,
+		invalidTitle.status,
+	]);
 
 	React.useEffect(() => {
 		const timeoutId = setTimeout(() => {
@@ -70,7 +80,7 @@ export default function UploadStepsDetails() {
 		}
 	}
 
-	function handleInputChange(e: any, field: 'title' | 'description') {
+	function handleInputChange(e: any, field: 'title' | 'description' | 'collectionCode') {
 		dispatch(
 			uploadActions.setUpload([
 				{
@@ -121,7 +131,8 @@ export default function UploadStepsDetails() {
 
 	return (
 		<>
-			<S.Wrapper className={'border-wrapper-primary'}>
+			<S.Wrapper className={'border-wrapper-alt2'}>
+				<h4>{language.collectionDetails}</h4>
 				<FormField
 					label={language.title}
 					value={uploadReducer.data.title}
@@ -138,11 +149,21 @@ export default function UploadStepsDetails() {
 					invalid={getInvalidDescription()}
 					required
 				/>
-				{/* <S.TWrapper>
+				<FormField
+					label={language.collectionCode}
+					value={uploadReducer.data.collectionCode}
+					onChange={(e: any) => handleInputChange(e, 'collectionCode')}
+					disabled={false}
+					invalid={{ status: false, message: null }}
+				/>
+				<S.TWrapper>
 					<S.THeader>
-						<span>{formatRequiredField(language.topics)}</span>
+						<span>{formatRequiredField(language.assetTopics)}</span>
 						<Button type={'alt2'} label={language.addTopic} handlePress={() => setShowTopicAdd(true)} />
 					</S.THeader>
+					<S.TInfo>
+						<span>{language.topicInfo}</span>
+					</S.TInfo>
 					<S.TBody>
 						{topicOptions.map((topic: string, index: number) => {
 							return (
@@ -157,9 +178,9 @@ export default function UploadStepsDetails() {
 							);
 						})}
 					</S.TBody>
-				</S.TWrapper> */}
+				</S.TWrapper>
 			</S.Wrapper>
-			{/* {showTopicAdd && (
+			{showTopicAdd && (
 				<Modal header={language.addTopic} handleClose={() => setShowTopicAdd(false)}>
 					<S.MWrapper onSubmit={(e: any) => handleAdditionalTopicAdd(e)}>
 						<FormField
@@ -170,19 +191,20 @@ export default function UploadStepsDetails() {
 							invalid={{ status: false, message: null }}
 						/>
 						<S.MActions>
-							<Button type={'primary'} label={language.cancel} handlePress={() => setShowTopicAdd(false)} />
+							<Button type={'primary'} label={language.cancel} handlePress={() => setShowTopicAdd(false)} noMinWidth />
 							<Button
 								type={'alt1'}
 								label={language.submit}
 								handlePress={(e: any) => handleAdditionalTopicAdd(e)}
 								disabled={topicOptions.includes(additionalTopic) || !additionalTopic}
 								formSubmit
+								noMinWidth
 							/>
 						</S.MActions>
 						<S.MWarning>{topicOptions.includes(additionalTopic) && <span>Topic exists</span>}</S.MWarning>
 					</S.MWrapper>
 				</Modal>
-			)} */}
+			)}
 		</>
 	);
 }

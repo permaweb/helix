@@ -4,6 +4,13 @@ import { STYLING } from 'helpers/config';
 
 export const Wrapper = styled.div`
 	padding: 15px 20px 20px 20px;
+	h4 {
+		color: ${(props) => props.theme.colors.font.alt2};
+		font-size: ${(props) => props.theme.typography.size.lg};
+		font-weight: ${(props) => props.theme.typography.weight.bold};
+		line-height: 1.5;
+		margin: 0 0 25px 0;
+	}
 `;
 
 export const TWrapper = styled.div``;
@@ -22,6 +29,15 @@ export const THeader = styled.div`
 		span {
 			font-size: ${(props) => props.theme.typography.size.xSmall};
 		}
+	}
+`;
+
+export const TInfo = styled.div`
+	margin: 2.5px 0 20px 0;
+	span {
+		color: ${(props) => props.theme.colors.font.primary};
+		font-size: ${(props) => props.theme.typography.size.xxSmall};
+		font-weight: ${(props) => props.theme.typography.weight.bold};
 	}
 `;
 
@@ -47,7 +63,7 @@ export const TAction = styled.button<{ active: boolean }>`
 	span {
 		font-size: ${(props) => props.theme.typography.size.xxxSmall};
 		font-weight: ${(props) => props.theme.typography.weight.bold};
-		color: ${(props) => (props.active ? props.theme.colors.font.alt2 : props.theme.colors.font.primary)};
+		color: ${(props) => props.theme.colors.font.primary};
 		line-height: 1.5;
 		text-overflow: ellipsis;
 		white-space: nowrap;
@@ -61,7 +77,7 @@ export const TAction = styled.button<{ active: boolean }>`
 		background: ${(props) =>
 			props.active ? props.theme.colors.button.alt1.active.background : props.theme.colors.container.primary.active};
 		border: 1px solid
-			${(props) => (props.active ? props.theme.colors.button.alt1.border : props.theme.colors.border.alt2)};
+			${(props) => (props.active ? props.theme.colors.button.alt1.active.border : props.theme.colors.border.alt2)};
 	}
 `;
 

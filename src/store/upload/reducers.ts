@@ -13,11 +13,13 @@ import {
 const initStateUploadReducer = {
 	data: {
 		content: null,
+		contentList: [],
 		contentType: '',
 		contentLength: null,
 		license: null,
 		title: '',
 		description: '',
+		collectionCode: '',
 		thumbnail: null,
 		topics: [],
 		type: '',

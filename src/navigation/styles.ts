@@ -37,7 +37,8 @@ export const LWrapper = styled.div`
 	margin: 0 0 0 42.5px;
 	svg {
 		height: fit-content;
-		width: 30px;
+		height: 23.5px;
+		width: 23.5px;
 		fill ${(props) => props.theme.colors.icon.primary.fill};
 		&:hover {
 			opacity: 0.85;
@@ -45,10 +46,6 @@ export const LWrapper = styled.div`
 	}
 	@media (max-width: ${STYLING.cutoffs.initial}) {
 		margin: 0 0 0 15px;
-		svg {
-			height: 27.5px;
-			width: 27.5px;
-		}
 	}
 `;
 
@@ -204,6 +201,7 @@ export const PWrapper = styled.div`
 	left: 0;
 	transition: width 50ms ease-out;
 	background: ${(props) => props.theme.colors.container.primary.background};
+	border-right: 1px solid ${(props) => props.theme.colors.border.primary};
 	animation: ${openLeft} 200ms;
 `;
 

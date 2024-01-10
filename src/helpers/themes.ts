@@ -1,29 +1,30 @@
 import { DefaultTheme } from 'styled-components';
 
 const DEFAULT = {
-	accent1: '#9297C4',
+	accent1: '#454FA8',
 	accent2: '#7A81B8',
 	negative1: '#DF4657',
 	negative2: '#EF6C82',
 	neutral1: '#12151a',
-	neutral2: '#3A3A3A',
+	neutral2: '#1F2022',
 	neutral3: '#606060',
 	neutral4: '#5C5C5C',
 	neutral5: '#A4A4A4',
 	neutral6: '#A9A9A9',
 	neutral7: '#CCCCCC',
+	neutral8: '#272727',
 	neutralA1: '#FFFFFF',
 	neutralA2: '#F1F1F1',
 	neutralA3: '#E0E0E0',
 	neutralA4: '#D6D6D6',
 	neutralA5: '#F7F7F7',
 	neutralA6: '#FAFAFA',
-	overlay1: 'rgba(255, 255, 255, 0.5)',
-	primary1: '#5BC29E',
+	overlay1: 'rgba(0, 0, 0, 0.5)',
+	primary1: '#379574',
 	primary2: '#42B38B',
 	semiTransparent1: 'rgba(0, 0, 0, 0.575)',
-	semiTransparent2: 'rgba(255, 255, 255, 0.45)',
-	semiTransparent3: 'rgba(255, 255, 255, 0.65)',
+	semiTransparent2: 'rgba(0, 0, 0, 0.45)',
+	semiTransparent3: 'rgba(0, 0, 0, 0.65)',
 	semiTransparent4: '#AEAEAE45',
 	semiTransparent5: 'rgba(0, 0, 0, 0.5)',
 };
@@ -32,50 +33,51 @@ export const defaultTheme: DefaultTheme = {
 	scheme: 'dark',
 	colors: {
 		border: {
-			primary: DEFAULT.neutral4,
+			primary: DEFAULT.neutral3,
 			alt1: DEFAULT.primary1,
 			alt2: DEFAULT.neutralA6,
 			alt3: DEFAULT.neutral5,
+			alt4: DEFAULT.neutral8,
 		},
 		button: {
 			primary: {
 				background: DEFAULT.neutral2,
-				border: DEFAULT.neutral2,
+				border: DEFAULT.neutral3,
 				color: DEFAULT.neutralA1,
 				active: {
-					background: DEFAULT.neutral4,
-					border: DEFAULT.neutral4,
+					background: DEFAULT.accent1,
+					border: DEFAULT.accent2,
 					color: DEFAULT.neutralA1,
 				},
 				disabled: {
 					background: DEFAULT.neutral3,
 					border: DEFAULT.neutral3,
-					color: DEFAULT.neutralA2,
+					color: DEFAULT.neutral6,
 				},
 			},
 			alt1: {
 				background: DEFAULT.primary1,
-				border: DEFAULT.primary1,
+				border: DEFAULT.primary2,
 				color: DEFAULT.neutralA1,
 				active: {
-					background: DEFAULT.primary2,
-					border: DEFAULT.primary2,
+					background: DEFAULT.accent1,
+					border: DEFAULT.accent2,
 					color: DEFAULT.neutralA1,
 				},
 				disabled: {
 					background: DEFAULT.neutral3,
 					border: DEFAULT.neutral3,
-					color: DEFAULT.neutralA2,
+					color: DEFAULT.neutral6,
 				},
 			},
 			alt2: {
-				background: DEFAULT.primary1,
-				border: DEFAULT.primary1,
-				color: DEFAULT.primary1,
+				background: DEFAULT.primary2,
+				border: DEFAULT.primary2,
+				color: DEFAULT.primary2,
 				active: {
-					background: DEFAULT.primary2,
-					border: DEFAULT.primary2,
-					color: DEFAULT.primary2,
+					background: DEFAULT.primary1,
+					border: DEFAULT.primary1,
+					color: DEFAULT.primary1,
 				},
 				disabled: {
 					background: DEFAULT.neutral3,
@@ -86,10 +88,10 @@ export const defaultTheme: DefaultTheme = {
 		},
 		checkbox: {
 			active: {
-				background: DEFAULT.primary1,
+				background: DEFAULT.primary2,
 			},
 			background: DEFAULT.neutral1,
-			hover: DEFAULT.neutral2,
+			hover: DEFAULT.neutral3,
 			disabled: DEFAULT.neutral5,
 		},
 		container: {
@@ -104,7 +106,7 @@ export const defaultTheme: DefaultTheme = {
 				background: DEFAULT.neutral2,
 			},
 			alt3: {
-				background: DEFAULT.neutralA1,
+				background: DEFAULT.neutral2,
 			},
 			alt4: {
 				background: DEFAULT.neutral2,
@@ -122,7 +124,7 @@ export const defaultTheme: DefaultTheme = {
 		font: {
 			primary: DEFAULT.neutralA1,
 			alt1: DEFAULT.neutralA4,
-			alt2: DEFAULT.neutral1,
+			alt2: DEFAULT.neutral7,
 			alt3: DEFAULT.neutral5,
 		},
 		form: {
@@ -170,14 +172,14 @@ export const defaultTheme: DefaultTheme = {
 			},
 		},
 		indicator: {
-			active: DEFAULT.primary1,
+			active: DEFAULT.primary2,
 		},
 		link: {
 			color: DEFAULT.primary2,
 			active: DEFAULT.primary1,
 		},
 		loader: {
-			primary: DEFAULT.primary1,
+			primary: DEFAULT.primary2,
 		},
 		overlay: {
 			primary: DEFAULT.overlay1,
@@ -185,8 +187,17 @@ export const defaultTheme: DefaultTheme = {
 			alt2: DEFAULT.semiTransparent3,
 			alt3: DEFAULT.semiTransparent1,
 		},
+		row: {
+			active: {
+				background: DEFAULT.neutral3,
+				border: DEFAULT.neutral2,
+			},
+			hover: {
+				background: DEFAULT.neutral2,
+			},
+		},
 		scrollbar: {
-			thumb: DEFAULT.neutralA2,
+			thumb: DEFAULT.neutral3,
 		},
 		shadow: {
 			primary: DEFAULT.semiTransparent5,

@@ -58,6 +58,7 @@ export const GlobalStyle = createGlobalStyle`
     sans-serif;
     font-family: ${(props) => props.theme.typography.family.primary};
     font-weight: ${(props) => props.theme.typography.weight.medium};
+    color: ${(props) => props.theme.colors.font.primary};
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     box-sizing: border-box;
@@ -91,8 +92,8 @@ export const GlobalStyle = createGlobalStyle`
     color: ${(props) => props.theme.colors.font.primary};
   }
 
-  a, p {
-    transition: color 75ms;
+  a, p, li, button {
+    transition: all 75ms;
   }
   
   button {
@@ -100,7 +101,6 @@ export const GlobalStyle = createGlobalStyle`
     margin: 0;
     border: none;
     background: transparent;
-    transition: all 75ms;
     &:hover {
       cursor: pointer;
     }
@@ -169,7 +169,15 @@ export const GlobalStyle = createGlobalStyle`
   }
 
   .border-wrapper-alt1 {
-    background: ${(props) => props.theme.colors.container.alt4.background};
+    background: ${(props) => props.theme.colors.container.alt3.background};
+    border: 1px solid ${(props) => props.theme.colors.border.primary};
+    border-radius: ${STYLING.dimensions.radius.primary};
+  }
+
+  .border-wrapper-alt2 {
+    background: ${(props) => props.theme.colors.container.primary.background};
+    box-shadow: 0 5px 15px 2.5px ${(props) => props.theme.colors.shadow.primary};
+    border: 1px solid ${(props) => props.theme.colors.border.alt4};
     border-radius: ${STYLING.dimensions.radius.primary};
   }
 
@@ -181,11 +189,12 @@ export const GlobalStyle = createGlobalStyle`
 
   .info-text {
     padding: 0 4.25px;
-    background: ${(props) => props.theme.colors.container.alt5.background};
+    background: ${(props) => props.theme.colors.container.primary.background};
+    border: 1px solid ${(props) => props.theme.colors.border.primary};
     border-radius: ${STYLING.dimensions.radius.alt2};
     animation: ${open} ${fadeIn1};
     span {
-      color: ${(props) => props.theme.colors.font.alt2};
+      color: ${(props) => props.theme.colors.font.primary};
       font-size: ${(props) => props.theme.typography.size.xxxSmall};
       font-weight: ${(props) => props.theme.typography.weight.medium};
       white-space: nowrap;

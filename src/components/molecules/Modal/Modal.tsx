@@ -17,7 +17,7 @@ export default function Modal(props: IProps) {
 
 	const escFunction = React.useCallback(
 		(e: any) => {
-			if (e.key === 'Escape') {
+			if (e.key === 'Escape' && props.handleClose) {
 				props.handleClose();
 			}
 		},
@@ -35,7 +35,7 @@ export default function Modal(props: IProps) {
 	function getBody() {
 		return (
 			<>
-				<S.Container noHeader={!props.header}>
+				<S.Container noHeader={!props.header} className={'border-wrapper-primary'}>
 					{props.header && (
 						<S.Header>
 							<S.LT>

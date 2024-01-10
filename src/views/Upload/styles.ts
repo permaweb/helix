@@ -4,6 +4,16 @@ import { fadeIn2, open } from 'helpers/animations';
 import { STYLING } from 'helpers/config';
 
 export const Wrapper = styled.div`
+	h4 {
+		margin: 0 0 20px 0;
+		color: ${(props) => props.theme.colors.font.primary};
+		font-size: clamp(18px, 3.25vw, 24px);
+		font-weight: ${(props) => props.theme.typography.weight.xBold};
+		line-height: 1.5;
+	}
+`;
+
+export const UploadWrapper = styled.div`
 	display: flex;
 	justify-content: space-between;
 	gap: 40px;
@@ -53,14 +63,7 @@ export const MActions = styled.div`
 export const AWrapper = styled.div``;
 
 export const AContainer = styled.div`
-	position: absolute;
-	top: 50%;
-	left: 50%;
-	transform: translate(-50%, -50%);
-	display: flex;
-	flex-direction: column;
-	justify-content: center;
-	align-items: center;
+	padding: 0 20px 20px 20px;
 	animation: ${open} ${fadeIn2};
 `;
 
@@ -77,7 +80,9 @@ export const AProgress = styled.div<{ percentage: string }>`
 	display: flex;
 	justify-content: center;
 	align-items: center;
+	margin: 40px auto 0 auto;
 	background: ${(props) => props.theme.colors.container.alt3.background};
+	border: 1px solid ${(props) => props.theme.colors.border.primary};
 	border-radius: 20px;
 	overflow: hidden;
 	position: relative;
@@ -106,8 +111,7 @@ export const APercentage = styled.span`
 `;
 
 export const AMessage = styled.div`
-	margin: 15px 0 0 0;
-	width: 335px;
+	margin: 0 0 15px 0;
 	max-width: 90vw;
 	display: flex;
 	span {
@@ -115,7 +119,5 @@ export const AMessage = styled.div`
 		font-size: ${(props) => props.theme.typography.size.small};
 		font-weight: ${(props) => props.theme.typography.weight.bold};
 		line-height: 1.5;
-		text-align: center;
-		text-shadow: 0 0 10px ${(props) => props.theme.colors.font.primary};
 	}
 `;

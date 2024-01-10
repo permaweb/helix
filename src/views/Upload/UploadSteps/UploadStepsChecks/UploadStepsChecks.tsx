@@ -58,7 +58,7 @@ export default function UploadStepsChecks() {
 						<span>{language.description}</span>
 						<p>{uploadReducer.data.description ?? '-'}</p>
 					</S.InfoLine>
-					{/* {uploadReducer.data.topics && uploadReducer.data.topics.length && (
+					{uploadReducer.data.topics && uploadReducer.data.topics.length && (
 						<S.InfoLine>
 							<span>{language.topics}</span>
 							<S.TWrapper>
@@ -72,7 +72,7 @@ export default function UploadStepsChecks() {
 								})}
 							</S.TWrapper>
 						</S.InfoLine>
-					)} */}
+					)}
 				</S.InfoWrapper>
 				{uploadReducer.data.hasLicense && (
 					<AssetInfoLicense

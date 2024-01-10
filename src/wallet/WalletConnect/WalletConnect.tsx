@@ -1,10 +1,8 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
 
 import { Avatar } from 'components/atoms/Avatar';
 import { Button } from 'components/atoms/Button';
 import { TurboBalanceFund } from 'components/molecules/TurboBalanceFund';
-import { URLS } from 'helpers/config';
 import { formatAddress, formatARAmount, getTurboBalance } from 'helpers/utils';
 import { useArweaveProvider } from 'providers/ArweaveProvider';
 import { useLanguageProvider } from 'providers/LanguageProvider';
@@ -13,8 +11,6 @@ import { CloseHandler } from 'wrappers/CloseHandler';
 import * as S from './styles';
 
 export default function WalletConnect(_props: { callback?: () => void }) {
-	const navigate = useNavigate();
-
 	const arProvider = useArweaveProvider();
 	const languageProvider = useLanguageProvider();
 	const language = languageProvider.object[languageProvider.current];
@@ -68,11 +64,6 @@ export default function WalletConnect(_props: { callback?: () => void }) {
 
 	function handleDisconnect() {
 		arProvider.handleDisconnect();
-		setShowWalletDropdown(false);
-	}
-
-	function handleViewProfile() {
-		navigate(`${URLS.profileChannel(arProvider.walletAddress)}`);
 		setShowWalletDropdown(false);
 	}
 
@@ -134,7 +125,6 @@ export default function WalletConnect(_props: { callback?: () => void }) {
 							</S.DHeaderWrapper>
 							<S.DBodyWrapper>
 								<li onClick={copyAddress}>{copied ? `${language.copied}!` : language.copyWalletAddress}</li>
-								<li onClick={handleViewProfile}>{language.viewProfile}</li>
 							</S.DBodyWrapper>
 							<S.DFooterWrapper>
 								<li onClick={handleDisconnect}>{language.disconnect}</li>

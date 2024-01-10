@@ -1,16 +1,13 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
 
 import { ArweaveWebIrys } from '@irys/sdk/build/esm/web/tokens/arweave';
 
 import { createContract, createTransaction } from 'api';
-import { getCurrentProfile } from 'gql';
 
 import { Button } from 'components/atoms/Button';
-import { Portal } from 'components/atoms/Portal';
 import { Modal } from 'components/molecules/Modal';
-import { ASSET_CONTRACT, CONTENT_TYPES, DOM, TAGS, UPLOAD_CONFIG, URLS } from 'helpers/config';
+import { ASSET_CONTRACT, CONTENT_TYPES, REDIRECTS, TAGS, UPLOAD_CONFIG } from 'helpers/config';
 import { TagType } from 'helpers/types';
 import { base64ToUint8Array, fileToBuffer, getBase64Data, getDataURLContentType } from 'helpers/utils';
 import { hideDocumentBody, showDocumentBody } from 'helpers/window';
@@ -20,13 +17,14 @@ import { RootState } from 'store';
 import * as uploadActions from 'store/upload/actions';
 
 import * as S from './styles';
-import { UploadAsset } from './UploadAsset';
+import { UploadAssets } from './UploadAssets';
 import { UploadSteps } from './UploadSteps';
-import { UploadThumbnail } from './UploadThumbnail';
 
+// TODO: banner
+// TODO: existing assets
+// TODO: reselecting files not working
 export default function Upload() {
 	const dispatch = useDispatch();
-	const navigate = useNavigate();
 
 	const uploadReducer = useSelector((state: RootState) => state.uploadReducer);
 
@@ -34,12 +32,12 @@ export default function Upload() {
 	const languageProvider = useLanguageProvider();
 	const language = languageProvider.object[languageProvider.current];
 
+	const [uploadIndex, setUploadIndex] = React.useState<number>(0);
 	const [uploadPercentage, setUploadPercentage] = React.useState<number>(0);
-	const [assetResponse, setAssetResponse] = React.useState<string | null>(null);
-	const [assetResponseError, setAssetResponseError] = React.useState<string | null>(null);
+	const [collectionResponse, setCollectionResponse] = React.useState<string | null>(null);
+	const [collectionResponseError, setCollectionResponseError] = React.useState<string | null>(null);
 
-	const [profileExists, setProfileExists] = React.useState<boolean>(true);
-
+	// TODO: add
 	// React.useEffect(() => {
 	// 	const handleBeforeUnload = (e: any) => {
 	// 		e.preventDefault();
@@ -54,18 +52,6 @@ export default function Upload() {
 	// }, [uploadReducer]);
 
 	React.useEffect(() => {
-		(async function () {
-			if (arProvider.walletAddress) {
-				try {
-					setProfileExists((await getCurrentProfile({ address: arProvider.walletAddress })).txId !== null);
-				} catch (e: any) {
-					console.error(e);
-				}
-			}
-		})();
-	}, [arProvider.walletAddress]);
-
-	React.useEffect(() => {
 		if (!arProvider.wallet) dispatch(uploadActions.setUploadDisabled(true));
 		if (arProvider.walletType) dispatch(uploadActions.setUploadDisabled(arProvider.walletType === 'arweave.app'));
 	}, [arProvider]);
@@ -75,38 +61,86 @@ export default function Upload() {
 		else showDocumentBody();
 	}, [uploadReducer.uploadActive]);
 
-	// Disable upload if turbo balance is not fetched
-	// React.useEffect(() => {
-	// 	if (arProvider.turboBalance === null) dispatch(uploadActions.setUploadDisabled(true));
-	// 	else {
-	// 		if (typeof arProvider.turboBalance === 'number' && uploadReducer.uploadCost) {
-	// 			dispatch(uploadActions.setUploadDisabled(arProvider.turboBalance < uploadReducer.uploadCost));
-	// 		}
-	// 	}
-	// }, [arProvider.turboBalance, uploadReducer.uploadCost]);
-
 	async function handleUpload() {
 		if (uploadChecksPassed(arProvider, uploadReducer)) {
 			dispatch(uploadActions.setUploadActive(true));
-			const irys = new ArweaveWebIrys({
-				url: UPLOAD_CONFIG.node2,
-				wallet: { provider: arProvider.wallet },
-			});
-			await irys.ready();
 
-			// let uploader = irys.uploader.chunkedUploader;
-			// uploader.setBatchSize(UPLOAD_CONFIG.batchSize);
-			// uploader.setChunkSize(UPLOAD_CONFIG.chunkSize);
+			let index = 0;
+			let assetList: string[] = [];
+			for (const data of uploadReducer.data.contentList) {
+				setUploadIndex(index + 1);
 
-			// uploader.on('chunkUpload', (chunkInfo) => {
-			// 	setUploadPercentage(Math.floor((chunkInfo.totalUploaded / uploadReducer.data.content.size) * 100));
-			// });
+				const irys = new ArweaveWebIrys({
+					url: UPLOAD_CONFIG.node2,
+					wallet: { provider: arProvider.wallet },
+				});
+				await irys.ready();
 
-			// uploader.on('chunkError', (e) => {
-			// 	console.error(e);
-			// });
+				let uploader = irys.uploader.chunkedUploader;
+				uploader.setBatchSize(UPLOAD_CONFIG.batchSize);
+				uploader.setChunkSize(UPLOAD_CONFIG.chunkSize);
 
-			const dateTime = new Date().getTime().toString();
+				uploader.on('chunkUpload', (chunkInfo) => {
+					setUploadPercentage(Math.floor((chunkInfo.totalUploaded / data.file.size) * 100));
+				});
+
+				uploader.on('chunkError', (e) => {
+					console.error(e);
+				});
+
+				const dateTime = new Date().getTime().toString();
+
+				const title = data.title ?? `${uploadReducer.data.title} #${index + 1}`;
+				const description = data.description ?? uploadReducer.data.description;
+				const type = data.file.type;
+
+				try {
+					let initStateAssetJson: any = {
+						balances: {
+							[arProvider.walletAddress]: 1,
+						},
+						title: title,
+						description: description,
+						ticker: TAGS.values.ticker,
+						dateCreated: dateTime,
+						claimable: [],
+					};
+
+					initStateAssetJson = JSON.stringify(initStateAssetJson);
+
+					const assetTags: TagType[] = [
+						{ name: TAGS.keys.contractSrc, value: ASSET_CONTRACT.src },
+						{ name: TAGS.keys.smartweaveAppName, value: TAGS.values.smartweaveAppName },
+						{ name: TAGS.keys.smartweaveAppVersion, value: TAGS.values.smartweaveAppVersion },
+						{ name: TAGS.keys.contentType, value: type },
+						{ name: TAGS.keys.appVersion, value: TAGS.values.appVersion },
+						{ name: TAGS.keys.initState, value: initStateAssetJson },
+						{ name: TAGS.keys.initialOwner, value: arProvider.walletAddress },
+						{ name: TAGS.keys.ans110.title, value: title },
+						{ name: TAGS.keys.ans110.description, value: description },
+						{ name: TAGS.keys.ans110.type, value: type },
+						{ name: TAGS.keys.ans110.implements, value: TAGS.values.ansVersion },
+						{ name: TAGS.keys.dateCreated, value: dateTime },
+					];
+
+					uploadReducer.data.topics.forEach((topic: string) =>
+						assetTags.push({ name: TAGS.keys.topic(topic), value: topic })
+					);
+
+					if (uploadReducer.data.hasLicense && uploadReducer.data.license)
+						assetTags.push(...buildLicenseTags(uploadReducer.data.license));
+
+					const buffer = await fileToBuffer(data.file);
+					const txResponse = await uploader.uploadData(buffer as any, { tags: assetTags } as any);
+
+					const contractResponse = await createContract({ assetId: txResponse.data.id });
+
+					if (contractResponse) assetList.push(contractResponse);
+					setUploadPercentage(0);
+				} catch (e: any) {
+					console.error(e);
+				}
+			}
 
 			let thumbnailTx: any = null;
 			if (uploadReducer.data.thumbnail) {
@@ -125,97 +159,90 @@ export default function Upload() {
 				}
 			}
 
-			let initStateJson: any = {
-				balances: {
-					[arProvider.walletAddress]: 1,
-				},
-				creator: arProvider.walletAddress,
-				name: uploadReducer.data.title,
-				description: uploadReducer.data.description,
-				ticker: TAGS.values.ticker,
-				dateCreated: dateTime,
-				claimable: [],
-			};
-
-			initStateJson = JSON.stringify(initStateJson);
-
-			// TODO: add thumbnail
-			// TODO: add collection code
-			const collectionTags: TagType[] = [
-				{ name: TAGS.keys.contentType, value: CONTENT_TYPES.json },
-				{ name: TAGS.keys.initState, value: initStateJson },
-				{ name: TAGS.keys.creator, value: arProvider.walletAddress },
-				{ name: TAGS.keys.dataProtocol, value: TAGS.values.collection },
-				{
-					name: TAGS.keys.smartweaveAppName,
-					value: TAGS.values.smartweaveAppName,
-				},
-				{
-					name: TAGS.keys.smartweaveAppVersion,
-					value: TAGS.values.smartweaveAppVersion,
-				},
-				{ name: TAGS.keys.contractSrc, value: ASSET_CONTRACT.src },
-				{
-					name: TAGS.keys.contractManifest,
-					value: TAGS.values.contractManifest,
-				},
-				{
-					name: TAGS.keys.ans110.title,
-					value: uploadReducer.data.title,
-				},
-				{
-					name: TAGS.keys.ans110.description,
-					value: uploadReducer.data.description,
-				},
-				{ name: TAGS.keys.ans110.type, value: TAGS.values.document },
-				{ name: TAGS.keys.dateCreated, value: dateTime },
-				{
-					name: TAGS.keys.name,
-					value: uploadReducer.data.title,
-				},
-			];
-
-			//   uploadReducer.data.topics.forEach((topic: string) =>
-			//     tags.push({ name: TAGS.keys.topic(topic), value: topic })
-			//   );
-			if (thumbnailTx) collectionTags.push({ name: TAGS.keys.thumbnail, value: thumbnailTx });
-			//   if (uploadReducer.data.contentLength)
-			//     tags.push({
-			//       name: TAGS.keys.contentLength,
-			//       value: uploadReducer.data.contentLength.toString(),
-			//     });
-			//   if (uploadReducer.data.hasLicense && uploadReducer.data.license)
-			//     tags.push(...buildLicenseTags(uploadReducer.data.license));
-
 			try {
-				// const buffer = await fileToBuffer(uploadReducer.data.content);
-				// const txResponse = await uploader.uploadData(buffer as any, { tags } as any);
+				const irys = new ArweaveWebIrys({
+					url: UPLOAD_CONFIG.node2,
+					wallet: { provider: arProvider.wallet },
+				});
+				await irys.ready();
 
-				// const contractResponse = await createContract({ assetId: txResponse.data.id });
+				const dateTime = new Date().getTime().toString();
 
-				// setAssetResponse(contractResponse);
+				let initStateCollectionJson: any = {
+					balances: {
+						[arProvider.walletAddress]: 1,
+					},
+					creator: arProvider.walletAddress,
+					name: uploadReducer.data.title,
+					description: uploadReducer.data.description,
+					ticker: TAGS.values.ticker,
+					dateCreated: dateTime,
+					claimable: [],
+				};
+
+				initStateCollectionJson = JSON.stringify(initStateCollectionJson);
+
+				// TODO: collection tag
+				const collectionTags: TagType[] = [
+					{ name: TAGS.keys.contentType, value: CONTENT_TYPES.json },
+					{ name: TAGS.keys.initState, value: initStateCollectionJson },
+					{ name: TAGS.keys.creator, value: arProvider.walletAddress },
+					// { name: TAGS.keys.dataProtocol, value: TAGS.values.collection },
+					{ name: TAGS.keys.dataProtocol, value: 'Test-Collection' },
+					{
+						name: TAGS.keys.smartweaveAppName,
+						value: TAGS.values.smartweaveAppName,
+					},
+					{
+						name: TAGS.keys.smartweaveAppVersion,
+						value: TAGS.values.smartweaveAppVersion,
+					},
+					{ name: TAGS.keys.contractSrc, value: ASSET_CONTRACT.src },
+					{
+						name: TAGS.keys.contractManifest,
+						value: TAGS.values.contractManifest,
+					},
+					{
+						name: TAGS.keys.ans110.title,
+						value: uploadReducer.data.title,
+					},
+					{
+						name: TAGS.keys.ans110.description,
+						value: uploadReducer.data.description,
+					},
+					{ name: TAGS.keys.ans110.type, value: TAGS.values.document },
+					{ name: TAGS.keys.dateCreated, value: dateTime },
+					{
+						name: TAGS.keys.name,
+						value: uploadReducer.data.title,
+					},
+				];
+
+				if (thumbnailTx) collectionTags.push({ name: TAGS.keys.thumbnail, value: thumbnailTx });
+				if (uploadReducer.data.collectionCode)
+					collectionTags.push({ name: TAGS.keys.collectionCode, value: uploadReducer.data.collectionCode });
 
 				// TODO: collection tag
 				// const data = JSON.stringify({
 				//   type: TAGS.values.collection,
-				//   items: [],
+				//   items: assetList,
 				// });
 
 				const collectionData = JSON.stringify({
 					type: 'Test-Collection',
-					items: [],
+					items: assetList,
 				});
 
-				const result = await irys.upload(collectionData as any, { tags: collectionTags } as any);
+				const collectionResult = await irys.upload(collectionData as any, { tags: collectionTags } as any);
 
-				console.log(result);
+				setCollectionResponse(collectionResult.id);
 
 				dispatch(uploadActions.setUploadActive(false));
 				dispatch(uploadActions.clearUpload());
 				setUploadPercentage(0);
 			} catch (e: any) {
 				console.error(e);
-				setAssetResponseError(e.message);
+				setCollectionResponseError(e.message);
 				dispatch(uploadActions.setUploadActive(false));
 			}
 		}
@@ -223,72 +250,62 @@ export default function Upload() {
 
 	return (
 		<>
-			<S.Wrapper className={'max-view-wrapper'}>
-				<S.UWrapper>
-					{/* <UploadAsset /> */}
-					<UploadThumbnail />
-				</S.UWrapper>
-				<S.SWrapper>
-					<UploadSteps handleUpload={handleUpload} />
-				</S.SWrapper>
+			<S.Wrapper>
+				<h4>{language.createACollection}</h4>
+				<S.UploadWrapper className={'max-view-wrapper'}>
+					<S.UWrapper>
+						<UploadAssets />
+					</S.UWrapper>
+					<S.SWrapper>
+						<UploadSteps handleUpload={handleUpload} />
+					</S.SWrapper>
+				</S.UploadWrapper>
 			</S.Wrapper>
 			{uploadReducer.uploadActive && (
-				<Portal node={DOM.overlay}>
-					<S.AWrapper className={'overlay'}>
-						<S.AContainer>
-							<S.AProgress percentage={uploadPercentage.toString()}>
-								<div />
-								<span>{language.assetUploading}</span>
-								&nbsp;
-								<S.APercentage>{`${uploadPercentage.toString()}%`}</S.APercentage>
-							</S.AProgress>
-							<S.AMessage>
-								<span>{language.assetUploadingInfo}</span>
-							</S.AMessage>
-						</S.AContainer>
-					</S.AWrapper>
-				</Portal>
+				<Modal header={language.uploading} handleClose={null}>
+					<S.AContainer>
+						<S.AMessage>
+							<span>{language.assetUploadingInfo}</span>
+						</S.AMessage>
+						<S.AMessage>
+							<span>{language.uploadingFileCount(uploadIndex, uploadReducer.data.contentList.length)}</span>
+						</S.AMessage>
+						<S.AProgress percentage={uploadPercentage.toString()}>
+							<div />
+							<span>{`${language.uploadStatus}:`}</span>
+							&nbsp;
+							<S.APercentage>{`${uploadPercentage.toString()}%`}</S.APercentage>
+						</S.AProgress>
+					</S.AContainer>
+				</Modal>
 			)}
-			{(assetResponse || assetResponseError) && (
+			{(collectionResponse || collectionResponseError) && (
 				<Modal
-					header={assetResponse ? language.assetUploaded : language.errorOccurred}
-					handleClose={() => setAssetResponse(null)}
+					header={collectionResponse ? language.assetUploaded : language.errorOccurred}
+					handleClose={() => setCollectionResponse(null)}
 				>
 					<S.MWrapper>
 						<S.MInfo>
-							<span>{assetResponse ? language.assetUploadedInfo : assetResponseError}</span>
+							<span>{collectionResponse ? language.collectionUploadedInfo : collectionResponseError}</span>
 						</S.MInfo>
 						<S.MActions>
 							<Button
 								type={'primary'}
 								label={language.close}
-								handlePress={() => (assetResponse ? setAssetResponse(null) : setAssetResponseError(null))}
+								handlePress={() =>
+									collectionResponse ? setCollectionResponse(null) : setCollectionResponseError(null)
+								}
+								noMinWidth
 							/>
-							{assetResponse && (
+							{collectionResponse && (
 								<Button
 									type={'alt1'}
-									label={language.viewAsset}
-									handlePress={() => navigate(`${URLS.asset}${assetResponse}`)}
+									label={language.viewCollection}
+									handlePress={() => window.open(REDIRECTS.bazar.collection(collectionResponse), '_blank')}
 									disabled={false}
+									noMinWidth
 								/>
 							)}
-						</S.MActions>
-					</S.MWrapper>
-				</Modal>
-			)}
-			{!profileExists && (
-				<Modal header={language.signUpRequired} handleClose={null}>
-					<S.MWrapper>
-						<S.MInfo>
-							<span>{language.signUpRequiredInfo}</span>
-						</S.MInfo>
-						<S.MActions>
-							<Button
-								type={'alt1'}
-								label={language.signUp}
-								handlePress={() => navigate(URLS.signup)}
-								disabled={false}
-							/>
 						</S.MActions>
 					</S.MWrapper>
 				</Modal>
@@ -297,12 +314,17 @@ export default function Upload() {
 	);
 }
 
-// uploadReducer.data.content &&
-// uploadReducer.data.contentType &&
-// uploadReducer.data.thumbnail
-
 export function uploadChecksPassed(arProvider: any, uploadReducer: any) {
-	return arProvider.wallet && arProvider.walletAddress && uploadReducer.data.title && uploadReducer.data.description;
+	return (
+		arProvider.wallet &&
+		arProvider.walletAddress &&
+		uploadReducer.data.title &&
+		uploadReducer.data.description &&
+		uploadReducer.data.topics &&
+		uploadReducer.data.topics.length &&
+		uploadReducer.data.contentList &&
+		uploadReducer.data.contentList.length
+	);
 }
 
 function buildLicenseTags(licenseObject: any) {

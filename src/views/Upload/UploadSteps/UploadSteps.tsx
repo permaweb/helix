@@ -8,6 +8,7 @@ import { useLanguageProvider } from 'providers/LanguageProvider';
 import { RootState } from 'store';
 import * as uploadActions from 'store/upload/actions';
 
+import { UploadThumbnail } from '../UploadThumbnail';
 import { uploadChecksPassed } from '..';
 
 import * as S from './styles';
@@ -66,6 +67,7 @@ export default function UploadSteps(props: IProps) {
 					disabled={
 						!uploadChecksPassed(arProvider, uploadReducer) || uploadReducer.uploadActive || uploadReducer.uploadDisabled
 					}
+					noMinWidth
 				/>
 			);
 		} else {
@@ -75,6 +77,7 @@ export default function UploadSteps(props: IProps) {
 					label={language.next}
 					handlePress={handleNextStep}
 					disabled={uploadReducer.nextStepDisabled || uploadReducer.uploadActive}
+					noMinWidth
 				/>
 			);
 		}
@@ -99,12 +102,14 @@ export default function UploadSteps(props: IProps) {
 				<UploadStepsProgress />
 			</S.PWrapper>
 			<S.SWrapper>{getCurrentStepComponent()}</S.SWrapper>
+			<UploadThumbnail />
 			<S.AWrapper>
 				<Button
 					type={'primary'}
 					label={language.back}
 					handlePress={handleBackStep}
 					disabled={uploadReducer.currentStep === 'details' || uploadReducer.uploadActive}
+					noMinWidth
 				/>
 				{getNextAction()}
 			</S.AWrapper>

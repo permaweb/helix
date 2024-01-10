@@ -13,15 +13,20 @@ export const Header = styled.div`
 	display: flex;
 	justify-content: space-between;
 	h4 {
-		color: ${(props) => props.theme.colors.font.primary};
-		font-size: clamp(18px, 3.25vw, 24px);
-		font-weight: ${(props) => props.theme.typography.weight.xBold};
+		color: ${(props) => props.theme.colors.font.alt2};
+		font-size: ${(props) => props.theme.typography.size.lg};
+		font-weight: ${(props) => props.theme.typography.weight.bold};
 		line-height: 1.5;
 	}
 `;
 
 export const Body = styled.div`
-	margin: 40px 0 0 0;
+	margin: 20px 0 0 0;
+`;
+
+export const DDataWrapper = styled.div`
+	margin: auto;
+	padding: 0 10px 0 0;
 `;
 
 export const EWrapper = styled.div`
@@ -39,13 +44,15 @@ export const EIcon = styled.div`
 	justify-content: center;
 	align-items: center;
 	background: ${(props) => props.theme.colors.container.alt4.background};
+	border: 1px solid ${(props) => props.theme.colors.border.primary};
+	box-shadow: 0 5px 15px 0 ${(props) => props.theme.colors.shadow.primary};
 	border-radius: 50%;
 	margin: 0 0 25px 0;
 	svg {
 		height: 75px;
 		width: 75px;
 		fill: ${(props) => props.theme.colors.icon.alt3.fill};
-		margin: 2.5px 0 0 7.5px;
+		margin: 5px 0 0 7.5px;
 	}
 `;
 
@@ -162,5 +169,69 @@ export const BalanceWarning = styled.div`
 		color: ${(props) => props.theme.colors.warning};
 		font-size: ${(props) => props.theme.typography.size.xSmall};
 		font-weight: ${(props) => props.theme.typography.weight.medium};
+	}
+`;
+
+export const DWrapper = styled.div`
+	height: fit-content;
+	width: fit-content;
+	position: relative;
+	margin: 5px auto 0 auto;
+`;
+
+export const DDropdown = styled.ul<{ open: boolean }>`
+	width: 225px;
+	padding: 10px 0;
+	display: ${(props) => (props.open ? 'block' : 'none')};
+	position: absolute;
+	top: 26.5px;
+	right: 15%;
+	z-index: 1;
+`;
+
+export const LI = styled.li<{ disabled: boolean }>`
+	pointer-events: ${(props) => (props.disabled ? 'none' : 'default')};
+	text-align: center;
+	height: 32.5px;
+	display: flex;
+	align-items: center;
+	cursor: pointer;
+	font-size: ${(props) => props.theme.typography.size.xSmall};
+	color: ${(props) => props.theme.colors.font.primary};
+	font-weight: ${(props) => props.theme.typography.weight.bold};
+	background: ${(props) => (props.disabled ? props.theme.colors.button.primary.disabled.background : 'transparent')};
+	padding: 0 15px;
+	&:hover {
+		background: ${(props) =>
+			props.disabled
+				? props.theme.colors.button.primary.disabled.background
+				: props.theme.colors.container.primary.active};
+	}
+`;
+
+export const MWrapper = styled.div`
+	padding: 0 20px 20px 20px;
+`;
+
+export const MActions = styled.div`
+	width: fit-content;
+	display: flex;
+	margin: 20px 0 0 auto;
+	> * {
+		&:not(:last-child) {
+			margin: 0 15px 0 0;
+		}
+		&:last-child {
+			margin: 0;
+		}
+	}
+`;
+
+export const TMessage = styled.div`
+	margin: 5px 0 0 0;
+	span {
+		color: ${(props) => props.theme.colors.font.alt1};
+		font-size: ${(props) => props.theme.typography.size.xxSmall};
+		font-weight: ${(props) => props.theme.typography.weight.bold};
 	}
 `;

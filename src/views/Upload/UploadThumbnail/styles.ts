@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { STYLING } from 'helpers/config';
 
 export const Wrapper = styled.div`
-	margin: 60px 0 0 0;
+	margin: 40px 0 0 0;
 	input {
 		display: none;
 	}

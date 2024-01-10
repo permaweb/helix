@@ -18,12 +18,7 @@ export async function search(args: { term: string; cursor: string | null }): Pro
 		const gqlResponse: AGQLResponseType = await getGQLData({
 			gateway: GATEWAYS.goldsky,
 			ids: addressCheck ? [args.term] : null,
-			tagFilters: addressCheck
-				? null
-				: [
-						{ name: TAGS.keys.appVersion, values: [TAGS.values.appVersion] },
-						{ name: TAGS.keys.ans110.title, values: [value], match: 'FUZZY_OR' },
-				  ],
+			tagFilters: addressCheck ? null : [{ name: TAGS.keys.ans110.title, values: [value], match: 'FUZZY_OR' }],
 			owners: null,
 			cursor: args.cursor,
 			reduxCursor: null,

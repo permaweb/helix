@@ -203,6 +203,7 @@ export default function Search() {
 	);
 }
 
+// TODO: search redirect
 function Asset(props: { asset: AssetType | null; handleClear: () => void }) {
 	const assetRedirect = props.asset ? `${URLS.asset}${props.asset.id}` : null;
 	const profileRedirect = props.asset ? URLS.profileChannel(props.asset.creator.walletAddress) : null;

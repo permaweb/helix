@@ -166,14 +166,18 @@ export type ReduxActionType = {
 	payload: any;
 };
 
+export type FileMetadataType = { file: any; title: string; description: string };
+
 export type UploadReduxType = {
 	data: {
 		content: any;
+		contentList: FileMetadataType[];
 		contentType: string;
 		contentLength: number | null;
 		license: any;
 		title: string;
 		description: string;
+		collectionCode: string;
 		thumbnail: any;
 		topics: string[];
 		type: string;
@@ -189,8 +193,10 @@ export type UploadPayloadType =
 	| 'license'
 	| 'title'
 	| 'description'
+	| 'collectionCode'
 	| 'topics'
 	| 'content'
+	| 'contentList'
 	| 'contentType'
 	| 'contentLength'
 	| 'thumbnail'
@@ -210,3 +216,22 @@ export type URLViewType = {
 };
 
 export type FollowingType = { addresses: string[]; count: number };
+
+export type CursorType = {
+	next: string | null;
+	previous: string | null;
+};
+
+export type TableRowType = {
+	data: { [key: string]: any };
+	active: boolean;
+	viewed: boolean;
+};
+
+export type AlignType = 'left' | 'center' | 'right';
+
+export type TableHeaderType = {
+	[key: string]: { width: string; align: AlignType; display: string | null };
+};
+
+export type ActiveFieldAddType = 'title' | 'description';

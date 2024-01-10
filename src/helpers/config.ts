@@ -1,7 +1,10 @@
+import actionMenu from 'assets/action-menu.svg';
 import add from 'assets/add.svg';
 import arweaveApp from 'assets/ar-logo.svg';
 import arconnect from 'assets/arconnect-wallet-logo.png';
 import arrow from 'assets/arrow.svg';
+import arrowNextSVG from 'assets/arrow-next.svg';
+import arrowPreviousSVG from 'assets/arrow-previous.svg';
 import asset from 'assets/asset.svg';
 import bazar from 'assets/bazar.svg';
 import checkmark from 'assets/checkmark.svg';
@@ -41,8 +44,11 @@ export const APP = {
 };
 
 export const ASSETS = {
+	actionMenu: actionMenu,
 	add: add,
 	arrow: arrow,
+	arrowNext: arrowNextSVG,
+	arrowPrevious: arrowPreviousSVG,
 	asset: asset,
 	bazar: bazar,
 	checkmark: checkmark,
@@ -95,6 +101,7 @@ export const TAGS = {
 		avatar: 'Avatar',
 		banner: 'Banner',
 		channelTitle: 'Channel-Title',
+		collectionCode: 'Collection-Code',
 		contentLength: 'Content-Length',
 		contentType: 'Content-Type',
 		contractManifest: 'Contract-Manifest',
@@ -197,7 +204,7 @@ export const STYLING = {
 	},
 	dimensions: {
 		button: {
-			height: '35px',
+			height: '32.5px',
 			width: '150px',
 		},
 		form: {
@@ -282,8 +289,8 @@ export const DEFAULT_ASSET_TOPICS = [
 export const ALLOWED_THUMBNAIL_TYPES = 'image/png, image/jpeg, image/gif';
 export const ALLOWED_BANNER_TYPES = 'image/png, image/jpeg, image/gif';
 export const ALLOWED_AVATAR_TYPES = 'image/png, image/jpeg, image/gif';
-export const ALLOWED_VIDEO_TYPES = 'video/mp4';
-export const ALLOWED_VIDEO_TYPES_DISPLAY = ['MP4'];
+export const ALLOWED_ASSET_TYPES = '*';
+export const ALLOWED_ASSET_TYPES_DISPLAY = [];
 
 export const ASSET_TITLE_PREFIX = 'Odysee -';
 
@@ -297,5 +304,6 @@ export const CURRENCIES = {
 export const REDIRECTS = {
 	bazar: {
 		asset: (id: string) => `https://bazar.arweave.dev/#/asset/${id}`,
+		collection: (id: string) => `https://bazar.arweave.dev/#/collection/${id}`,
 	},
 };

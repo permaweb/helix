@@ -68,7 +68,7 @@ export const Primary = styled.button<{
 	border: 1px solid
 		${(props) =>
 			props.active ? props.theme.colors.button.primary.active.border : props.theme.colors.button.primary.border};
-	border-radius: 36px;
+	border-radius: ${STYLING.dimensions.radius.primary};
 	&:hover {
 		background: ${(props) => props.theme.colors.button.primary.active.background};
 		border: 1px solid ${(props) => props.theme.colors.button.primary.active.border};
@@ -89,7 +89,7 @@ export const Primary = styled.button<{
 		width: fit-content;
 		text-overflow: ellipsis;
 		overflow: hidden;
-		font-size: ${(props) => props.theme.typography.size.small} !important;
+		font-size: ${(props) => props.theme.typography.size.xSmall} !important;
 		font-weight: ${(props) => props.theme.typography.weight.bold} !important;
 		color: ${(props) =>
 			props.active
@@ -128,7 +128,9 @@ export const Alt1 = styled(Primary)`
 	}
 	&:focus {
 		background: ${(props) =>
-			props.active ? props.theme.colors.button.alt1.active.background : props.theme.colors.button.alt1.background};
+			props.active
+				? props.theme.colors.button.alt1.active.background
+				: props.theme.colors.button.alt1.active.background};
 		border: 1px solid ${(props) => props.theme.colors.button.alt1.active.border};
 	}
 	&:disabled {
@@ -193,7 +195,7 @@ export const Alt2 = styled(Alt1)`
 		width: fit-content;
 		text-overflow: ellipsis;
 		overflow: hidden;
-		font-size: ${(props) => props.theme.typography.size.small} !important;
+		font-size: ${(props) => props.theme.typography.size.xSmall} !important;
 		font-weight: ${(props) => props.theme.typography.weight.bold} !important;
 		color: ${(props) =>
 			props.active ? props.theme.colors.button.alt2.active.color : props.theme.colors.button.alt2.color} !important;

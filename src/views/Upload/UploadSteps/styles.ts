@@ -12,7 +12,6 @@ export const PWrapper = styled.div`
 `;
 
 export const SWrapper = styled.div`
-	min-height: 62.5vh;
 	margin: 25px 0 0 0;
 	@media (max-width: ${STYLING.cutoffs.initial}) {
 		min-height: 0;
