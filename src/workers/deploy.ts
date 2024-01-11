@@ -32,6 +32,7 @@ const ANT_CONTRACT = process.env.ANT_CONTRACT;
 				function: 'setRecord',
 				subDomain: '@',
 				transactionId: txResult.id,
+				ttlSeconds: 3600,
 			},
 			{ disableBundling: true }
 		);
