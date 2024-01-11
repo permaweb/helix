@@ -213,7 +213,7 @@ export const STYLING = {
 			width: '150px',
 		},
 		form: {
-			small: '42.5px',
+			small: '45px',
 			max: '47.5px',
 		},
 		nav: {
@@ -313,3 +313,5 @@ export const REDIRECTS = {
 		profile: (id: string) => `https://bazar.arweave.dev/#/profile/${id}`,
 	},
 };
+
+export const DRE_NODE = 'https://dre-u.warp.cc/contract';

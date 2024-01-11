@@ -173,6 +173,7 @@ export default function AssetsTable(props: { useIdAction: boolean }) {
 
 				const titleTag = getTagValue(element.node.tags, TAGS.keys.ans110.title);
 				const title = titleTag !== STORAGE.none ? titleTag : formatAddress(element.node.id, false);
+				const displayTitle = title ? title : language.titleNotFound;
 
 				const contractSrc = getTagValue(element.node.tags, TAGS.keys.contractSrc);
 
@@ -183,7 +184,7 @@ export default function AssetsTable(props: { useIdAction: boolean }) {
 
 				data.assetTitle = (
 					<a href={REDIRECTS.bazar.asset(element.node.id)} target={'_blank'}>
-						<p>{title ? title : 'Title not found'}</p>
+						<p>{displayTitle}</p>
 					</a>
 				);
 

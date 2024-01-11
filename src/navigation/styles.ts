@@ -41,7 +41,7 @@ export const LWrapper = styled.div`
 		text-decoration: none !important;
 		padding: 7.5px 15px 5px 10px;
 		&:hover {
-			opacity: 0.85;
+			opacity: 0.65;
 		}
 	}
 	svg {
