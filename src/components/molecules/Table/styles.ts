@@ -31,6 +31,7 @@ export const HeaderFlex = styled.div`
 	flex-wrap: wrap;
 	gap: 20px;
 	p {
+		font-family: ${(props) => props.theme.typography.family.alt1};
 		font-size: ${(props) => props.theme.typography.size.lg};
 		font-weight: ${(props) => props.theme.typography.weight.bold};
 	}

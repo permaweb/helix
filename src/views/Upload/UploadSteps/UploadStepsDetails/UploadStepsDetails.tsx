@@ -178,6 +178,7 @@ export default function UploadStepsDetails() {
 					onChange={(e: any) => handleInputChange(e, 'collectionCode')}
 					disabled={false}
 					invalid={{ status: false, message: null }}
+					tooltip={language.collectionCodeInfo}
 				/>
 				<S.TWrapper>
 					<S.THeader>

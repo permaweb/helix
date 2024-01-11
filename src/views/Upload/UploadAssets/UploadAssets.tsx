@@ -360,7 +360,7 @@ export default function UploadAssets() {
 								: sequence.end + 1
 						}`}</span>
 					</S.TMessage>
-					{uploadReducer.uploadCost && (
+					{arProvider.walletAddress && uploadReducer.uploadCost !== null && (
 						<S.TMessage>
 							<span>{`${language.uploadCost}: ${formatTurboAmount(uploadReducer.uploadCost)}`}</span>
 						</S.TMessage>

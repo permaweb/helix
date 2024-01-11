@@ -50,7 +50,7 @@ export const SIndicator = styled.div<{ active: boolean; completed: boolean }>`
 	svg {
 		height: 10px;
 		width: 10px;
-		fill: ${(props) => props.theme.colors.font.alt4};
+		fill: ${(props) => props.theme.colors.font.primary};
 	}
 `;
 

@@ -39,7 +39,7 @@ export const LWrapper = styled.div`
 		display: flex;
 		align-items: center;
 		text-decoration: none !important;
-		padding: 7.5px 14.5px 5px 10px;
+		padding: 7.5px 15px 5px 10px;
 		&:hover {
 			opacity: 0.85;
 		}
