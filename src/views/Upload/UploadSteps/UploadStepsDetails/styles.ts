@@ -63,14 +63,14 @@ export const TAction = styled.button<{ active: boolean }>`
 	span {
 		font-size: ${(props) => props.theme.typography.size.xxxSmall};
 		font-weight: ${(props) => props.theme.typography.weight.bold};
-		color: ${(props) => props.theme.colors.font.primary};
+		color: ${(props) => (props.active ? props.theme.colors.font.light1 : props.theme.colors.font.primary)};
 		line-height: 1.5;
 		text-overflow: ellipsis;
 		white-space: nowrap;
 	}
 	svg {
 		width: 7.5px;
-		fill: ${(props) => (props.active ? props.theme.colors.font.alt2 : props.theme.colors.font.primary)};
+		fill: ${(props) => (props.active ? props.theme.colors.font.light1 : props.theme.colors.font.primary)};
 		margin: 0 0 2.25px 5px;
 	}
 	&:hover {
@@ -78,6 +78,9 @@ export const TAction = styled.button<{ active: boolean }>`
 			props.active ? props.theme.colors.button.alt1.active.background : props.theme.colors.container.primary.active};
 		border: 1px solid
 			${(props) => (props.active ? props.theme.colors.button.alt1.active.border : props.theme.colors.border.alt2)};
+		span {
+			color: ${(props) => (props.active ? props.theme.colors.font.light1 : props.theme.colors.font.primary)};
+		}
 	}
 `;
 

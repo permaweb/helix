@@ -1,4 +1,4 @@
-import styled, { DefaultTheme } from 'styled-components';
+import styled, { theme } from 'styled-components';
 
 import { fadeIn2, open } from 'helpers/animations';
 import { STYLING } from 'helpers/config';
@@ -80,7 +80,7 @@ export const TableHeader = styled.div`
 	overflow: hidden;
 `;
 
-function getRowStyle(theme: DefaultTheme, active: boolean, viewed: boolean) {
+function getRowStyle(theme: theme, active: boolean, viewed: boolean) {
 	if (active) {
 		return `
 			background: ${theme.colors.table.row.active.background};

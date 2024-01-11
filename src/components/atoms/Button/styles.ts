@@ -63,10 +63,22 @@ export const Primary = styled.button<{
 	&:hover {
 		background: ${(props) => props.theme.colors.button.primary.active.background};
 		border: 1px solid ${(props) => props.theme.colors.button.primary.active.border};
+		span {
+			color: ${(props) => props.theme.colors.font.light1} !important;
+		}
+		svg {
+			fill: ${(props) => props.theme.colors.font.light1} !important;
+		}
 	}
 	&:focus {
 		background: ${(props) => props.theme.colors.button.primary.active.background};
 		border: 1px solid ${(props) => props.theme.colors.button.primary.active.border};
+		span {
+			color: ${(props) => props.theme.colors.font.light1} !important;
+		}
+		svg {
+			fill: ${(props) => props.theme.colors.font.light1} !important;
+		}
 	}
 	&:disabled {
 		background: ${(props) => props.theme.colors.button.primary.disabled.background};
