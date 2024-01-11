@@ -12,4 +12,5 @@ export interface IProps {
 	handleCursorFetch: (cursor: string | null) => void;
 	cursors: CursorType;
 	showNoResults: boolean;
+	hidePaginator?: boolean;
 }

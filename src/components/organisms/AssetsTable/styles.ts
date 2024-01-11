@@ -44,3 +44,7 @@ export const MWrapper = styled.div`
 		margin: 0 0 5px 0;
 	}
 `;
+
+export const TAWrapper = styled.div`
+	margin: 20px 0 0 0;
+`;

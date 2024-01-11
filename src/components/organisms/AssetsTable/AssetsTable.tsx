@@ -27,6 +27,7 @@ export default function AssetsTable(props: { useIdAction: boolean }) {
 	const language = languageProvider.object[languageProvider.current];
 
 	const [assets, setAssets] = React.useState<GQLNodeResponseType[] | null>(null);
+	const [selectedAssets, setSelectedAssets] = React.useState<GQLNodeResponseType[] | null>(null);
 	const [groupIndex, setGroupIndex] = React.useState<GroupIndexType | null>(null);
 	const [idCount, setIdCount] = React.useState<number>(0);
 
@@ -116,6 +117,31 @@ export default function AssetsTable(props: { useIdAction: boolean }) {
 		})();
 	}, [currentTableCursor]);
 
+	React.useEffect(() => {
+		(async function () {
+			if (uploadReducer.data.idList && uploadReducer.data.idList.length) {
+				try {
+					const assetsResponse = await getGQLData({
+						gateway: GATEWAYS.arweave,
+						ids: uploadReducer.data.idList,
+						tagFilters: null,
+						owners: null,
+						cursor: null,
+						reduxCursor: null,
+						cursorObjectKey: CursorEnum.IdGQL,
+					});
+					if (assetsResponse) {
+						setSelectedAssets(assetsResponse.data);
+					}
+				} catch (e: any) {
+					console.error(e);
+				}
+			} else {
+				setSelectedAssets([]);
+			}
+		})();
+	}, [uploadReducer.data.idList]);
+
 	function handleId(id: string) {
 		let ids: string[];
 		const index = uploadReducer.data.idList.indexOf(id);
@@ -166,9 +192,9 @@ export default function AssetsTable(props: { useIdAction: boolean }) {
 		return header;
 	}
 
-	function getTableData() {
-		if (currentRecords && currentRecords.length) {
-			return currentRecords.map((element: GQLNodeResponseType) => {
+	function getTableData(records: GQLNodeResponseType[], useDisable: boolean) {
+		if (records && records.length) {
+			return records.map((element: GQLNodeResponseType) => {
 				const data: any = {};
 
 				const titleTag = getTagValue(element.node.tags, TAGS.keys.ans110.title);
@@ -194,7 +220,7 @@ export default function AssetsTable(props: { useIdAction: boolean }) {
 							<Checkbox
 								checked={idChecked}
 								handleSelect={() => handleId(element.node.id)}
-								disabled={!TRADE_SOURCES.includes(contractSrc)}
+								disabled={!TRADE_SOURCES.includes(contractSrc) && useDisable}
 							/>
 						</S.CWrapper>
 					);
@@ -229,7 +255,7 @@ export default function AssetsTable(props: { useIdAction: boolean }) {
 							title={`${language.assets} (${idCount})`}
 							action={null}
 							header={getTableHeader()}
-							data={getTableData()}
+							data={getTableData(currentRecords, true)}
 							recordsPerPage={PAGINATORS.assetTable}
 							showPageNumbers={false}
 							handleCursorFetch={(cursor: string | null) => setCurrentTableCursor(cursor)}
@@ -256,6 +282,31 @@ export default function AssetsTable(props: { useIdAction: boolean }) {
 		}
 	}
 
+	function getSelectedAssets() {
+		if (selectedAssets && selectedAssets.length) {
+			return (
+				<S.TAWrapper>
+					<Table
+						title={`${language.selected} (${uploadReducer.data.idList.length})`}
+						action={null}
+						header={getTableHeader()}
+						data={getTableData(selectedAssets, false)}
+						recordsPerPage={PAGINATORS.default}
+						showPageNumbers={false}
+						handleCursorFetch={(_cursor: string | null) => {}}
+						cursors={{
+							next: null,
+							previous: null,
+						}}
+						showNoResults={false}
+						hidePaginator={true}
+					/>
+				</S.TAWrapper>
+			);
+		}
+		return null;
+	}
+
 	return (
 		<S.Wrapper>
 			{props.useIdAction && (
@@ -264,6 +315,7 @@ export default function AssetsTable(props: { useIdAction: boolean }) {
 				</S.Header>
 			)}
 			<S.Body>{getAssets()}</S.Body>
+			{props.useIdAction && getSelectedAssets()}
 		</S.Wrapper>
 	);
 }

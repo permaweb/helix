@@ -27,7 +27,7 @@ import {
 } from 'helpers/config';
 import { getTxEndpoint } from 'helpers/endpoints';
 import { AlignType, CursorEnum, GQLNodeResponseType } from 'helpers/types';
-import { formatAddress, getTagValue, log } from 'helpers/utils';
+import { formatAddress, getTagValue, log, logValue } from 'helpers/utils';
 import { useArweaveProvider } from 'providers/ArweaveProvider';
 import { useLanguageProvider } from 'providers/LanguageProvider';
 import { CloseHandler } from 'wrappers/CloseHandler';
@@ -105,28 +105,28 @@ function CollectionDropdown(props: { id: string; title: string }) {
 					}
 				}
 
+				let errorCount: number = 0;
 				for (let i = 0; i < items.length; i++) {
 					try {
-						let assetState = assetStates[items[i]];
-						let walletQty = assetState.balances[arProvider.walletAddress];
-
-						let intendedSaleQty = Math.ceil((collectionObj.percentage / 100) * walletQty);
-						await orderBook
-							.sell({
-								assetId: items[i],
-								price: collectionObj.price * 1e6,
-								qty: intendedSaleQty,
-								wallet: signer,
-								walletAddress: arProvider.walletAddress,
-							})
-							.catch((e: any) => console.error(e));
-						log(`Listed asset: ${items[i]}`, 0);
-					} catch (e: any) {
-						console.error(e);
+						const assetState = assetStates[items[i]];
+						const walletQty = assetState.balances[arProvider.walletAddress];
+						const intendedSaleQty = Math.ceil((collectionObj.percentage / 100) * walletQty);
+						await orderBook.sell({
+							assetId: items[i],
+							price: collectionObj.price * 1e6,
+							qty: intendedSaleQty,
+							wallet: signer,
+							walletAddress: arProvider.walletAddress,
+						});
+						logValue(`Listed asset`, `${items[i]}`, 0);
+					} catch {
+						errorCount = errorCount + 1;
 					}
 				}
-
-				setResponse({ status: true, message: `${language.listingsCreated}!` });
+				setResponse({
+					status: errorCount !== items.length,
+					message: `${language.listingsCreated(items.length - errorCount, items.length)}`,
+				});
 			} catch (e: any) {
 				console.error(e);
 				setResponse({ status: false, message: e.message ? e.message : language.errorOccurred });
@@ -180,7 +180,7 @@ function CollectionDropdown(props: { id: string; title: string }) {
 				<S.MCWrapper>
 					<S.MBody>
 						<S.MHeader>
-							<p>{`${language.collection}: ${props.title}${response ? ` (${response.message})` : ''}`}</p>
+							<p>{`${language.collection}: ${props.title}`}</p>
 						</S.MHeader>
 						<FormField
 							type={'number'}
@@ -200,6 +200,11 @@ function CollectionDropdown(props: { id: string; title: string }) {
 							invalid={getInvalidPercentage()}
 							tooltip={language.listingPercentageInfo}
 						/>
+						{(loading || response !== null) && (
+							<S.MMessage className={'border-wrapper-alt1'}>
+								<span>{loading ? `${language.listingsCreating}...` : response.message}</span>
+							</S.MMessage>
+						)}
 					</S.MBody>
 					<S.MActions>
 						<Button

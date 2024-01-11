@@ -124,7 +124,7 @@ export default function Table(props: IProps) {
 				</S.Header>
 			)}
 			{getTable()}
-			{getPaginator(false)}
+			{!props.hidePaginator && getPaginator(false)}
 		</S.Wrapper>
 	);
 }

@@ -6,6 +6,7 @@ import { ArweaveWebIrys } from '@irys/sdk/build/esm/web/tokens/arweave';
 import { createContract, createTransaction } from 'api';
 
 import { Button } from 'components/atoms/Button';
+import { Loader } from 'components/atoms/Loader';
 import { Modal } from 'components/molecules/Modal';
 import { ASSET_CONTRACT, CONTENT_TYPES, REDIRECTS, TAGS, UPLOAD_CONFIG } from 'helpers/config';
 import { TagType } from 'helpers/types';
@@ -66,7 +67,8 @@ export default function Upload() {
 			let index = 0;
 			let uploadedAssetsList: string[] = [];
 			for (const data of uploadReducer.data.contentList) {
-				setUploadIndex(index + 1);
+				index = index + 1;
+				setUploadIndex(index);
 
 				const irys = new ArweaveWebIrys({
 					url: UPLOAD_CONFIG.node2,
@@ -88,7 +90,7 @@ export default function Upload() {
 
 				const dateTime = new Date().getTime().toString();
 
-				const title = data.title ? data.title : `${uploadReducer.data.title} #${index + 1}`;
+				const title = data.title ? data.title : `${uploadReducer.data.title} #${index}`;
 				const description = data.description ? data.description : uploadReducer.data.description;
 				const type = data.file.type;
 
@@ -137,7 +139,7 @@ export default function Upload() {
 					const contractResponse = await createContract({ assetId: txResponse.data.id });
 
 					if (contractResponse) uploadedAssetsList.push(contractResponse);
-					setUploadPercentage(0);
+					if (index < uploadReducer.data.contentList.length) setUploadPercentage(0);
 				} catch (e: any) {
 					console.error(e);
 				}
@@ -286,18 +288,24 @@ export default function Upload() {
 			{uploadReducer.uploadActive && (
 				<Modal header={language.uploading} handleClose={null}>
 					<S.AContainer>
-						<S.AMessage>
-							<span>{language.assetUploadingInfo}</span>
-						</S.AMessage>
-						<S.AMessage>
-							<span>{language.uploadingFileCount(uploadIndex, uploadReducer.data.contentList.length)}</span>
-						</S.AMessage>
-						<S.AProgress percentage={uploadPercentage.toString()}>
-							<div />
-							<span>{`${language.uploadStatus}:`}</span>
-							&nbsp;
-							<S.APercentage>{`${uploadPercentage.toString()}%`}</S.APercentage>
-						</S.AProgress>
+						{uploadReducer.data.contentList && uploadReducer.data.contentList.length ? (
+							<>
+								<S.AMessage>
+									<span>{language.assetUploadingInfo}</span>
+								</S.AMessage>
+								<S.AMessage>
+									<span>{language.uploadingFileCount(uploadIndex, uploadReducer.data.contentList.length)}</span>
+								</S.AMessage>
+								<S.AProgress percentage={uploadPercentage.toString()}>
+									<div />
+									<span>{`${language.uploadStatus}:`}</span>
+									&nbsp;
+									<S.APercentage>{`${uploadPercentage.toString()}%`}</S.APercentage>
+								</S.AProgress>
+							</>
+						) : (
+							<Loader sm relative />
+						)}
 					</S.AContainer>
 				</Modal>
 			)}

@@ -26,15 +26,18 @@ export function useCustomThemeProvider(): CustomThemeContextState {
 }
 
 export function CustomThemeProvider(props: CustomThemeProviderProps) {
-	const [current, setCurrent] = React.useState<ThemeType>('dark');
+	const storagePreferredTheme = localStorage.getItem('preferredTheme');
+	const preferredTheme =
+		window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+
+	const [current, setCurrent] = React.useState<ThemeType>(
+		(storagePreferredTheme ? storagePreferredTheme : preferredTheme) as ThemeType
+	);
 
 	React.useEffect(() => {
-		const storagePreferredTheme = localStorage.getItem('preferredTheme');
 		if (storagePreferredTheme) {
 			setCurrent(storagePreferredTheme as ThemeType);
 		} else {
-			const preferredTheme =
-				window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
 			localStorage.setItem('preferredTheme', preferredTheme);
 			setCurrent(preferredTheme);
 		}

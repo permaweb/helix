@@ -97,6 +97,16 @@ export const MHeader = styled.div`
 	}
 `;
 
+export const MMessage = styled.div`
+	margin: 0 0 30px 0;
+	padding 7.5px 12px 10px 12px;
+	span {
+		color: ${(props) => props.theme.colors.font.primary};
+		font-size: ${(props) => props.theme.typography.size.xSmall};
+		font-weight: ${(props) => props.theme.typography.weight.bold};
+	}
+`;
+
 export const MActions = styled.div`
 	width: fit-content;
 	display: flex;
