@@ -78,7 +78,11 @@ export default function WalletConnect(_props: { callback?: () => void }) {
 			>
 				<S.Wrapper>
 					<S.PWrapper>
-						{label && <span>{label}</span>}
+						{label && (
+							<S.LAction onClick={handlePress}>
+								<span>{label}</span>
+							</S.LAction>
+						)}
 						<Avatar owner={arProvider.profile} dimensions={{ wrapper: 32.5, icon: 21.5 }} callback={handlePress} />
 					</S.PWrapper>
 					{showWalletDropdown && (

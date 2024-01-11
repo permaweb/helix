@@ -27,8 +27,8 @@ export const Wrapper = styled.div`
 export const Icon = styled.div`
 	margin: 0 0 10px 0;
 	svg {
-		height: 100px;
-		width: 100px;
+		height: 90px;
+		width: 90px;
 		fill: ${(props) => props.theme.colors.icon.primary.fill};
 	}
 `;
