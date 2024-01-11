@@ -25,11 +25,21 @@ export const Wrapper = styled.div`
 `;
 
 export const Icon = styled.div`
-	margin: 0 0 10px 0;
+	height: 125px;
+	width: 125px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	background: ${(props) => props.theme.colors.container.alt4.background};
+	border: 1px solid ${(props) => props.theme.colors.border.primary};
+	box-shadow: 0 5px 15px 0 ${(props) => props.theme.colors.shadow.primary};
+	border-radius: 50%;
+	margin: 0 0 25px 0;
 	svg {
-		height: 90px;
-		width: 90px;
+		height: 75px;
+		width: 75px;
 		fill: ${(props) => props.theme.colors.icon.primary.fill};
+		margin: 3.5px 0 0 0;
 	}
 `;
 
