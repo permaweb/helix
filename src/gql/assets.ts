@@ -1,10 +1,9 @@
 import { getGQLData, getProfiles } from 'gql';
 
-import { ASSET_TITLE_PREFIX, ASSETS, DEFAULT_THUMBNAIL, GATEWAYS, PAGINATORS, STORAGE, TAGS } from 'helpers/config';
+import { ASSETS, DEFAULT_THUMBNAIL, STORAGE, TAGS } from 'helpers/config';
 import { getBalancesEndpoint } from 'helpers/endpoints';
 import {
 	AGQLResponseType,
-	AssetGQLResponseType,
 	AssetType,
 	BalanceType,
 	CursorEnum,
@@ -67,85 +66,6 @@ export async function getAssetIdsByUser(args: { walletAddress: string }): Promis
 	}
 }
 
-export async function getAssetsByVersion(args: {
-	cursor: string | null;
-	owners: string[] | null;
-}): Promise<AssetGQLResponseType> {
-	const emptyResponseObject = {
-		data: [],
-		count: 0,
-		nextCursor: null,
-		previousCursor: null,
-	};
-	try {
-		const gqlResponse: AGQLResponseType = await getGQLData({
-			gateway: GATEWAYS.arweave,
-			ids: null,
-			tagFilters: [{ name: TAGS.keys.appVersion, values: [TAGS.values.appVersion] }],
-			owners: args.owners ? args.owners : null,
-			cursor: args.cursor,
-			reduxCursor: null,
-			cursorObjectKey: CursorEnum.GQL,
-			paginator: PAGINATORS.version,
-		});
-
-		if (gqlResponse && gqlResponse.data && gqlResponse.data.length) {
-			const profiles = await getProfiles({
-				addresses: gqlResponse.data.map((element: GQLNodeResponseType) =>
-					getTagValue(element.node.tags, TAGS.keys.initialOwner)
-				),
-			});
-
-			const assets: AssetType[] = [];
-			gqlResponse.data.forEach((element: GQLNodeResponseType) => {
-				assets.push(structureAsset(element, profiles));
-			});
-
-			return {
-				data: assets,
-				count: gqlResponse.count,
-				nextCursor: gqlResponse.nextCursor,
-				previousCursor: gqlResponse.previousCursor,
-			};
-		} else return emptyResponseObject;
-	} catch (e: any) {
-		console.error(e);
-		return emptyResponseObject;
-	}
-}
-
-export async function getAssetsByRecommendations(args: {
-	id: string;
-	cursor: string | null;
-}): Promise<AssetGQLResponseType> {
-	console.log(`Get recommendations for ${args.id}`);
-	return await getAssetsByVersion({ cursor: args.cursor, owners: null });
-}
-
-export async function getAssetCountByOwner(args: { address: string }): Promise<number> {
-	try {
-		const gqlResponse: AGQLResponseType = await getGQLData({
-			gateway: GATEWAYS.goldsky,
-			ids: null,
-			tagFilters: [
-				{ name: TAGS.keys.appVersion, values: [TAGS.values.appVersion] },
-				{ name: TAGS.keys.initialOwner, values: [args.address] },
-			],
-			owners: [args.address],
-			cursor: null,
-			reduxCursor: null,
-			cursorObjectKey: CursorEnum.GQL,
-		});
-
-		if (gqlResponse) {
-			return gqlResponse.count;
-		} else return 0;
-	} catch (e: any) {
-		console.error(e);
-		return 0;
-	}
-}
-
 export function structureAsset(element: GQLNodeResponseType, profiles: ProfileType[] | null): AssetType {
 	const contentType = getTagValue(element.node.tags, TAGS.keys.contentType);
 
@@ -153,7 +73,7 @@ export function structureAsset(element: GQLNodeResponseType, profiles: ProfileTy
 	if (contentLength !== STORAGE.none) contentLength = parseInt(contentLength);
 	else contentLength = 0;
 
-	const title = getTagValue(element.node.tags, TAGS.keys.ans110.title).replace(ASSET_TITLE_PREFIX, '');
+	const title = getTagValue(element.node.tags, TAGS.keys.ans110.title);
 	const description = getTagValue(element.node.tags, TAGS.keys.ans110.description);
 	const type = getTagValue(element.node.tags, TAGS.keys.ans110.type);
 	const topics = element.node.tags

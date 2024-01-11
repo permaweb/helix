@@ -99,7 +99,6 @@ export const TAGS = {
 			license: 'License',
 		},
 		appName: 'App-Name',
-		appVersion: 'App-Version',
 		avatar: 'Avatar',
 		banner: 'Banner',
 		channelTitle: 'Channel-Title',
@@ -136,7 +135,6 @@ export const TAGS = {
 	},
 	values: {
 		ansVersion: 'ANS-110',
-		appVersion: 'Odysee-v0.0.2',
 		collection: 'Collection',
 		comment: 'comment',
 		contractManifest:
@@ -296,8 +294,6 @@ export const ALLOWED_BANNER_TYPES = 'image/png, image/jpeg, image/gif';
 export const ALLOWED_AVATAR_TYPES = 'image/png, image/jpeg, image/gif';
 export const ALLOWED_ASSET_TYPES = '*';
 export const ALLOWED_ASSET_TYPES_DISPLAY = [];
-
-export const ASSET_TITLE_PREFIX = 'Odysee -';
 
 export const CURRENCIES = {
 	u: {

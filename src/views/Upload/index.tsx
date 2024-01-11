@@ -113,7 +113,6 @@ export default function Upload() {
 						{ name: TAGS.keys.smartweaveAppName, value: TAGS.values.smartweaveAppName },
 						{ name: TAGS.keys.smartweaveAppVersion, value: TAGS.values.smartweaveAppVersion },
 						{ name: TAGS.keys.contentType, value: type },
-						{ name: TAGS.keys.appVersion, value: TAGS.values.appVersion },
 						{ name: TAGS.keys.initState, value: initStateAssetJson },
 						{ name: TAGS.keys.initialOwner, value: arProvider.walletAddress },
 						{ name: TAGS.keys.ans110.title, value: title },
