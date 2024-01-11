@@ -71,7 +71,7 @@ export default function CollectionsTable() {
 
 				data.collectionTitle = (
 					<a href={REDIRECTS.bazar.collection(element.node.id)} target={'_blank'}>
-						<p>{title}</p>
+						<p>{title ? title : 'Title not found'}</p>
 					</a>
 				);
 

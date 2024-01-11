@@ -194,6 +194,7 @@ export const language = {
 		supportedFileTypes: `Any file type is supported for upload`,
 		terms: `Terms`,
 		title: `Title`,
+		titleNotFound: `Title not found`,
 		thumbnail: `Thumbnail`,
 		thumbnailDescription: `Upload an image that represents your collection`,
 		totalAssets: `Total`,

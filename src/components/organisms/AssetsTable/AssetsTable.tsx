@@ -183,7 +183,7 @@ export default function AssetsTable(props: { useIdAction: boolean }) {
 
 				data.assetTitle = (
 					<a href={REDIRECTS.bazar.asset(element.node.id)} target={'_blank'}>
-						<p>{title}</p>
+						<p>{title ? title : 'Title not found'}</p>
 					</a>
 				);
 
