@@ -53,6 +53,7 @@ export const GlobalStyle = createGlobalStyle`
 
   html, body {
     margin: 0;
+    color-scheme: ${(props) => props.theme.scheme};
     font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
     "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
     sans-serif;
@@ -62,19 +63,16 @@ export const GlobalStyle = createGlobalStyle`
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     box-sizing: border-box;
-    scrollbar-color: transparent transparent;
 
+    scrollbar-color: transparent transparent;
     ::-webkit-scrollbar-track {
       background: ${(props) => props.theme.colors.view.background};
       padding: 0 5px;
     }
-
     ::-webkit-scrollbar {
       width: 15.5px;
     }
-
     scrollbar-color: ${(props) => props.theme.colors.scrollbar.thumb} transparent;
-
     ::-webkit-scrollbar-thumb {
       background-color: ${(props) => props.theme.colors.scrollbar.thumb};
       border-radius: 36px;

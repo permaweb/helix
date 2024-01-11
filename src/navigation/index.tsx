@@ -9,6 +9,7 @@ import { NavPathType } from 'helpers/types';
 import * as windowUtils from 'helpers/window';
 import { checkWindowCutoff, checkWindowResize } from 'helpers/window';
 import { useArweaveProvider } from 'providers/ArweaveProvider';
+import { useCustomThemeProvider } from 'providers/CustomThemeProvider';
 import { useLanguageProvider } from 'providers/LanguageProvider';
 import { WalletConnect } from 'wallet/WalletConnect';
 import { CloseHandler } from 'wrappers/CloseHandler';
@@ -23,6 +24,8 @@ export default function Navigation() {
 
 	const languageProvider = useLanguageProvider();
 	const language = languageProvider.object[languageProvider.current];
+
+	const themeProvider = useCustomThemeProvider();
 
 	const [panelOpen, setPanelOpen] = React.useState<boolean>(false);
 	const [_desktop, setDesktop] = React.useState(checkWindowCutoff(parseInt(STYLING.cutoffs.initial)));
@@ -102,12 +105,23 @@ export default function Navigation() {
 						<Search />
 					</S.SWrapper>
 					<S.EWrapper>
+						<S.TWrapper>
+							<IconButton
+								src={ASSETS.theme}
+								type={'primary'}
+								handlePress={() => themeProvider.setCurrent(themeProvider.current === 'light' ? 'dark' : 'light')}
+								dimensions={{ wrapper: 32.5, icon: 16.5 }}
+								tooltip={language.toggleTheme}
+								useBottomToolTip
+								active={true}
+							/>
+						</S.TWrapper>
 						<S.AWrapper>
 							<IconButton
 								src={ASSETS.upload}
 								type={'primary'}
 								handlePress={() => navigate(URLS.upload)}
-								dimensions={{ wrapper: 32.5, icon: 25 }}
+								dimensions={{ wrapper: 32.5, icon: 21.5 }}
 								tooltip={language.upload}
 								useBottomToolTip
 								active={true}

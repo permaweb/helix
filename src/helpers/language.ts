@@ -197,6 +197,7 @@ export const language = {
 		titleNotFound: `Title not found`,
 		thumbnail: `Thumbnail`,
 		thumbnailDescription: `Upload an image that represents your collection`,
+		toggleTheme: `Toggle theme`,
 		totalAssets: `Total`,
 		topic: `Topic`,
 		topics: `Topics`,

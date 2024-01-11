@@ -34,7 +34,7 @@ export const MWrapper = styled.div`
 `;
 
 export const LWrapper = styled.div`
-	margin: 0 0 0 42.5px;
+	margin: 0 0 0 45px;
 	a {
 		display: flex;
 		align-items: center;
@@ -89,8 +89,19 @@ export const EWrapper = styled.div`
 
 export const AWrapper = styled.div`
 	margin: 0 20px 0 0;
-	svg {
-		margin: 0 0 0 2.5px;
+	@media (max-width: ${STYLING.cutoffs.initial}) {
+		button {
+			padding: 2.5px 0 0 0;
+		}
+	}
+`;
+
+export const TWrapper = styled.div`
+	margin: 0 15px 0 0;
+	@media (max-width: ${STYLING.cutoffs.initial}) {
+		button {
+			padding: 2.5px 0 0 0;
+		}
 	}
 `;
 
@@ -144,7 +155,7 @@ export const BNavItem = styled.div<{ active: boolean }>`
 		justify-content: center;
 		align-items: center;
 		margin: 0 auto 6.5px auto;
-		stroke: ${(props) => props.theme.colors.icon.primary.fill};
+		fill: ${(props) => props.theme.colors.icon.primary.fill};
 	}
 	a,
 	span {

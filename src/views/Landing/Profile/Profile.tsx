@@ -79,24 +79,19 @@ export default function Profile(props: { address: string }) {
 			return (
 				<>
 					<S.Wrapper className={'max-view-wrapper'}>
-						<S.Header
-							banner={fullProfile.banner ? getTxEndpoint(fullProfile.banner) : null}
-							className={'border-wrapper-primary'}
-						>
-							<S.HeaderInfo className={'border-wrapper-primary'}>
-								<S.HeaderAvatar>{getAvatar()}</S.HeaderAvatar>
-								{getHeaderDetails()}
-								<S.HeaderActions>
-									<Button
-										type={'primary'}
-										label={language.viewOnBazar}
-										handlePress={() => window.open(REDIRECTS.bazar.profile(props.address), '_blank')}
-										icon={ASSETS.bazar}
-										noMinWidth
-									/>
-								</S.HeaderActions>
-							</S.HeaderInfo>
-						</S.Header>
+						<S.HeaderInfo className={'border-wrapper-primary'}>
+							<S.HeaderAvatar>{getAvatar()}</S.HeaderAvatar>
+							{getHeaderDetails()}
+							<S.HeaderActions>
+								<Button
+									type={'primary'}
+									label={language.viewOnBazar}
+									handlePress={() => window.open(REDIRECTS.bazar.profile(props.address), '_blank')}
+									icon={ASSETS.bazar}
+									noMinWidth
+								/>
+							</S.HeaderActions>
+						</S.HeaderInfo>
 						<S.Body>
 							<S.TWrapper>
 								<AssetsTable useIdAction={false} />

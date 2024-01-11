@@ -2,23 +2,19 @@ import ReactDOM from 'react-dom/client';
 import { Provider } from 'react-redux';
 import { HashRouter } from 'react-router-dom';
 import { PersistGate } from 'redux-persist/integration/react';
-import { ThemeProvider } from 'styled-components';
 
 import { App } from 'app';
 import { GlobalStyle } from 'app/styles';
 import { Loader } from 'components/atoms/Loader';
-import { darkTheme, lightTheme, theme } from 'helpers/themes';
 import { ArweaveProvider } from 'providers/ArweaveProvider';
+import { CustomThemeProvider } from 'providers/CustomThemeProvider';
 import { LanguageProvider } from 'providers/LanguageProvider';
 import { persistor, store } from 'store';
-
-const selectedTheme =
-	window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? darkTheme : lightTheme;
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
 	<Provider store={store}>
 		<PersistGate loading={<Loader />} persistor={persistor}>
-			<ThemeProvider theme={theme(selectedTheme)}>
+			<CustomThemeProvider>
 				<LanguageProvider>
 					<ArweaveProvider>
 						<HashRouter>
@@ -27,7 +23,7 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
 						</HashRouter>
 					</ArweaveProvider>
 				</LanguageProvider>
-			</ThemeProvider>
+			</CustomThemeProvider>
 		</PersistGate>
 	</Provider>
 );

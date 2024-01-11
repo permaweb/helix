@@ -1,43 +1,17 @@
 import styled from 'styled-components';
 
-import { fadeIn2, open } from 'helpers/animations';
 import { STYLING } from 'helpers/config';
 
 export const Wrapper = styled.div``;
 
-export const Header = styled.div<{ banner: string | null }>`
-	min-height: 300px;
-	width: 100%;
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	background: ${(props) => props.theme.colors.container.alt4.background};
-	background: linear-gradient(
-		to right,
-		${(props) => props.theme.colors.gradient.start},
-		${(props) => props.theme.colors.gradient.middle},
-		${(props) => props.theme.colors.gradient.end}
-	);
-	background: ${(props) => (props.banner ? `url(${props.banner})` : '')};
-	background-size: cover;
-	background-position: center center;
-	background-repeat: no-repeat;
-	border-radius: ${STYLING.dimensions.radius.primary};
-	animation: ${open} ${fadeIn2};
-	padding: 20px;
-`;
-
 export const HeaderInfo = styled.div`
-	min-height: 175px;
-	width: ${STYLING.cutoffs.max};
-	max-width: 90%;
 	display: flex;
 	flex-wrap: wrap;
 	gap: 25px;
-	padding: 17.5px;
+	padding: 20px;
 	border-radius: ${STYLING.dimensions.radius.primary};
 	background: ${(props) => props.theme.colors.overlay.alt3};
-	box-shadow: 0 5px 15px 0 ${(props) => props.theme.colors.shadow.primary};
+	box-shadow: 0 5px 20px 5px ${(props) => props.theme.colors.shadow.primary};
 `;
 
 export const HeaderAvatar = styled.div`

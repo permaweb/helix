@@ -28,6 +28,7 @@ import play from 'assets/play.svg';
 import search from 'assets/search.svg';
 import share from 'assets/share.svg';
 import stamp from 'assets/stamp.svg';
+import theme from 'assets/theme.svg';
 import u from 'assets/u.svg';
 import upload from 'assets/upload.svg';
 import uploadGraphic from 'assets/upload-graphic.riv';
@@ -72,6 +73,7 @@ export const ASSETS = {
 	search: search,
 	share: share,
 	stamp: stamp,
+	theme: theme,
 	u: u,
 	upload: upload,
 	uploadGraphic: uploadGraphic,

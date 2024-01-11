@@ -1,0 +1,20 @@
+name: publish
+
+on:
+  push:
+    branches:
+      - 'main'
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 18.x
+      - run: npm i
+      - run: npm run deploy
+        env:
+          DEPLOY_KEY: ${{ secrets.DEPLOY_KEY }}
+          ANT_CONTRACT: ${{ secrets.ANT_CONTRACT }}
