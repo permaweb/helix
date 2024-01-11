@@ -50,7 +50,6 @@ export const EIcon = styled.div`
 		height: 75px;
 		width: 75px;
 		fill: ${(props) => props.theme.colors.icon.alt3.fill};
-		margin: 5px 0 0 7.5px;
 	}
 `;
 
