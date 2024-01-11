@@ -4,6 +4,7 @@ import { fadeIn1, open } from 'helpers/animations';
 import { STYLING } from 'helpers/config';
 
 export const Wrapper = styled.div`
+	scroll-margin-top: 100px;
 	animation: ${open} ${fadeIn1};
 `;
 

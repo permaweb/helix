@@ -42,12 +42,25 @@ export default function Paginator(props: IProps) {
 	const sliceStart = getSliceStart();
 	const sliceEnd = getSliceEnd();
 
+	function handleScroll() {
+		if (props.scrollRef.current) {
+			setTimeout(function () {
+				props.scrollRef.current.scrollIntoView({
+					behavior: 'smooth',
+					block: 'start',
+				});
+			}, 1);
+		}
+	}
+
 	const handleNextPage = () => {
 		props.handleCursorFetch(props.cursors.next);
+		handleScroll();
 	};
 
 	const handlePreviousPage = () => {
 		props.handleCursorFetch(props.cursors.previous);
+		handleScroll();
 	};
 
 	const handleCurrentPage = (number: number) => {

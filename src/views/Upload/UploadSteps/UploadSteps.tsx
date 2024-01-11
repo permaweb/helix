@@ -1,3 +1,4 @@
+import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { Button } from 'components/atoms/Button';
@@ -29,6 +30,8 @@ export default function UploadSteps(props: IProps) {
 	const languageProvider = useLanguageProvider();
 	const language = languageProvider.object[languageProvider.current];
 
+	const scrollRef = React.useRef(null);
+
 	function getCurrentStepComponent() {
 		switch (uploadReducer.currentStep) {
 			case 'details':
@@ -42,11 +45,23 @@ export default function UploadSteps(props: IProps) {
 		}
 	}
 
+	function handleScroll() {
+		if (scrollRef.current) {
+			setTimeout(function () {
+				scrollRef.current.scrollIntoView({
+					behavior: 'smooth',
+					block: 'start',
+				});
+			}, 1);
+		}
+	}
+
 	function handleNextStep() {
 		const currentIndex = UPLOAD_STEPS.indexOf(uploadReducer.currentStep);
 		if (currentIndex < UPLOAD_STEPS.length - 1) {
 			const nextStep = UPLOAD_STEPS[currentIndex + 1] as UploadStepType;
 			dispatch(uploadActions.setStepDetails(nextStep));
+			handleScroll();
 		}
 	}
 
@@ -55,6 +70,7 @@ export default function UploadSteps(props: IProps) {
 		if (currentIndex > 0) {
 			const previousStep = UPLOAD_STEPS[currentIndex - 1] as UploadStepType;
 			dispatch(uploadActions.setStepDetails(previousStep));
+			handleScroll();
 		}
 	}
 
@@ -98,7 +114,7 @@ export default function UploadSteps(props: IProps) {
 	}
 
 	return (
-		<S.Wrapper>
+		<S.Wrapper ref={scrollRef}>
 			<S.PWrapper>
 				<UploadStepsProgress />
 			</S.PWrapper>
