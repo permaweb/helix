@@ -10,8 +10,6 @@ export const HeaderInfo = styled.div`
 	gap: 25px;
 	padding: 20px;
 	border-radius: ${STYLING.dimensions.radius.primary};
-	background: ${(props) => props.theme.colors.overlay.alt3};
-	box-shadow: 0 5px 20px 5px ${(props) => props.theme.colors.shadow.primary};
 `;
 
 export const HeaderAvatar = styled.div`

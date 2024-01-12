@@ -44,14 +44,18 @@ export default function UploadStepsChecks() {
 					<span>{language.details}</span>
 				</S.InfoHeader>
 				<S.InfoWrapper className={'border-wrapper-alt1'}>
-					<S.InfoLine>
-						<span>{language.title}</span>
-						<p>{uploadReducer.data.title ?? '-'}</p>
-					</S.InfoLine>
-					<S.InfoLine>
-						<span>{language.description}</span>
-						<p>{uploadReducer.data.description ?? '-'}</p>
-					</S.InfoLine>
+					{uploadReducer.uploadType === 'collection' && (
+						<>
+							<S.InfoLine>
+								<span>{language.title}</span>
+								<p>{uploadReducer.data.title || '-'}</p>
+							</S.InfoLine>
+							<S.InfoLine>
+								<span>{language.description}</span>
+								<p>{uploadReducer.data.description || '-'}</p>
+							</S.InfoLine>
+						</>
+					)}
 					{uploadReducer.data.topics && uploadReducer.data.topics.length && (
 						<S.InfoLine>
 							<span>{language.topics}</span>
@@ -76,14 +80,18 @@ export default function UploadStepsChecks() {
 						<span>{language.toUpload}</span>
 						<p>{`(${uploadReducer.data.contentList.length})`}</p>
 					</S.InfoLine>
-					<S.InfoLine>
-						<span>{language.existingAssets}</span>
-						<p>{`(${uploadReducer.data.idList.length})`}</p>
-					</S.InfoLine>
-					<S.InfoLine>
-						<span>{language.totalAssets}</span>
-						<p>{`(${uploadReducer.data.contentList.length + uploadReducer.data.idList.length})`}</p>
-					</S.InfoLine>
+					{uploadReducer.uploadType === 'collection' && (
+						<>
+							<S.InfoLine>
+								<span>{language.existingAssets}</span>
+								<p>{`(${uploadReducer.data.idList.length})`}</p>
+							</S.InfoLine>
+							<S.InfoLine>
+								<span>{language.totalAssets}</span>
+								<p>{`(${uploadReducer.data.contentList.length + uploadReducer.data.idList.length})`}</p>
+							</S.InfoLine>
+						</>
+					)}
 				</S.InfoWrapper>
 				{uploadReducer.data.hasLicense && (
 					<AssetInfoLicense
@@ -119,46 +127,50 @@ export default function UploadStepsChecks() {
 						}}
 					/>
 				)}
-				<S.InfoHeader>
-					<span>{language.paymentInformation}</span>
-				</S.InfoHeader>
-				<S.InfoWrapper className={'border-wrapper-alt1'}>
-					<S.InfoLine>
-						<span>{language.turboUploadCost}</span>
-						<p>
-							{uploadReducer.uploadCost > 0
-								? formatTurboAmount(uploadReducer.uploadCost)
-								: language.uploadChecksCostInfo}
-						</p>
-					</S.InfoLine>
-					<S.InfoLine>
-						<S.InfoLineFlex>
-							<span>{language.yourBalance}</span>
-							{arProvider.turboBalance === null && (
-								<Button
-									type={'alt2'}
-									label={`(${language.fetch})`}
-									handlePress={() => arProvider.getTurboBalance()}
-									disabled={arProvider.turboBalance !== null}
-									height={22.5}
-									noMinWidth
-								/>
-							)}
-							<Button
-								type={'alt2'}
-								label={language.fund}
-								handlePress={() => setShowFund(true)}
-								height={22.5}
-								noMinWidth
-							/>
-						</S.InfoLineFlex>
-						<p>
-							{arProvider.turboBalance !== null
-								? getTurboBalance(arProvider.turboBalance)
-								: language.uploadChecksCostTurboInfo}
-						</p>
-					</S.InfoLine>
-				</S.InfoWrapper>
+				{arProvider.wallet && (
+					<>
+						<S.InfoHeader>
+							<span>{language.paymentInformation}</span>
+						</S.InfoHeader>
+						<S.InfoWrapper className={'border-wrapper-alt1'}>
+							<S.InfoLine>
+								<span>{language.turboUploadCost}</span>
+								<p>
+									{uploadReducer.uploadCost > 0
+										? formatTurboAmount(uploadReducer.uploadCost)
+										: language.uploadChecksCostInfo}
+								</p>
+							</S.InfoLine>
+							<S.InfoLine>
+								<S.InfoLineFlex>
+									<span>{language.yourBalance}</span>
+									{arProvider.turboBalance === null && (
+										<Button
+											type={'alt2'}
+											label={`(${language.fetch})`}
+											handlePress={() => arProvider.getTurboBalance()}
+											disabled={arProvider.turboBalance !== null}
+											height={22.5}
+											noMinWidth
+										/>
+									)}
+									<Button
+										type={'alt2'}
+										label={language.fund}
+										handlePress={() => setShowFund(true)}
+										height={22.5}
+										noMinWidth
+									/>
+								</S.InfoLineFlex>
+								<p>
+									{arProvider.turboBalance !== null
+										? getTurboBalance(arProvider.turboBalance)
+										: language.uploadChecksCostTurboInfo}
+								</p>
+							</S.InfoLine>
+						</S.InfoWrapper>
+					</>
+				)}
 			</S.Wrapper>
 			{showPlayer && uploadReducer.data.content && (
 				<Modal header={language.previewContent} handleClose={() => setShowPlayer(false)}>

@@ -12,7 +12,7 @@ export const lightTheme = {
 	neutral5: '#CCCCCC',
 	neutral6: '#F7F7F7',
 	neutral7: '#FAFAFA',
-	neutral8: '#C9C9C9',
+	neutral8: '#B1B1B1',
 	neutralA1: '#0A0A0A',
 	neutralA2: '#606060',
 	neutralA3: '#5C5C5C',
@@ -29,6 +29,7 @@ export const lightTheme = {
 	semiTransparent5: 'rgba(0, 0, 0, 0.15)',
 	scheme: 'light',
 	light1: '#FFFFFF',
+	dark1: '#12151A',
 };
 
 export const darkTheme = {
@@ -37,8 +38,8 @@ export const darkTheme = {
 	labelAlt1: `#FFFFFF`,
 	negative1: '#DF4657',
 	negative2: '#EF6C82',
-	neutral1: '#12151a',
-	neutral2: '#1F2022',
+	neutral1: '#12151A',
+	neutral2: '#1D1E22',
 	neutral3: '#606060',
 	neutral4: '#5C5C5C',
 	neutral5: '#A4A4A4',
@@ -61,6 +62,7 @@ export const darkTheme = {
 	semiTransparent5: 'rgba(0, 0, 0, 0.5)',
 	scheme: 'dark',
 	light1: '#FFFFFF',
+	dark1: '#151515',
 };
 
 export const theme = (currentTheme: any): DefaultTheme => ({
@@ -153,6 +155,9 @@ export const theme = (currentTheme: any): DefaultTheme => ({
 			},
 			alt7: {
 				background: currentTheme.neutralA3,
+			},
+			alt8: {
+				background: currentTheme.dark1,
 			},
 		},
 		font: {

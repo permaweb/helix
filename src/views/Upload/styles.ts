@@ -3,13 +3,33 @@ import styled from 'styled-components';
 import { fadeIn2, open } from 'helpers/animations';
 import { STYLING } from 'helpers/config';
 
-export const Wrapper = styled.div`
+export const Wrapper = styled.div``;
+
+export const HWrapper = styled.div`
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	flex-wrap: wrap-reverse;
+	gap: 20px;
+	margin: 0 0 40px 0;
 	h4 {
-		margin: 0 0 20px 0;
 		color: ${(props) => props.theme.colors.font.primary};
 		font-size: clamp(18px, 3.25vw, 24px);
 		font-weight: ${(props) => props.theme.typography.weight.xBold};
 		line-height: 1.5;
+	}
+`;
+
+export const TRWrapper = styled.div`
+	display: flex;
+	align-items: center;
+	> * {
+		&:not(:last-child) {
+			margin: 0 10px 0 0;
+		}
+		&:last-child {
+			margin: 0;
+		}
 	}
 `;
 
@@ -85,13 +105,13 @@ export const AProgress = styled.div<{ percentage: string }>`
 	justify-content: center;
 	align-items: center;
 	margin: 40px auto 0 auto;
-	background: ${(props) => props.theme.colors.container.alt3.background};
+	background: ${(props) => props.theme.colors.container.alt8.background};
 	border: 1px solid ${(props) => props.theme.colors.border.primary};
 	border-radius: 20px;
 	overflow: hidden;
 	position: relative;
 	span {
-		color: ${(props) => props.theme.colors.font.alt2};
+		color: ${(props) => props.theme.colors.font.light1};
 		font-size: ${(props) => props.theme.typography.size.small};
 		font-weight: ${(props) => props.theme.typography.weight.bold};
 		line-height: 1.25;

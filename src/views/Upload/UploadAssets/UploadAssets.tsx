@@ -243,6 +243,8 @@ export default function UploadAssets() {
 					},
 				])
 			);
+
+			e.target.value = '';
 		}
 	}
 

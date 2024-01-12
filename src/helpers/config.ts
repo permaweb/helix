@@ -41,7 +41,7 @@ import x from 'assets/x.svg';
 import { UploadStepType, WalletEnum } from './types';
 
 export const APP = {
-	name: 'Odysee',
+	name: 'Helix',
 };
 
 export const ASSETS = {

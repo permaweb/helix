@@ -79,12 +79,12 @@ export default function Profile(props: { address: string }) {
 			return (
 				<>
 					<S.Wrapper className={'max-view-wrapper'}>
-						<S.HeaderInfo className={'border-wrapper-primary'}>
+						<S.HeaderInfo className={'border-wrapper-alt2'}>
 							<S.HeaderAvatar>{getAvatar()}</S.HeaderAvatar>
 							{getHeaderDetails()}
 							<S.HeaderActions>
 								<Button
-									type={'primary'}
+									type={'alt1'}
 									label={language.viewOnBazar}
 									handlePress={() => window.open(REDIRECTS.bazar.profile(props.address), '_blank')}
 									icon={ASSETS.bazar}

@@ -41,13 +41,22 @@ export default function UploadStepsDetails() {
 			return;
 		}
 
-		const isDataValid =
-			uploadReducer.data.title &&
-			uploadReducer.data.description &&
-			uploadReducer.data.topics.length &&
-			!invalidTitle.status &&
-			!getInvalidContentTokens().status &&
-			!getInvalidDescription().status;
+		let isDataValid: boolean = false;
+
+		switch (uploadReducer.uploadType) {
+			case 'collection':
+				isDataValid =
+					uploadReducer.data.title &&
+					uploadReducer.data.description &&
+					uploadReducer.data.topics.length &&
+					!invalidTitle.status &&
+					!getInvalidContentTokens().status &&
+					!getInvalidDescription().status;
+				break;
+			case 'assets':
+				isDataValid = uploadReducer.data.topics.length && !getInvalidContentTokens().status;
+				break;
+		}
 
 		dispatch(uploadActions.setStepDisabled(!isDataValid));
 	}, [
@@ -142,26 +151,39 @@ export default function UploadStepsDetails() {
 		return { status: false, message: null };
 	}
 
+	function getHeader() {
+		switch (uploadReducer.uploadType) {
+			case 'collection':
+				return language.collectionDetails;
+			case 'assets':
+				return language.assetDetails;
+		}
+	}
+
 	return (
 		<>
 			<S.Wrapper className={'border-wrapper-alt2'}>
-				<h4>{language.collectionDetails}</h4>
-				<FormField
-					label={language.title}
-					value={uploadReducer.data.title}
-					onChange={(e: any) => handleInputChange(e, 'title')}
-					disabled={false}
-					invalid={invalidTitle}
-					required
-				/>
-				<TextArea
-					label={language.description}
-					value={uploadReducer.data.description}
-					onChange={(e: any) => handleInputChange(e, 'description')}
-					disabled={false}
-					invalid={getInvalidDescription()}
-					required
-				/>
+				<h4>{getHeader()}</h4>
+				{uploadReducer.uploadType === 'collection' && (
+					<>
+						<FormField
+							label={language.title}
+							value={uploadReducer.data.title}
+							onChange={(e: any) => handleInputChange(e, 'title')}
+							disabled={false}
+							invalid={invalidTitle}
+							required
+						/>
+						<TextArea
+							label={language.description}
+							value={uploadReducer.data.description}
+							onChange={(e: any) => handleInputChange(e, 'description')}
+							disabled={false}
+							invalid={getInvalidDescription()}
+							required
+						/>
+					</>
+				)}
 				<FormField
 					type={'number'}
 					label={language.contentTokens}
@@ -172,14 +194,16 @@ export default function UploadStepsDetails() {
 					tooltip={language.contentTokensInfo}
 					required
 				/>
-				<FormField
-					label={language.collectionCode}
-					value={uploadReducer.data.collectionCode}
-					onChange={(e: any) => handleInputChange(e, 'collectionCode')}
-					disabled={false}
-					invalid={{ status: false, message: null }}
-					tooltip={language.collectionCodeInfo}
-				/>
+				{uploadReducer.uploadType === 'collection' && (
+					<FormField
+						label={language.collectionCode}
+						value={uploadReducer.data.collectionCode}
+						onChange={(e: any) => handleInputChange(e, 'collectionCode')}
+						disabled={false}
+						invalid={{ status: false, message: null }}
+						tooltip={language.collectionCodeInfo}
+					/>
+				)}
 				<S.TWrapper>
 					<S.THeader>
 						<span>{formatRequiredField(language.assetTopics)}</span>

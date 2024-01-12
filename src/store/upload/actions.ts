@@ -1,8 +1,9 @@
 import { Dispatch } from 'redux';
 
-import { UploadPayloadDataType, UploadStepType } from 'helpers/types';
+import { UploadPayloadDataType, UploadStepType, UploadType } from 'helpers/types';
 
 import {
+	CHANGE_UPLOAD,
 	CLEAR_UPLOAD,
 	SET_STEP_DETAILS,
 	SET_STEP_DISABLED,
@@ -10,6 +11,7 @@ import {
 	SET_UPLOAD_ACTIVE,
 	SET_UPLOAD_COST,
 	SET_UPLOAD_DISABLED,
+	SET_UPLOAD_TYPE,
 } from './constants';
 
 export function setUpload(payload: UploadPayloadDataType[]) {
@@ -62,6 +64,24 @@ export function setUploadCost(payload: number) {
 		dispatch({
 			type: SET_UPLOAD_COST,
 			payload: payload,
+		});
+	};
+}
+
+export function setUploadType(payload: UploadType) {
+	return (dispatch: Dispatch) => {
+		dispatch({
+			type: SET_UPLOAD_TYPE,
+			payload: payload,
+		});
+	};
+}
+
+export function changeUpload() {
+	return (dispatch: Dispatch) => {
+		dispatch({
+			type: CHANGE_UPLOAD,
+			payload: null,
 		});
 	};
 }

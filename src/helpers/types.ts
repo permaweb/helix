@@ -168,26 +168,7 @@ export type ReduxActionType = {
 
 export type FileMetadataType = { file: any; title: string; description: string };
 
-export type UploadReduxType = {
-	data: {
-		content: any;
-		contentList: FileMetadataType[];
-		contentType: string;
-		contentLength: number | null;
-		license: any;
-		title: string;
-		description: string;
-		collectionCode: string;
-		thumbnail: any;
-		topics: string[];
-		type: string;
-		hasLicense: boolean;
-	};
-	currentStep: UploadStepType;
-	nextStepDisabled: boolean;
-	uploadActive: boolean;
-	uploadDisabled: boolean;
-};
+export type UploadType = 'collection' | 'assets';
 
 export type UploadPayloadType =
 	| 'license'
@@ -208,6 +189,29 @@ export type UploadPayloadType =
 export type UploadPayloadDataType = { field: UploadPayloadType; data: any };
 
 export type UploadStepType = 'details' | 'license' | 'checks';
+
+export type UploadReduxType = {
+	data: {
+		content: any;
+		contentList: FileMetadataType[];
+		contentType: string;
+		contentLength: number | null;
+		license: any;
+		title: string;
+		description: string;
+		collectionCode: string;
+		thumbnail: any;
+		topics: string[];
+		type: string;
+		hasLicense: boolean;
+	};
+	currentStep: UploadStepType;
+	nextStepDisabled: boolean;
+	uploadActive: boolean;
+	uploadDisabled: boolean;
+	uploadCost: number;
+	uploadType: UploadType;
+};
 
 export type SelectOptionType = { id: string; label: string };
 

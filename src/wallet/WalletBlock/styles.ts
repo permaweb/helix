@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { fadeIn2, open } from 'helpers/animations';
 
 export const Wrapper = styled.div`
-	width: 100%;
+	width: 700px;
 	max-width: 95vw;
 	position: absolute;
 	top: 50%;
@@ -12,7 +12,7 @@ export const Wrapper = styled.div`
 	display: flex;
 	flex-direction: column;
 	align-items: center;
-	padding: 20px;
+	padding: 40px 20px;
 	animation: ${open} ${fadeIn2};
 	p {
 		font-size: ${(props) => props.theme.typography.size.base};
@@ -30,7 +30,7 @@ export const Icon = styled.div`
 	display: flex;
 	justify-content: center;
 	align-items: center;
-	background: ${(props) => props.theme.colors.container.alt4.background};
+	background: ${(props) => props.theme.colors.container.primary.background};
 	border: 1px solid ${(props) => props.theme.colors.border.primary};
 	box-shadow: 0 5px 15px 0 ${(props) => props.theme.colors.shadow.primary};
 	border-radius: 50%;

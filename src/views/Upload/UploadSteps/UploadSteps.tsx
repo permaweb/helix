@@ -119,8 +119,12 @@ export default function UploadSteps(props: IProps) {
 				<UploadStepsProgress />
 			</S.PWrapper>
 			<S.SWrapper>{getCurrentStepComponent()}</S.SWrapper>
-			<UploadBanner />
-			<UploadThumbnail />
+			{uploadReducer.uploadType === 'collection' && (
+				<>
+					<UploadBanner />
+					<UploadThumbnail />
+				</>
+			)}
 			<S.AWrapper>
 				<Button
 					type={'primary'}
@@ -137,6 +141,10 @@ export default function UploadSteps(props: IProps) {
 				)}
 				{!arProvider.wallet && <span>{language.uploadConnectionRequired}</span>}
 				{getBalanceMessage()}
+				{uploadReducer.data.contentList &&
+					uploadReducer.data.idList &&
+					uploadReducer.data.contentList.length + uploadReducer.data.idList.length <= 0 &&
+					uploadReducer.currentStep === 'checks' && <span>{language.noAssetsSelected}</span>}
 			</S.MWrapper>
 		</S.Wrapper>
 	);

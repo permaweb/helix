@@ -5,6 +5,7 @@ export const Wrapper = styled.div``;
 export const Header = styled.div`
 	display: flex;
 	justify-content: space-between;
+	margin: 0 0 5px 0;
 	h4 {
 		color: ${(props) => props.theme.colors.font.alt2} !important;
 		font-size: ${(props) => props.theme.typography.size.lg} !important;

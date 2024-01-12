@@ -1,6 +1,7 @@
-import { ReduxActionType, UploadPayloadDataType, UploadReduxType, UploadStepType } from 'helpers/types';
+import { ReduxActionType, UploadPayloadDataType, UploadReduxType, UploadStepType, UploadType } from 'helpers/types';
 
 import {
+	CHANGE_UPLOAD,
 	CLEAR_UPLOAD,
 	SET_STEP_DETAILS,
 	SET_STEP_DISABLED,
@@ -8,6 +9,7 @@ import {
 	SET_UPLOAD_ACTIVE,
 	SET_UPLOAD_COST,
 	SET_UPLOAD_DISABLED,
+	SET_UPLOAD_TYPE,
 } from './constants';
 
 const initStateUploadReducer = {
@@ -33,6 +35,7 @@ const initStateUploadReducer = {
 	uploadActive: false,
 	uploadDisabled: false,
 	uploadCost: 0,
+	uploadType: 'collection' as UploadType,
 };
 
 export function uploadReducer(state: UploadReduxType = initStateUploadReducer, action: ReduxActionType) {
@@ -64,6 +67,10 @@ export function uploadReducer(state: UploadReduxType = initStateUploadReducer, a
 			updatedState = { ...state };
 			updatedState.uploadDisabled = action.payload;
 			return updatedState;
+		case SET_UPLOAD_TYPE:
+			updatedState = { ...state };
+			updatedState.uploadType = action.payload;
+			return updatedState;
 		case CLEAR_UPLOAD:
 			return {
 				data: {
@@ -76,6 +83,7 @@ export function uploadReducer(state: UploadReduxType = initStateUploadReducer, a
 					title: '',
 					description: '',
 					collectionCode: '',
+					contentTokens: 100,
 					banner: null,
 					thumbnail: null,
 					topics: [],
@@ -87,6 +95,33 @@ export function uploadReducer(state: UploadReduxType = initStateUploadReducer, a
 				uploadActive: false,
 				uploadDisabled: false,
 				uploadCost: 0,
+				uploadType: 'collection',
+			};
+		case CHANGE_UPLOAD:
+			return {
+				data: {
+					content: null,
+					contentList: state.data.contentList,
+					contentType: '',
+					contentLength: null,
+					idList: [],
+					license: null,
+					title: '',
+					description: '',
+					collectionCode: '',
+					contentTokens: 100,
+					banner: null,
+					thumbnail: null,
+					topics: [],
+					type: '',
+					hasLicense: true,
+				},
+				currentStep: 'details' as UploadStepType,
+				nextStepDisabled: true,
+				uploadActive: false,
+				uploadDisabled: false,
+				uploadCost: 0,
+				uploadType: state.uploadType,
 			};
 		default:
 			return state;

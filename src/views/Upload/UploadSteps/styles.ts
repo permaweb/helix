@@ -13,7 +13,7 @@ export const PWrapper = styled.div`
 `;
 
 export const SWrapper = styled.div`
-	margin: 25px 0 0 0;
+	margin: 33.5px 0 0 0;
 	@media (max-width: ${STYLING.cutoffs.initial}) {
 		min-height: 0;
 	}

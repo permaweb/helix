@@ -14,7 +14,7 @@ export default function WalletBlock() {
 	const language = languageProvider.object[languageProvider.current];
 
 	return (
-		<S.Wrapper>
+		<S.Wrapper className={'border-wrapper-alt1'}>
 			<S.Icon>
 				<ReactSVG src={ASSETS.wallet} />
 			</S.Icon>

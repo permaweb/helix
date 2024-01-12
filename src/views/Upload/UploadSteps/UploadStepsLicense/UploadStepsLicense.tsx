@@ -405,9 +405,10 @@ export default function UploadStepsLicense() {
 					label={language.recipient}
 					value={paymentRecipient}
 					onChange={(e: any) => setPaymentRecipient(e.target.value)}
-					invalid={{ status: paymentRecipient ? !checkAddress(paymentRecipient) : false, message: null }}
+					invalid={{ status: paymentRecipient ? !checkAddress(paymentRecipient) : true, message: null }}
 					disabled={disabled}
 					hideErrorMessage
+					required
 				/>
 			</S.AWrapper>
 		);
