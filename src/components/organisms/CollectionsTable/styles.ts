@@ -99,7 +99,7 @@ export const MHeader = styled.div`
 
 export const MMessage = styled.div`
 	margin: 0 0 30px 0;
-	padding 7.5px 12px 10px 12px;
+	padding 10px 12.5px;
 	span {
 		color: ${(props) => props.theme.colors.font.primary};
 		font-size: ${(props) => props.theme.typography.size.xSmall};
