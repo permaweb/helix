@@ -221,15 +221,16 @@ export const MSWrapper = styled.div`
 `;
 
 export const MSearchWrapper = styled(DSearchWrapper)`
-	height: 55px;
+	height: 65px;
 	width: 100%;
 	position: relative;
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
 	padding: 10px;
-	background: ${(props) => props.theme.colors.container.primary.background};
+	background: ${(props) => props.theme.colors.container.alt2.background};
 	border-bottom: 1px solid ${(props) => props.theme.colors.border.primary};
+	box-shadow: 0 5px 15px 2.5px ${(props) => props.theme.colors.shadow.primary};
 `;
 
 export const MCloseWrapper = styled.div`
@@ -255,11 +256,11 @@ export const MInput = styled(DInput)`
 `;
 
 export const MResultsWrapper = styled(DResultsWrapper)`
-	max-height: calc(100vh - 55px);
+	max-height: calc(100vh - 65px);
 	margin: 0;
 	background: ${(props) => props.theme.colors.container.primary.background};
 	border: none;
-	border-top: 1px solid ${(props) => props.theme.colors.border.primary};
+	border-bottom: 1px solid ${(props) => props.theme.colors.border.primary};
 	box-shadow: none;
 	border-radius: 0;
 	overflow: auto;
