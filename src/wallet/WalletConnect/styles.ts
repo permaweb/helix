@@ -12,11 +12,6 @@ export const Wrapper = styled.div`
 export const PWrapper = styled.div`
 	display: flex;
 	align-items: center;
-	@media (max-width: ${STYLING.cutoffs.initial}) {
-		span {
-			display: none;
-		}
-	}
 `;
 
 export const LAction = styled.button`
@@ -32,6 +27,9 @@ export const LAction = styled.button`
 		span {
 			color: ${(props) => props.theme.colors.font.alt1};
 		}
+	}
+	@media (max-width: ${STYLING.cutoffs.initial}) {
+		display: none;
 	}
 `;
 

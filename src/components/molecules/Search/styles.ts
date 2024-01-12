@@ -228,7 +228,8 @@ export const MSearchWrapper = styled(DSearchWrapper)`
 	justify-content: space-between;
 	align-items: center;
 	padding: 10px;
-	background: ${(props) => props.theme.colors.container.alt1.background};
+	background: ${(props) => props.theme.colors.container.primary.background};
+	border-bottom: 1px solid ${(props) => props.theme.colors.border.primary};
 `;
 
 export const MCloseWrapper = styled.div`
