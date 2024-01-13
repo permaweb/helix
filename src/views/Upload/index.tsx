@@ -42,14 +42,6 @@ export default function Upload() {
 	const [collectionResponseError, setCollectionResponseError] = React.useState<string | null>(null);
 
 	React.useEffect(() => {
-		dispatch(uploadActions.setUploadType('collection'));
-	}, []);
-
-	React.useEffect(() => {
-		dispatch(uploadActions.changeUpload());
-	}, [uploadReducer.uploadType]);
-
-	React.useEffect(() => {
 		const handleBeforeUnload = (e: any) => {
 			e.preventDefault();
 			e.returnValue = '';
@@ -306,7 +298,6 @@ export default function Upload() {
 		}
 		if (collectionResponseError) setCollectionResponseError(null);
 		if (assetsResponseError) setAssetsResponseError(null);
-		window.location.reload();
 	}
 
 	function handleUploadType(uploadType: UploadType) {

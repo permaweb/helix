@@ -15,11 +15,13 @@ export const Header = styled.div`
 `;
 
 export const Body = styled.div`
-	p {
-		max-width: 500px;
-		overflow: hidden;
-		white-space: nowrap;
-		text-overflow: ellipsis;
+	a {
+		max-width: 85%;
+		p {
+			overflow: hidden;
+			white-space: nowrap;
+			text-overflow: ellipsis;
+		}
 	}
 `;
 

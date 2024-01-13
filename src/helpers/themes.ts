@@ -29,7 +29,7 @@ export const lightTheme = {
 	semiTransparent5: 'rgba(0, 0, 0, 0.15)',
 	scheme: 'light',
 	light1: '#FFFFFF',
-	dark1: '#12151A',
+	dark1: '#151515',
 };
 
 export const darkTheme = {
@@ -87,8 +87,8 @@ export const theme = (currentTheme: any): DefaultTheme => ({
 				},
 				disabled: {
 					background: currentTheme.neutral3,
-					border: currentTheme.neutral3,
-					color: currentTheme.neutral6,
+					border: currentTheme.neutral5,
+					color: currentTheme.neutral5,
 				},
 			},
 			alt1: {
@@ -102,8 +102,8 @@ export const theme = (currentTheme: any): DefaultTheme => ({
 				},
 				disabled: {
 					background: currentTheme.neutral3,
-					border: currentTheme.neutral3,
-					color: currentTheme.neutral6,
+					border: currentTheme.neutral5,
+					color: currentTheme.neutral5,
 				},
 			},
 			alt2: {

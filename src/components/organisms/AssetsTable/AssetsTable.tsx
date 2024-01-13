@@ -283,14 +283,18 @@ export default function AssetsTable(props: { useIdAction: boolean }) {
 	}
 
 	function getSelectedAssets() {
-		if (selectedAssets && selectedAssets.length) {
+		if (selectedAssets && selectedAssets.length && uploadReducer.data.idList && uploadReducer.data.idList.length) {
+			const currentSelectedAssets = selectedAssets.filter((element: GQLNodeResponseType) =>
+				uploadReducer.data.idList.includes(element.node.id)
+			);
+
 			return (
 				<S.TAWrapper>
 					<Table
 						title={`${language.selected} (${uploadReducer.data.idList.length})`}
 						action={null}
 						header={getTableHeader()}
-						data={getTableData(selectedAssets, false)}
+						data={getTableData(currentSelectedAssets, false)}
 						recordsPerPage={PAGINATORS.default}
 						showPageNumbers={false}
 						handleCursorFetch={(_cursor: string | null) => {}}
