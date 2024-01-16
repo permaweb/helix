@@ -176,6 +176,7 @@ export type UploadPayloadType =
 	| 'description'
 	| 'collectionCode'
 	| 'contentTokens'
+	| 'useFractionalTokens'
 	| 'topics'
 	| 'content'
 	| 'contentList'
@@ -200,6 +201,8 @@ export type UploadReduxType = {
 		title: string;
 		description: string;
 		collectionCode: string;
+		contentTokens: number;
+		useFractionalTokens: boolean;
 		thumbnail: any;
 		topics: string[];
 		type: string;

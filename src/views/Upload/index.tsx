@@ -41,18 +41,19 @@ export default function Upload() {
 	const [collectionResponse, setCollectionResponse] = React.useState<string | null>(null);
 	const [collectionResponseError, setCollectionResponseError] = React.useState<string | null>(null);
 
-	React.useEffect(() => {
-		const handleBeforeUnload = (e: any) => {
-			e.preventDefault();
-			e.returnValue = '';
-		};
+	// TODO: add
+	// React.useEffect(() => {
+	// 	const handleBeforeUnload = (e: any) => {
+	// 		e.preventDefault();
+	// 		e.returnValue = '';
+	// 	};
 
-		window.addEventListener('beforeunload', handleBeforeUnload);
+	// 	window.addEventListener('beforeunload', handleBeforeUnload);
 
-		return () => {
-			window.removeEventListener('beforeunload', handleBeforeUnload);
-		};
-	}, [uploadReducer]);
+	// 	return () => {
+	// 		window.removeEventListener('beforeunload', handleBeforeUnload);
+	// 	};
+	// }, [uploadReducer]);
 
 	React.useEffect(() => {
 		if (!arProvider.wallet) dispatch(uploadActions.setUploadDisabled(true));
@@ -219,11 +220,12 @@ export default function Upload() {
 					? uploadReducer.data.description
 					: data.file.name;
 				const type = data.file.type;
+				const balance = uploadReducer.data.useFractionalTokens ? Number(uploadReducer.data.contentTokens) : 1;
 
 				try {
 					let initStateAssetJson: any = {
 						balances: {
-							[arProvider.walletAddress]: Number(uploadReducer.data.contentTokens),
+							[arProvider.walletAddress]: balance,
 						},
 						title: title,
 						description: description,

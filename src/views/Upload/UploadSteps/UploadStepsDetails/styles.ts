@@ -13,6 +13,24 @@ export const Wrapper = styled.div`
 	}
 `;
 
+export const COWrapper = styled.div`
+	padding: 15px;
+	margin: 0 0 25px 0;
+	border: none;
+`;
+
+export const CWrapper = styled.div`
+	display: flex;
+	align-items: center;
+	span {
+		color: ${(props) => props.theme.colors.font.primary};
+		font-size: ${(props) => props.theme.typography.size.xSmall};
+		font-weight: ${(props) => props.theme.typography.weight.bold};
+		display: block;
+		margin: 0 5px 0 0;
+	}
+`;
+
 export const TWrapper = styled.div``;
 
 export const THeader = styled.div`

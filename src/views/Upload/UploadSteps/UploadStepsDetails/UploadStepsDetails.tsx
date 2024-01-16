@@ -5,6 +5,7 @@ import { ReactSVG } from 'react-svg';
 import { checkDuplicateTitle } from 'gql';
 
 import { Button } from 'components/atoms/Button';
+import { Checkbox } from 'components/atoms/Checkbox';
 import { FormField } from 'components/atoms/FormField';
 import { TextArea } from 'components/atoms/TextArea';
 import { Modal } from 'components/molecules/Modal';
@@ -103,6 +104,17 @@ export default function UploadStepsDetails() {
 		);
 	}
 
+	function handleUseFractionalChange() {
+		dispatch(
+			uploadActions.setUpload([
+				{
+					field: 'useFractionalTokens',
+					data: !uploadReducer.data.useFractionalTokens,
+				},
+			])
+		);
+	}
+
 	function handleTopicChange(topic: string) {
 		let topics = [...uploadReducer.data.topics];
 		if (topics.includes(topic)) {
@@ -184,16 +196,29 @@ export default function UploadStepsDetails() {
 						/>
 					</>
 				)}
-				<FormField
-					type={'number'}
-					label={language.contentTokens}
-					value={uploadReducer.data.contentTokens}
-					onChange={(e: any) => handleInputChange(e, 'contentTokens')}
-					disabled={false}
-					invalid={getInvalidContentTokens()}
-					tooltip={language.contentTokensInfo}
-					required
-				/>
+				<S.COWrapper className={'border-wrapper-alt1'}>
+					<S.CWrapper>
+						<span>{language.contentTokensCheckInfo}</span>
+						<Checkbox
+							checked={uploadReducer.data.useFractionalTokens}
+							handleSelect={handleUseFractionalChange}
+							disabled={false}
+						/>
+					</S.CWrapper>
+					{uploadReducer.data.useFractionalTokens && (
+						<FormField
+							type={'number'}
+							label={language.contentTokens}
+							value={uploadReducer.data.useFractionalTokens ? uploadReducer.data.contentTokens : 1}
+							onChange={(e: any) => handleInputChange(e, 'contentTokens')}
+							disabled={!uploadReducer.data.useFractionalTokens}
+							invalid={getInvalidContentTokens()}
+							tooltip={language.contentTokensInfo}
+							required
+							hideErrorMessage
+						/>
+					)}
+				</S.COWrapper>
 				{uploadReducer.uploadType === 'collection' && (
 					<FormField
 						label={language.collectionCode}
