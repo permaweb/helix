@@ -16,7 +16,6 @@ export const Wrapper = styled.div`
 export const COWrapper = styled.div`
 	padding: 15px;
 	margin: 0 0 25px 0;
-	border: none;
 `;
 
 export const CWrapper = styled.div`
