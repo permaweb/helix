@@ -26,7 +26,7 @@ export const CWrapper = styled.div`
 		font-size: ${(props) => props.theme.typography.size.xSmall};
 		font-weight: ${(props) => props.theme.typography.weight.bold};
 		display: block;
-		margin: 0 5px 0 0;
+		margin: 0 10px 0 0;
 	}
 `;
 
