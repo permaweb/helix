@@ -6,7 +6,7 @@
 	"author": "",
 	"license": "ISC",
 	"scripts": {
-		"start": "NODE_ENV=development webpack serve --port 3011",
+		"start": "NODE_ENV=development webpack serve --port 3000",
 		"format": "eslint --fix . && npx prettier --write .",
 		"test": "npm test",
 		"test:verbose": "npm test -- --verbose",
