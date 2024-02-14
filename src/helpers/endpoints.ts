@@ -18,7 +18,7 @@ export function getTurboPriceWincEndpoint(currency: string, amount: number) {
 }
 
 export function getTurboCheckoutEndpoint(walletAddress: string, currency: string, amount: number) {
-	return `${turboEndpoint}/top-up/checkout-session/${walletAddress}/${currency}/${amount * 100}`;
+	return `${turboEndpoint}/top-up/payment-intent/${walletAddress}/${currency}/${amount * 100}`;
 }
 
 export function getTurboBalanceEndpoint() {

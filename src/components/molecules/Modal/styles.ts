@@ -23,7 +23,7 @@ export const Container = styled.div<{
 	max-width: ${(props) => (props.noHeader ? '100%' : '90vw')};
 	background: ${(props) => (props.noHeader ? 'transparent' : props.theme.colors.container.primary.background)};
 	border-radius: ${STYLING.dimensions.radius.primary};
-	margin: 60px auto;
+	margin: 20px auto;
 `;
 
 export const Header = styled.div`

@@ -18,7 +18,8 @@
 	"dependencies": {
 		"@irys/sdk": "^0.1.0-a1",
 		"@permaweb/stampjs": "0.6.1",
-		"@rive-app/react-canvas": "^4.5.4",
+		"@stripe/react-stripe-js": "^2.4.0",
+		"@stripe/stripe-js": "^2.4.0",
 		"@types/react-router-dom": "^5.3.3",
 		"arbundles": "^0.10.1",
 		"arweave-wallet-connector": "^1.0.2",

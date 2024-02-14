@@ -1,9 +1,15 @@
 import React from 'react';
+import { Elements, PaymentElement, useElements, useStripe } from '@stripe/react-stripe-js';
+import { loadStripe } from '@stripe/stripe-js';
+import { useTheme } from 'styled-components';
 
 import { Button } from 'components/atoms/Button';
 import { FormField } from 'components/atoms/FormField';
 import { Loader } from 'components/atoms/Loader';
+import { Notification } from 'components/atoms/Notification';
+import { STRIPE_PUBLISHABLE_KEY, STYLING } from 'helpers/config';
 import { getTurboCheckoutEndpoint, getTurboPriceWincEndpoint } from 'helpers/endpoints';
+import { NotificationResponseType } from 'helpers/types';
 import { formatTurboAmount, formatUSDAmount, getARAmountFromWinc } from 'helpers/utils';
 import { useArweaveProvider } from 'providers/ArweaveProvider';
 import { useLanguageProvider } from 'providers/LanguageProvider';
@@ -13,13 +19,121 @@ import { Modal } from '../Modal';
 import * as S from './styles';
 import { IProps } from './types';
 
+const stripePromise = loadStripe(STRIPE_PUBLISHABLE_KEY);
+
+function CheckoutForm(props: {
+	handleGoBack: () => void;
+	amount: number;
+	wincConversion: number;
+	currency: string;
+	handleClose: () => void;
+}) {
+	const stripe = useStripe();
+	const elements = useElements();
+
+	const arProvider = useArweaveProvider();
+
+	const languageProvider = useLanguageProvider();
+	const language = languageProvider.object[languageProvider.current];
+
+	const [loading, setLoading] = React.useState<boolean>(false);
+	const [result, setResult] = React.useState<NotificationResponseType | null>(null);
+
+	const [mounting, setMounting] = React.useState<boolean>(true);
+
+	React.useEffect(() => {
+		(async function () {
+			await new Promise((r) => setTimeout(r, 500));
+			setMounting(false);
+		})();
+	}, []);
+
+	async function handleSubmit(e: any) {
+		e.preventDefault();
+		setLoading(true);
+		if (!stripe || !elements) {
+			return;
+		}
+		try {
+			if (arProvider.walletAddress) {
+				const paymentResponse = await stripe.confirmPayment({
+					elements,
+					confirmParams: {
+						return_url: `https://helix.arweave.dev`,
+					},
+					redirect: 'if_required',
+				});
+
+				if (paymentResponse.error) {
+					console.error(paymentResponse.error.message);
+				} else {
+					if (paymentResponse && paymentResponse.paymentIntent && paymentResponse.paymentIntent.status) {
+						if (paymentResponse.paymentIntent.status === 'succeeded') {
+							setResult({ status: true, message: language.successfullyFunded });
+						} else {
+							setResult({ status: false, message: language.errorOccurred });
+						}
+					}
+				}
+			}
+		} catch (e: any) {
+			console.error(e);
+		}
+		setLoading(false);
+	}
+
+	return (
+		<>
+			<S.COWrapperAlt className={'border-wrapper-alt1'}>
+				<S.COHeader>
+					<span>{language.amount}</span>
+				</S.COHeader>
+				<span>{`${formatUSDAmount(props.amount)} = ${formatTurboAmount(props.wincConversion)}`}</span>
+			</S.COWrapperAlt>
+			<S.CheckoutForm disabled={loading || result !== null}>
+				{mounting ? <Loader sm relative /> : <PaymentElement options={{ layout: 'accordion' }} />}
+			</S.CheckoutForm>
+			<S.MActions>
+				<Button
+					type={'primary'}
+					label={language.back}
+					handlePress={props.handleGoBack}
+					disabled={loading || result !== null}
+					noMinWidth
+				/>
+				<Button
+					type={'alt1'}
+					label={language.submit}
+					handlePress={handleSubmit}
+					disabled={loading || result !== null}
+					loading={loading}
+					formSubmit
+					noMinWidth
+				/>
+			</S.MActions>
+			{result && (
+				<Notification
+					message={result.message!}
+					callback={() => {
+						setResult(null);
+						props.handleClose();
+					}}
+				/>
+			)}
+		</>
+	);
+}
+
 export default function TurboBalanceFund(props: IProps) {
+	const theme = useTheme();
+
 	const arProvider = useArweaveProvider();
 	const languageProvider = useLanguageProvider();
 	const language = languageProvider.object[languageProvider.current];
 
 	const [checkout, setCheckout] = React.useState<any>(null);
 	const [checkoutStep, setCheckoutStep] = React.useState<'amount' | 'payment'>('amount');
+	const [clientSecret, setClientSecret] = React.useState<string>('');
 
 	const [currency, _setCurrency] = React.useState<string>('usd');
 	const [amount, setAmount] = React.useState<number>(0);
@@ -56,21 +170,23 @@ export default function TurboBalanceFund(props: IProps) {
 				try {
 					const checkoutResponse = await fetch(getTurboCheckoutEndpoint(arProvider.walletAddress, currency, amount));
 					if (checkoutResponse.ok) {
-						setCheckout(await checkoutResponse.json());
+						const checkoutResponseJson = await checkoutResponse.json();
+						setCheckout(checkoutResponseJson);
+						setClientSecret(checkoutResponseJson.paymentSession.client_secret);
 					}
 				} catch (e: any) {
 					console.error(e);
 				}
 			}
 		})();
-	}, [checkoutStep]);
+	}, [arProvider.walletAddress, checkoutStep]);
 
 	function getInvalidAmount() {
 		if (amount && (amount < 5 || amount > 10000)) return { status: true, message: language.invalidAmountTurbo };
 		return { status: false, message: null };
 	}
 
-	const DEFAULT_AMOUNTS = [10, 25, 50, 75];
+	const DEFAULT_AMOUNTS = [5, 10, 25, 50, 75];
 
 	function handleGoBack() {
 		setCheckout(null);
@@ -150,40 +266,42 @@ export default function TurboBalanceFund(props: IProps) {
 					</S.MWrapper>
 				);
 			case 'payment':
-				if (checkout && checkout.paymentSession && checkout.paymentSession.url) {
+				if (checkout && checkout.paymentSession && clientSecret) {
 					return (
 						<S.MWrapper>
 							<S.MInfo>
 								<p>{language.fundTurboPaymentHeader}</p>
 								<span>{language.fundTurboPaymentDetail}</span>
 							</S.MInfo>
-							<S.DWrapper>
-								<S.DHeader>
-									<span>{`${language.amount}: ${formatUSDAmount(amount)}`}</span>
-								</S.DHeader>
-							</S.DWrapper>
-							<S.COWrapperAlt className={'border-wrapper-alt1'}>
-								<S.COHeader>
-									<span>{language.conversion}</span>
-								</S.COHeader>
-								<span>
-									{fetchingConversion
-										? `${language.fetching}...`
-										: `${formatUSDAmount(amount)} = ${formatTurboAmount(wincConversion)}`}
-								</span>
-							</S.COWrapperAlt>
-							<S.MActions>
-								<Button type={'primary'} label={language.back} handlePress={handleGoBack} disabled={false} noMinWidth />
-								<Button
-									type={'alt1'}
-									label={language.goToPayment}
-									handlePress={() => window.open(checkout.paymentSession.url, '_blank')}
-									disabled={false}
-									loading={false}
-									formSubmit
-									noMinWidth
+							<Elements
+								stripe={stripePromise}
+								options={{
+									clientSecret: clientSecret,
+									appearance: {
+										theme: 'stripe',
+										variables: {
+											colorBackground: theme.colors.container.primary.background,
+											colorPrimary: theme.colors.font.alt5,
+											colorText: theme.colors.font.primary,
+											fontSizeBase: theme.typography.size.small,
+											fontWeightLight: theme.typography.weight.medium,
+											fontWeightNormal: theme.typography.weight.medium,
+											fontWeightMedium: theme.typography.weight.medium,
+											fontWeightBold: theme.typography.weight.medium,
+											borderRadius: STYLING.dimensions.radius.primary,
+											spacingUnit: '3.5px',
+										},
+									},
+								}}
+							>
+								<CheckoutForm
+									handleGoBack={handleGoBack}
+									wincConversion={wincConversion}
+									currency={currency}
+									amount={amount}
+									handleClose={props.handleClose}
 								/>
-							</S.MActions>
+							</Elements>
 						</S.MWrapper>
 					);
 				} else {

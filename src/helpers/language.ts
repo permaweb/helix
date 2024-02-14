@@ -90,7 +90,7 @@ export const language = {
 		fundTurboBalanceInfoHeader: `Buy Credits`,
 		fundTurboBalanceInfoDetail: `Credits will be automatically added to your Turbo balance, and you can start using them right away.`,
 		fundTurboPaymentHeader: `Complete Payment`,
-		fundTurboPaymentDetail: `In order to securely complete your payment, click Go to payment below. This will open a new window that will allow you to complete the purchase.`,
+		fundTurboPaymentDetail: `Payments are powered by ArDrive Turbo, and handled securely by Stripe.`,
 		goToPayment: `Go to payment`,
 		handle: `Handle`,
 		home: `Home`,

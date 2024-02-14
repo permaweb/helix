@@ -266,3 +266,8 @@ export type UserBalancesType = {
 };
 
 export type GroupIndexType = { index: string; ids: string[] }[];
+
+export type NotificationResponseType = {
+	status: boolean;
+	message: string | null;
+};

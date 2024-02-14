@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 
+import { fadeIn2, open } from 'helpers/animations';
 import { STYLING } from 'helpers/config';
 
 export const MWrapper = styled.div`
@@ -81,4 +82,10 @@ export const COWrapperAlt = styled(COWrapper)`
 
 export const LWrapper = styled.div`
 	margin: 0 auto 20px auto;
+`;
+
+export const CheckoutForm = styled.form<{ disabled: boolean }>`
+	pointer-events: ${(props) => (props.disabled ? 'none' : 'all')};
+	margin: 20px 0 0 0;
+	animation: ${open} ${fadeIn2};
 `;

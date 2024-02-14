@@ -311,3 +311,6 @@ export const REDIRECTS = {
 };
 
 export const DRE_NODE = 'https://dre-u.warp.cc/contract';
+
+export const STRIPE_PUBLISHABLE_KEY =
+	'pk_live_51JUAtwC8apPOWkDLMQqNF9sPpfneNSPnwX8YZ8y1FNDl6v94hZIwzgFSYl27bWE4Oos8CLquunUswKrKcaDhDO6m002Yj9AeKj';
