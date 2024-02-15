@@ -126,7 +126,8 @@ export default function Upload() {
 				{ name: TAGS.keys.contentType, value: CONTENT_TYPES.json },
 				{ name: TAGS.keys.initState, value: initStateCollectionJson },
 				{ name: TAGS.keys.creator, value: arProvider.walletAddress },
-				{ name: TAGS.keys.dataProtocol, value: TAGS.values.collection },
+				// { name: TAGS.keys.dataProtocol, value: TAGS.values.collection },
+				{ name: TAGS.keys.dataProtocol, value: 'Test-Collection' }, // TODO
 				{
 					name: TAGS.keys.smartweaveAppName,
 					value: TAGS.values.smartweaveAppName,
@@ -183,6 +184,7 @@ export default function Upload() {
 			dispatch(uploadActions.setUploadActive(true));
 
 			let index = 0;
+			let assetError = null;
 			let uploadedAssetsList: string[] = [];
 			for (const data of uploadReducer.data.contentList) {
 				index = index + 1;
@@ -268,28 +270,29 @@ export default function Upload() {
 					if (index < uploadReducer.data.contentList.length) setUploadPercentage(0);
 				} catch (e: any) {
 					console.error(e.message);
-					setAssetsResponseError(e.message);
+					assetError = e.message;
+					setAssetsResponseError(assetError);
 					setUploadPercentage(0);
 					dispatch(uploadActions.clearUpload());
 				}
 			}
 
-			if (uploadedAssetsList.length) {
-				switch (uploadReducer.uploadType) {
-					case 'collection':
-						try {
-							await handleUploadCollection(uploadedAssetsList);
-						} catch (e: any) {
-							console.error(e);
-						}
-						break;
-					case 'assets':
+			switch (uploadReducer.uploadType) {
+				case 'collection':
+					try {
+						if (!assetError) await handleUploadCollection(uploadedAssetsList);
+					} catch (e: any) {
+						console.error(e);
+					}
+					break;
+				case 'assets':
+					if (uploadedAssetsList.length) {
 						setAssetsResponse(`${language.assetsCreated}!`);
 						dispatch(uploadActions.setUploadActive(false));
 						dispatch(uploadActions.clearUpload());
 						setUploadPercentage(0);
-						break;
-				}
+					}
+					break;
 			}
 		}
 	}
