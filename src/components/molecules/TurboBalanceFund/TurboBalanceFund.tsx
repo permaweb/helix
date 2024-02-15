@@ -84,15 +84,15 @@ function CheckoutForm(props: {
 
 	return (
 		<>
+			<S.CheckoutForm disabled={loading || result !== null}>
+				{mounting ? <Loader sm relative /> : <PaymentElement options={{ layout: 'accordion' }} />}
+			</S.CheckoutForm>
 			<S.COWrapperAlt className={'border-wrapper-alt1'}>
 				<S.COHeader>
 					<span>{language.amount}</span>
 				</S.COHeader>
 				<span>{`${formatUSDAmount(props.amount)} = ${formatTurboAmount(props.wincConversion)}`}</span>
 			</S.COWrapperAlt>
-			<S.CheckoutForm disabled={loading || result !== null}>
-				{mounting ? <Loader sm relative /> : <PaymentElement options={{ layout: 'accordion' }} />}
-			</S.CheckoutForm>
 			<S.MActions>
 				<Button
 					type={'primary'}
@@ -289,7 +289,7 @@ export default function TurboBalanceFund(props: IProps) {
 											fontWeightMedium: theme.typography.weight.medium,
 											fontWeightBold: theme.typography.weight.medium,
 											borderRadius: STYLING.dimensions.radius.primary,
-											spacingUnit: '3.5px',
+											spacingUnit: '4.5px',
 										},
 									},
 								}}
