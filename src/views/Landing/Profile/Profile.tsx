@@ -1,7 +1,8 @@
 import React from 'react';
 import { ReactSVG } from 'react-svg';
 
-import { getFullProfile } from 'gql';
+import { getFullProfile } from 'permaweb-sdk/dist/gql';
+import { FullProfileType } from 'permaweb-sdk/dist/helpers/types';
 
 import { Button } from 'components/atoms/Button';
 import { Loader } from 'components/atoms/Loader';
@@ -9,7 +10,6 @@ import { AssetsTable } from 'components/organisms/AssetsTable';
 import { CollectionsTable } from 'components/organisms/CollectionsTable';
 import { ASSETS, REDIRECTS } from 'helpers/config';
 import { getTxEndpoint } from 'helpers/endpoints';
-import { FullProfileType } from 'helpers/types';
 import { checkAddress, formatAddress } from 'helpers/utils';
 import { useLanguageProvider } from 'providers/LanguageProvider';
 
@@ -61,7 +61,7 @@ export default function Profile(props: { address: string }) {
 	function getHeaderDetails() {
 		return (
 			<S.HeaderHA>
-				<h4>{fullProfile.channelTitle ? fullProfile.channelTitle : formatAddress(fullProfile.walletAddress, false)}</h4>
+				<h4>{fullProfile.displayName ? fullProfile.displayName : formatAddress(fullProfile.walletAddress, false)}</h4>
 				<S.HeaderInfoDetail>
 					<span>{`${getHandle()}`}</span>
 				</S.HeaderInfoDetail>

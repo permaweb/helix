@@ -267,26 +267,29 @@ export default function Upload() {
 					if (contractResponse) uploadedAssetsList.push(contractResponse);
 					if (index < uploadReducer.data.contentList.length) setUploadPercentage(0);
 				} catch (e: any) {
-					console.error(e);
+					console.error(e.message);
+					setAssetsResponseError(e.message);
+					setUploadPercentage(0);
+					dispatch(uploadActions.clearUpload());
 				}
 			}
 
-			switch (uploadReducer.uploadType) {
-				case 'collection':
-					try {
-						await handleUploadCollection(uploadedAssetsList);
-					} catch (e: any) {
-						console.error(e);
-					}
-					break;
-				case 'assets':
-					if (uploadedAssetsList.length) {
+			if (uploadedAssetsList.length) {
+				switch (uploadReducer.uploadType) {
+					case 'collection':
+						try {
+							await handleUploadCollection(uploadedAssetsList);
+						} catch (e: any) {
+							console.error(e);
+						}
+						break;
+					case 'assets':
 						setAssetsResponse(`${language.assetsCreated}!`);
 						dispatch(uploadActions.setUploadActive(false));
 						dispatch(uploadActions.clearUpload());
 						setUploadPercentage(0);
-					}
-					break;
+						break;
+				}
 			}
 		}
 	}
@@ -400,7 +403,13 @@ export default function Upload() {
 				<Modal header={assetsResponse ? assetsResponse : language.errorOccurred} handleClose={handleClear}>
 					<S.MWrapper>
 						<S.MInfo>
-							<span>{assetsResponse ? language.assetsCreatedInfo : language.errorOccurred}</span>
+							<span>
+								{assetsResponse
+									? language.assetsCreatedInfo
+									: assetsResponseError
+									? assetsResponseError
+									: language.errorOccurred}
+							</span>
 						</S.MInfo>
 						<S.MActions>
 							<Button type={'primary'} label={language.close} handlePress={handleClear} noMinWidth />

@@ -23,6 +23,7 @@ import logo from 'assets/logo.svg';
 import menu from 'assets/menu.svg';
 import miniPlayerActive from 'assets/miniplayer-active.svg';
 import miniPlayerInactive from 'assets/miniplayer-inactive.svg';
+import othent from 'assets/othent.svg';
 import pause from 'assets/pause.svg';
 import play from 'assets/play.svg';
 import search from 'assets/search.svg';
@@ -84,6 +85,7 @@ export const ASSETS = {
 	wallets: {
 		arconnect: arconnect,
 		arweaveApp: arweaveApp,
+		othent: othent,
 	},
 	x: x,
 };
@@ -141,7 +143,7 @@ export const TAGS = {
 			'{"evaluationOptions":{"sourceType":"redstone-sequencer","allowBigInt":true,"internalWrites":true,"unsafeClient":"skip","useConstructor":true}}',
 		document: 'Document',
 		followDataProtocol: 'Follow',
-		license: 'yRj4a5KMctX_uOmKWCFJIjmY8DeJcusVk6-HzLiM_t8',
+		license: 'dE0rmDfl9_OWjkDznNEXHaSO_JohJkRolvMzaCroUdw',
 		profileVersions: {
 			'1': 'Account-0.3',
 		},
@@ -234,7 +236,10 @@ export const CONTENT_TYPES = {
 	textPlain: 'text/plain',
 };
 
-export const AR_WALLETS = [{ type: WalletEnum.arConnect, logo: ASSETS.wallets.arconnect }];
+export const AR_WALLETS = [
+	{ type: WalletEnum.arConnect, logo: ASSETS.wallets.arconnect },
+	{ type: WalletEnum.othent, logo: ASSETS.wallets.othent },
+];
 
 export const WALLET_PERMISSIONS = ['ACCESS_ADDRESS', 'ACCESS_PUBLIC_KEY', 'SIGN_TRANSACTION', 'DISPATCH', 'SIGNATURE'];
 

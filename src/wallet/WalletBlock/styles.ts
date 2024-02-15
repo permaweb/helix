@@ -15,8 +15,8 @@ export const Wrapper = styled.div`
 	padding: 40px 20px;
 	animation: ${open} ${fadeIn2};
 	p {
-		font-size: ${(props) => props.theme.typography.size.base};
-		font-weight: ${(props) => props.theme.typography.weight.medium};
+		font-size: ${(props) => props.theme.typography.size.small};
+		font-weight: ${(props) => props.theme.typography.weight.bold};
 		text-align: center;
 	}
 	button {

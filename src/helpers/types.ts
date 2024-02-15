@@ -132,6 +132,7 @@ export type FullProfileType = ProfileType & {
 export enum WalletEnum {
 	arConnect = 'arconnect',
 	arweaveApp = 'arweave.app',
+	othent = 'othent',
 }
 
 export type TagType = { name: string; value: string };

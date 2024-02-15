@@ -126,7 +126,7 @@ export const HeaderAddress = styled.button`
 	svg {
 		width: 15px;
 		fill: ${(props) => props.theme.colors.font.primary};
-		margin: 5px 0 0 0;
+		margin: 2.5px 0 0 0;
 	}
 	&:hover {
 		opacity: 0.75;

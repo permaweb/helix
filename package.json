@@ -24,6 +24,7 @@
 		"arbundles": "^0.10.1",
 		"arweave-wallet-connector": "^1.0.2",
 		"permaweb-orderbook": "^1.6.52",
+		"permaweb-sdk": "git+ssh://git@github.com:permaweb/permaweb-sdk.git#a0b2eadc5948084137642bf9fa9a931c2e895d01",
 		"react": "^18.2.0",
 		"react-dom": "^18.2.0",
 		"react-redux": "^7.2.9",
@@ -34,6 +35,7 @@
 		"redux-thunk": "^2.4.2",
 		"styled-components": "^5.3.6",
 		"timers-browserify": "^2.0.12",
+		"typescript": "^5.3.3",
 		"warp-contracts": "1.4.26",
 		"warp-contracts-plugin-deploy": "1.0.8",
 		"warp-contracts-plugin-signature": "1.0.15-beta.1"
