@@ -13,7 +13,7 @@ jobs:
       - uses: actions/setup-node@v1
         with:
           node-version: 18.x
-      - run: yarn
+      - run: npm install
       - run: npm run deploy
         env:
           DEPLOY_KEY: ${{ secrets.DEPLOY_KEY }}
