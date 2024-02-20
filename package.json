@@ -12,7 +12,7 @@
 		"test:verbose": "npm test -- --verbose",
 		"test:coverage": "CI=true npm test -- --env=jsdom --coverage",
 		"build": "NODE_ENV=production webpack",
-		"deploy": "npm run build && ts-node src/workers/deploy.ts",
+		"deploy": "npm run build && permaweb-deploy",
 		"prepare": "husky install"
 	},
 	"dependencies": {
@@ -71,6 +71,7 @@
 		"npm-force-resolutions": "^0.0.10",
 		"os-browserify": "^0.3.0",
 		"path-browserify": "^1.0.1",
+		"permaweb-deploy": "1.0.0",
 		"prettier": "^2.8.3",
 		"process": "^0.11.10",
 		"raw-loader": "^4.0.2",
