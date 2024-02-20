@@ -13,6 +13,7 @@ export const language = {
 		assetDetails: `Asset details`,
 		assetExists: `An asset with this name already exists`,
 		assetFetchConnectionRequired: `Connect a wallet to view your assets`,
+		assetInfoNote: `Note: Details entered below will only apply to newly created assets, existing assets will not be modified.`,
 		assetTopics: `Asset topics`,
 		assetLicenseCheck: `This asset will contain a license`,
 		assetRights: `Asset Rights`,

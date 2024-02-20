@@ -124,3 +124,12 @@ export const MWarning = styled.div`
 		font-weight: ${(props) => props.theme.typography.weight.medium};
 	}
 `;
+
+export const IWrapper = styled.div`
+	margin: 0 0 20px 0;
+	span {
+		color: ${(props) => props.theme.colors.font.alt1};
+		font-size: ${(props) => props.theme.typography.size.xSmall};
+		font-weight: ${(props) => props.theme.typography.weight.bold};
+	}
+`;

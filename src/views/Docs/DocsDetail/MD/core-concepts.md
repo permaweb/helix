@@ -10,13 +10,13 @@ On other chains, the asset data, metadata, and smart contract are typically sepa
 
 Read more about atomic assets [here](https://cookbook.arweave.dev/concepts/atomic-tokens.html).
 
-![Atomic Asset](img/atomic.png)
+![Atomic Asset](https://arweave.net/05Ke4y_K8KTpl44wEDCodh-Xfa8M2DVNYkCG04jXnEo)
 
 ### Atomic asset collections
 
 Atomic asset collections are groups of atomic assets bundled together and displayed as a collection on the UCM. These collections can consist of existing atomic assets owned by the user, newly uploaded assets, or a combination of both.
 
-![Atomic Asset Collection](img/collection.png)
+![Atomic Asset Collection](https://arweave.net/DSwK9H1peJUie_FVz7HI3cnyllK_ln3dzCHxSiFNA8Y)
 
 ## Ardrive Turbo
 
@@ -30,7 +30,7 @@ Instead of platforms setting the terms and conditions, on the permaweb creators 
 
 You can read the full UDL [here](https://orgsxgbx4x37hfuoidzzzuixdwsi57e2eetei2ew6mzwqkxikhoa.arweave.net/dE0rmDfl9_OWjkDznNEXHaSO_JohJkRolvMzaCroUdw).
 
-![Atomic Asset](img/udl.png)
+![Atomic Asset](https://arweave.net/TDH835b0UCD0B8h8CRqPalmVCw2J_9Fp_s0UNOsa8pY)
 
 ## Universal Content Marketplace (UCM)
 

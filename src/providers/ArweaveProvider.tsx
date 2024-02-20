@@ -205,7 +205,7 @@ export function ArweaveProvider(props: ArweaveProviderProps) {
 	}
 
 	async function getTurboBalance() {
-		if (wallet) {
+		if (wallet && walletType) {
 			try {
 				setTurboBalance(`${language.loading}...`);
 				const arweave = Arweave.init({

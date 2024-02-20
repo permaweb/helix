@@ -16,7 +16,7 @@ export const docsOrder = [
 		path: 'upload-assets',
 	},
 	{
-		name: 'Create collections',
+		name: 'Create a collection',
 		path: 'upload-collection',
 	},
 	{
@@ -24,7 +24,7 @@ export const docsOrder = [
 		path: 'attach-udl',
 	},
 	{
-		name: 'List collections (UCM)',
+		name: 'List collection assets (UCM)',
 		path: 'listing-assets',
 	},
 ];

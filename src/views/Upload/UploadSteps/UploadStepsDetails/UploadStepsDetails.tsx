@@ -194,6 +194,9 @@ export default function UploadStepsDetails() {
 							invalid={getInvalidDescription()}
 							required
 						/>
+						<S.IWrapper>
+							<span>{language.assetInfoNote}</span>
+						</S.IWrapper>
 					</>
 				)}
 				<S.COWrapper className={'border-wrapper-alt1'}>

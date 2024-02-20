@@ -58,7 +58,7 @@ export const Wrapper = styled.div<{ isView: boolean }>`
 
 	strong,
 	b {
-		font-weight: ${(props) => props.theme.typography.weight.medium} !important;
+		font-weight: ${(props) => props.theme.typography.weight.xBold} !important;
 	}
 
 	p,
