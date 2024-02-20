@@ -126,8 +126,7 @@ export default function Upload() {
 				{ name: TAGS.keys.contentType, value: CONTENT_TYPES.json },
 				{ name: TAGS.keys.initState, value: initStateCollectionJson },
 				{ name: TAGS.keys.creator, value: arProvider.walletAddress },
-				// { name: TAGS.keys.dataProtocol, value: TAGS.values.collection },
-				{ name: TAGS.keys.dataProtocol, value: 'Test-Collection' }, // TODO
+				{ name: TAGS.keys.dataProtocol, value: TAGS.values.collection },
 				{
 					name: TAGS.keys.smartweaveAppName,
 					value: TAGS.values.smartweaveAppName,

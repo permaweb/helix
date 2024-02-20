@@ -12,6 +12,7 @@ import close from 'assets/close.svg';
 import comments from 'assets/comments.svg';
 import copy from 'assets/copy.svg';
 import details from 'assets/details.svg';
+import docs from 'assets/docs.svg';
 import download from 'assets/download.svg';
 import following from 'assets/following.svg';
 import fullScreen from 'assets/fullscreen.svg';
@@ -58,6 +59,7 @@ export const ASSETS = {
 	comments: comments,
 	copy: copy,
 	details: details,
+	docs: docs,
 	download: download,
 	following: following,
 	fullScreen: fullScreen,
@@ -166,6 +168,7 @@ function createURLs() {
 	return {
 		base: base,
 		asset: `${base}asset/`,
+		docs: `${base}docs/`,
 		following: `${base}following`,
 		profile: profile,
 		profileChannel: (address: string) => `${profile}${address}/channel/`,

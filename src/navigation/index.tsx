@@ -8,7 +8,6 @@ import { ASSETS, STYLING, URLS } from 'helpers/config';
 import { NavPathType } from 'helpers/types';
 import * as windowUtils from 'helpers/window';
 import { checkWindowCutoff, checkWindowResize } from 'helpers/window';
-import { useArweaveProvider } from 'providers/ArweaveProvider';
 import { useCustomThemeProvider } from 'providers/CustomThemeProvider';
 import { useLanguageProvider } from 'providers/LanguageProvider';
 import { WalletConnect } from 'wallet/WalletConnect';
@@ -19,8 +18,6 @@ import * as S from './styles';
 export default function Navigation() {
 	const location = useLocation();
 	const navigate = useNavigate();
-
-	const arProvider = useArweaveProvider();
 
 	const languageProvider = useLanguageProvider();
 	const language = languageProvider.object[languageProvider.current];
@@ -43,6 +40,7 @@ export default function Navigation() {
 	const NAV_PATHS: NavPathType[] = [
 		{ path: URLS.base, label: language.home, icon: ASSETS.landing },
 		{ path: URLS.upload, label: language.upload, icon: ASSETS.upload },
+		{ path: URLS.docs, basePath: URLS.docs, label: language.docs, icon: ASSETS.docs },
 	];
 
 	React.useEffect(() => {
@@ -59,9 +57,7 @@ export default function Navigation() {
 						<Wrapper
 							key={index}
 							active={
-								element.basePath
-									? location.pathname.includes(element.basePath) && location.pathname.includes(arProvider.walletAddress)
-									: element.path === location.pathname
+								element.basePath ? location.pathname.includes(element.basePath) : element.path === location.pathname
 							}
 						>
 							<Link to={element.path} onClick={() => (useFlex ? setPanelOpen(false) : {})}>

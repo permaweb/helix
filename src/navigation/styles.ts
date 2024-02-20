@@ -161,7 +161,7 @@ export const BNavItem = styled.div<{ active: boolean }>`
 	span {
 		color: ${(props) => props.theme.colors.font.primary};
 		font-size: ${(props) => props.theme.typography.size.xxSmall};
-		font-weight: ${(props) => props.theme.typography.weight.medium};
+		font-weight: ${(props) => props.theme.typography.weight.bold};
 		text-align: center;
 	}
 	a {
