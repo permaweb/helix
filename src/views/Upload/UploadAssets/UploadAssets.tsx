@@ -24,6 +24,7 @@ import * as S from './styles';
 const SEQUENCE_ITERATION = 10;
 
 function FileDropdown(props: {
+	id: string;
 	data: FileMetadataType;
 	handleRemoveFile: (fileName: string) => void;
 	handleAddField: (fileName: string, value: string, fieldType: ActiveFieldAddType) => void;
@@ -36,6 +37,11 @@ function FileDropdown(props: {
 
 	const [title, setTitle] = React.useState<string>('');
 	const [description, setDescription] = React.useState<string>('');
+
+	React.useEffect(() => {
+		setTitle('');
+		setDescription('');
+	}, [props.id]);
 
 	function getFieldAdd() {
 		let header: string;
@@ -66,7 +72,7 @@ function FileDropdown(props: {
 							props.handleAddField(props.data.file.name, title, 'title');
 							setActiveFieldAdd(null);
 						}}
-						disabled={!title}
+						disabled={false}
 						noMinWidth
 					/>
 				);
@@ -94,7 +100,7 @@ function FileDropdown(props: {
 							setActiveFieldAdd(null);
 							setOpen(false);
 						}}
-						disabled={!description}
+						disabled={false}
 						noMinWidth
 					/>
 				);
@@ -122,7 +128,7 @@ function FileDropdown(props: {
 						type={'primary'}
 						src={ASSETS.actionMenu}
 						handlePress={() => setOpen(!open)}
-						dimensions={{ wrapper: 27.5, icon: 18.5 }}
+						dimensions={{ wrapper: 27.5, icon: 17.5 }}
 					/>
 					{open && (
 						<S.DDropdown className={'border-wrapper-primary'} open={open}>
@@ -217,7 +223,7 @@ export default function UploadAssets() {
 
 	React.useEffect(() => {
 		if (uploadReducer.data.contentList) {
-			let currentData = [...uploadReducer.data.contentList].splice(sequence.start, sequence.end + 1);
+			let currentData = [...uploadReducer.data.contentList].slice(sequence.start, sequence.end + 1);
 			setCurrentSelectedData(currentData);
 		}
 	}, [uploadReducer.data.contentList, sequence]);
@@ -305,6 +311,9 @@ export default function UploadAssets() {
 	function getTableData() {
 		if (uploadReducer.data.contentList && currentSelectedData) {
 			return currentSelectedData.map((data: FileMetadataType) => {
+				const index = uploadReducer.data.contentList.findIndex(
+					(currentData: FileMetadataType) => currentData.file.name === data.file.name
+				);
 				return {
 					data: {
 						fileName: data.title ? data.title : data.file.name,
@@ -315,6 +324,7 @@ export default function UploadAssets() {
 						),
 						actions: (
 							<FileDropdown
+								id={`file-dropdown-${index}`}
 								data={data}
 								handleRemoveFile={(fileName: string) => handleRemoveFile(fileName)}
 								handleAddField={(fileName: string, value: string, fieldType: ActiveFieldAddType) =>

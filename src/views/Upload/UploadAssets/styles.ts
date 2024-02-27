@@ -174,6 +174,11 @@ export const DWrapper = styled.div`
 	width: fit-content;
 	position: relative;
 	margin: 5px auto 0 auto;
+	button {
+		svg {
+			margin: 0 0 1px 0;
+		}
+	}
 `;
 
 export const DDropdown = styled.ul<{ open: boolean }>`
