@@ -11,7 +11,7 @@ export const HWrapper = styled.div`
 	justify-content: space-between;
 	flex-wrap: wrap-reverse;
 	gap: 20px;
-	margin: 0 0 40px 0;
+	margin: 0 auto 40px auto;
 	h4 {
 		color: ${(props) => props.theme.colors.font.primary};
 		font-size: clamp(18px, 3.25vw, 24px);
