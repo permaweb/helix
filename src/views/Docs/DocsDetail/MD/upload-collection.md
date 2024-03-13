@@ -17,5 +17,5 @@ Create an atomic asset collection from either existing atomic assets or uploadin
   - In the field below determine how many fractional tokens are allowed for each of your atomic assets.
 - Collection code - A collection code is a unique identifier for your collection. It can be used to identify which collection an asset belongs to in other applications. Ex: On Bazar, if your collection code is "cryptopunk," your collection assets are named "cryptopunk#1," "cryptopunk#2," etc...).
 - Asset topics: Select topics that best describe your atomic assets. Add as many custom topics as needed. These topics assist in discoverability on the permaweb. Learn more about asset discoverability tags (ANS-110) [here](https://github.com/ArweaveTeam/arweave-standards/blob/master/ans/ANS-110.md).
-- Banner: Upload a banner image to display at the top of the collection.
-- Thumbnail: Upload a thumbnail image for the collection.
+- Banner: Upload a banner image to display at the top of the collection. (Recommended size: 16:9 aspect ratio, 1920 x 1080 pixels).
+- Thumbnail: Upload a thumbnail image for the collection. (Recommended size: 1:1 aspect ratio, 300 x 300 pixels).
