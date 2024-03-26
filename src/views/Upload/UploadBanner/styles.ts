@@ -10,6 +10,8 @@ export const Wrapper = styled.div`
 `;
 
 export const Header = styled.div`
+	display: flex;
+	align-items: center;
 	p,
 	span {
 		line-height: 1.5;
@@ -18,7 +20,7 @@ export const Header = styled.div`
 		color: ${(props) => props.theme.colors.font.primary};
 		font-size: ${(props) => props.theme.typography.size.base};
 		font-weight: ${(props) => props.theme.typography.weight.bold};
-		margin: 0px 0 5px 0;
+		margin: 0 5px 5px 0;
 	}
 	span {
 		color: ${(props) => props.theme.colors.font.alt1};
@@ -26,6 +28,18 @@ export const Header = styled.div`
 		font-weight: ${(props) => props.theme.typography.weight.medium};
 		display: block;
 		max-width: 600px;
+	}
+	button {
+		margin 0 0 6.5px 0;
+	}
+`;
+
+export const Tooltip = styled.div`
+	padding: 0 20px 20px 20px;
+	p {
+		font-size: ${(props) => props.theme.typography.size.xSmall};
+		line-height: 1.5;
+		color: ${(props) => props.theme.colors.font.primary};
 	}
 `;
 
