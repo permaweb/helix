@@ -262,19 +262,55 @@ export default function Upload() {
 					// if (uploadReducer.uploadType === 'collection' && uploadReducer.data.collectionCode)
 					// 	assetTags.push({ name: TAGS.keys.collectionCode, value: uploadReducer.data.collectionCode });
 
+					const aos = connect({ MU_URL: 'https://mu.ao-testnest.xyz' });
+
+					const TOKEN_PROCESS_SRC = 'jlqBStsJjDr7hK_5ODYk68aUwbjWVPJosQbUbXN9_70';
 					const MODULE = 'SBNb1qPQ1TDwpD_mboxm2YllmMLXpWw4U8P9Ff8W9vk';
 					const SCHEDULER = '_GQ33BkPtZrqxA84vM8Zk-N2aO0toNNu_C-l-rawrBA';
-					const aos = connect();
+
+					let processSrc = null;
 					const buffer: any = await fileToBuffer(data.file);
-					const pid = await aos.spawn({
+
+					try {
+						const processSrcFetch = await fetch(`https://arweave.net/${TOKEN_PROCESS_SRC}`);
+						if (processSrcFetch.ok) {
+							processSrc = await processSrcFetch.text();
+						}
+					} catch (e: any) {
+						console.error(e);
+					}
+
+					if (processSrc) {
+						processSrc = processSrc.replaceAll('<NAME>', title);
+						processSrc = processSrc.replaceAll('<TICKER>', 'ATOMIC');
+						processSrc = processSrc.replaceAll('<DENOMINATION>', '1');
+						processSrc = processSrc.replaceAll('<BALANCE>', balance.toString());
+					}
+
+					const processId = await aos.spawn({
 						module: MODULE,
 						scheduler: SCHEDULER,
-						signer: createDataItemSigner(globalThis.arweaveWallet),
+						signer: createDataItemSigner(arProvider.wallet),
 						tags: assetTags,
-						data: 'buffer',
+						data: buffer,
 					});
 
-					console.log(pid);
+					console.log(processId);
+					console.log(processSrc);
+
+					const evalMessage = await aos.message({
+						process: processId,
+						signer: createDataItemSigner(arProvider.wallet),
+						tags: [{ name: 'Action', value: 'Eval' }],
+						data: processSrc,
+					});
+
+					const evalResult = await aos.result({
+						message: evalMessage,
+						process: processId,
+					});
+
+					console.log(evalResult);
 
 					// const txResponse = await uploader.uploadData(buffer as any, { tags: assetTags } as any);
 
