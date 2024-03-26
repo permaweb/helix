@@ -2,6 +2,7 @@ import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { ArweaveWebIrys } from '@irys/sdk/build/esm/web/tokens/arweave';
+import { connect, createDataItemSigner } from '@permaweb/aoconnect';
 
 import { createContract, createTransaction } from 'api';
 
@@ -41,18 +42,19 @@ export default function Upload() {
 	const [collectionResponse, setCollectionResponse] = React.useState<string | null>(null);
 	const [collectionResponseError, setCollectionResponseError] = React.useState<string | null>(null);
 
-	React.useEffect(() => {
-		const handleBeforeUnload = (e: any) => {
-			e.preventDefault();
-			e.returnValue = '';
-		};
+	// TODO
+	// React.useEffect(() => {
+	// 	const handleBeforeUnload = (e: any) => {
+	// 		e.preventDefault();
+	// 		e.returnValue = '';
+	// 	};
 
-		window.addEventListener('beforeunload', handleBeforeUnload);
+	// 	window.addEventListener('beforeunload', handleBeforeUnload);
 
-		return () => {
-			window.removeEventListener('beforeunload', handleBeforeUnload);
-		};
-	}, [uploadReducer]);
+	// 	return () => {
+	// 		window.removeEventListener('beforeunload', handleBeforeUnload);
+	// 	};
+	// }, [uploadReducer]);
 
 	React.useEffect(() => {
 		if (!arProvider.wallet) dispatch(uploadActions.setUploadDisabled(true));
@@ -189,23 +191,23 @@ export default function Upload() {
 				index = index + 1;
 				setUploadIndex(index);
 
-				const irys = new ArweaveWebIrys({
-					url: UPLOAD_CONFIG.node2,
-					wallet: { provider: arProvider.wallet },
-				});
-				await irys.ready();
+				// const irys = new ArweaveWebIrys({
+				// 	url: UPLOAD_CONFIG.node2,
+				// 	wallet: { provider: arProvider.wallet },
+				// });
+				// await irys.ready();
 
-				let uploader = irys.uploader.chunkedUploader;
-				uploader.setBatchSize(UPLOAD_CONFIG.batchSize);
-				uploader.setChunkSize(UPLOAD_CONFIG.chunkSize);
+				// let uploader = irys.uploader.chunkedUploader;
+				// uploader.setBatchSize(UPLOAD_CONFIG.batchSize);
+				// uploader.setChunkSize(UPLOAD_CONFIG.chunkSize);
 
-				uploader.on('chunkUpload', (chunkInfo) => {
-					setUploadPercentage(Math.floor((chunkInfo.totalUploaded / data.file.size) * 100));
-				});
+				// uploader.on('chunkUpload', (chunkInfo) => {
+				// 	setUploadPercentage(Math.floor((chunkInfo.totalUploaded / data.file.size) * 100));
+				// });
 
-				uploader.on('chunkError', (e) => {
-					console.error(e);
-				});
+				// uploader.on('chunkError', (e) => {
+				// 	console.error(e);
+				// });
 
 				const dateTime = new Date().getTime().toString();
 
@@ -237,9 +239,9 @@ export default function Upload() {
 					initStateAssetJson = JSON.stringify(initStateAssetJson);
 
 					const assetTags: TagType[] = [
-						{ name: TAGS.keys.contractSrc, value: ASSET_CONTRACT.src },
-						{ name: TAGS.keys.smartweaveAppName, value: TAGS.values.smartweaveAppName },
-						{ name: TAGS.keys.smartweaveAppVersion, value: TAGS.values.smartweaveAppVersion },
+						// { name: TAGS.keys.contractSrc, value: ASSET_CONTRACT.src },
+						// { name: TAGS.keys.smartweaveAppName, value: TAGS.values.smartweaveAppName },
+						// { name: TAGS.keys.smartweaveAppVersion, value: TAGS.values.smartweaveAppVersion },
 						{ name: TAGS.keys.contentType, value: type },
 						{ name: TAGS.keys.initState, value: initStateAssetJson },
 						{ name: TAGS.keys.initialOwner, value: arProvider.walletAddress },
@@ -250,22 +252,35 @@ export default function Upload() {
 						{ name: TAGS.keys.dateCreated, value: dateTime },
 					];
 
-					uploadReducer.data.topics.forEach((topic: string) =>
-						assetTags.push({ name: TAGS.keys.topic(topic), value: topic })
-					);
+					// uploadReducer.data.topics.forEach((topic: string) =>
+					// 	assetTags.push({ name: TAGS.keys.topic(topic), value: topic })
+					// );
 
-					if (uploadReducer.data.hasLicense && uploadReducer.data.license)
-						assetTags.push(...buildLicenseTags(uploadReducer.data.license));
+					// if (uploadReducer.data.hasLicense && uploadReducer.data.license)
+					// 	assetTags.push(...buildLicenseTags(uploadReducer.data.license));
 
-					if (uploadReducer.uploadType === 'collection' && uploadReducer.data.collectionCode)
-						assetTags.push({ name: TAGS.keys.collectionCode, value: uploadReducer.data.collectionCode });
+					// if (uploadReducer.uploadType === 'collection' && uploadReducer.data.collectionCode)
+					// 	assetTags.push({ name: TAGS.keys.collectionCode, value: uploadReducer.data.collectionCode });
 
-					const buffer = await fileToBuffer(data.file);
-					const txResponse = await uploader.uploadData(buffer as any, { tags: assetTags } as any);
+					const MODULE = 'SBNb1qPQ1TDwpD_mboxm2YllmMLXpWw4U8P9Ff8W9vk';
+					const SCHEDULER = '_GQ33BkPtZrqxA84vM8Zk-N2aO0toNNu_C-l-rawrBA';
+					const aos = connect();
+					const buffer: any = await fileToBuffer(data.file);
+					const pid = await aos.spawn({
+						module: MODULE,
+						scheduler: SCHEDULER,
+						signer: createDataItemSigner(globalThis.arweaveWallet),
+						tags: assetTags,
+						data: 'buffer',
+					});
 
-					const contractResponse = await createContract({ assetId: txResponse.data.id });
+					console.log(pid);
 
-					if (contractResponse) uploadedAssetsList.push(contractResponse);
+					// const txResponse = await uploader.uploadData(buffer as any, { tags: assetTags } as any);
+
+					// const contractResponse = await createContract({ assetId: txResponse.data.id });
+
+					// if (contractResponse) uploadedAssetsList.push(contractResponse);
 					if (index < uploadReducer.data.contentList.length) setUploadPercentage(0);
 				} catch (e: any) {
 					console.error(e.message);
