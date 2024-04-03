@@ -4,12 +4,13 @@ import { useDispatch, useSelector } from 'react-redux';
 import { ArweaveWebIrys } from '@irys/sdk/build/esm/web/tokens/arweave';
 import { connect, createDataItemSigner } from '@permaweb/aoconnect';
 
-import { createContract, createTransaction } from 'api';
+import { createTransaction } from 'api';
+import { getGQLData } from 'gql';
 
 import { Button } from 'components/atoms/Button';
 import { Loader } from 'components/atoms/Loader';
 import { Modal } from 'components/molecules/Modal';
-import { ASSET_CONTRACT, CONTENT_TYPES, REDIRECTS, TAGS, UPLOAD_CONFIG } from 'helpers/config';
+import { ASSET_CONTRACT, CONTENT_TYPES, GATEWAYS, REDIRECTS, TAGS, UPLOAD_CONFIG } from 'helpers/config';
 import { TagType, UploadType } from 'helpers/types';
 import { base64ToUint8Array, fileToBuffer, getBase64Data, getDataURLContentType } from 'helpers/utils';
 import { hideDocumentBody, showDocumentBody } from 'helpers/window';
@@ -128,7 +129,8 @@ export default function Upload() {
 				{ name: TAGS.keys.contentType, value: CONTENT_TYPES.json },
 				{ name: TAGS.keys.initState, value: initStateCollectionJson },
 				{ name: TAGS.keys.creator, value: arProvider.walletAddress },
-				{ name: TAGS.keys.dataProtocol, value: TAGS.values.collection },
+				// { name: TAGS.keys.dataProtocol, value: TAGS.values.collection }, // TODO
+				{ name: TAGS.keys.dataProtocol, value: 'AO-Test-Collection' },
 				{
 					name: TAGS.keys.smartweaveAppName,
 					value: TAGS.values.smartweaveAppName,
@@ -252,17 +254,17 @@ export default function Upload() {
 						{ name: TAGS.keys.dateCreated, value: dateTime },
 					];
 
-					// uploadReducer.data.topics.forEach((topic: string) =>
-					// 	assetTags.push({ name: TAGS.keys.topic(topic), value: topic })
-					// );
+					uploadReducer.data.topics.forEach((topic: string) =>
+						assetTags.push({ name: TAGS.keys.topic(topic), value: topic })
+					);
 
-					// if (uploadReducer.data.hasLicense && uploadReducer.data.license)
-					// 	assetTags.push(...buildLicenseTags(uploadReducer.data.license));
+					if (uploadReducer.data.hasLicense && uploadReducer.data.license)
+						assetTags.push(...buildLicenseTags(uploadReducer.data.license));
 
-					// if (uploadReducer.uploadType === 'collection' && uploadReducer.data.collectionCode)
-					// 	assetTags.push({ name: TAGS.keys.collectionCode, value: uploadReducer.data.collectionCode });
+					if (uploadReducer.uploadType === 'collection' && uploadReducer.data.collectionCode)
+						assetTags.push({ name: TAGS.keys.collectionCode, value: uploadReducer.data.collectionCode });
 
-					const aos = connect({ MU_URL: 'https://mu.ao-testnest.xyz' });
+					const aos = connect();
 
 					const TOKEN_PROCESS_SRC = 'jlqBStsJjDr7hK_5ODYk68aUwbjWVPJosQbUbXN9_70';
 					const MODULE = 'SBNb1qPQ1TDwpD_mboxm2YllmMLXpWw4U8P9Ff8W9vk';
@@ -290,17 +292,42 @@ export default function Upload() {
 					const processId = await aos.spawn({
 						module: MODULE,
 						scheduler: SCHEDULER,
-						signer: createDataItemSigner(arProvider.wallet),
+						signer: createDataItemSigner(globalThis.arweaveWallet),
 						tags: assetTags,
 						data: buffer,
 					});
 
 					console.log(processId);
-					console.log(processSrc);
+
+					let fetchedAssetId: string;
+					let retryCount: number = 0;
+					while (!fetchedAssetId) {
+						await new Promise((r) => setTimeout(r, 2000));
+						const gqlResponse = await getGQLData({
+							gateway: GATEWAYS.arweave,
+							ids: [processId],
+							tagFilters: null,
+							owners: null,
+							cursor: null,
+							reduxCursor: null,
+							cursorObjectKey: null,
+						});
+
+						if (gqlResponse && gqlResponse.data.length) {
+							console.log(`Fetched transaction`, gqlResponse.data[0].node.id, 0);
+							fetchedAssetId = gqlResponse.data[0].node.id;
+						} else {
+							console.log(`Transaction not found`, processId, 0);
+							retryCount++;
+							if (retryCount >= 5) {
+								throw new Error(`Transaction not found after 5 attempts, contract deployment retries failed`);
+							}
+						}
+					}
 
 					const evalMessage = await aos.message({
 						process: processId,
-						signer: createDataItemSigner(arProvider.wallet),
+						signer: createDataItemSigner(globalThis.arweaveWallet),
 						tags: [{ name: 'Action', value: 'Eval' }],
 						data: processSrc,
 					});
@@ -313,10 +340,10 @@ export default function Upload() {
 					console.log(evalResult);
 
 					// const txResponse = await uploader.uploadData(buffer as any, { tags: assetTags } as any);
-
 					// const contractResponse = await createContract({ assetId: txResponse.data.id });
 
-					// if (contractResponse) uploadedAssetsList.push(contractResponse);
+					if (evalResult) uploadedAssetsList.push(processId);
+
 					if (index < uploadReducer.data.contentList.length) setUploadPercentage(0);
 				} catch (e: any) {
 					console.error(e.message);
