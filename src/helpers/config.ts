@@ -46,6 +46,12 @@ export const APP = {
 	name: 'Helix',
 };
 
+export const AOS = {
+	module: 'SBNb1qPQ1TDwpD_mboxm2YllmMLXpWw4U8P9Ff8W9vk',
+	scheduler: '_GQ33BkPtZrqxA84vM8Zk-N2aO0toNNu_C-l-rawrBA',
+	tokenProcess: 'jlqBStsJjDr7hK_5ODYk68aUwbjWVPJosQbUbXN9_70',
+};
+
 export const ASSETS = {
 	actionMenu: actionMenu,
 	add: add,
@@ -139,18 +145,14 @@ export const TAGS = {
 	},
 	values: {
 		ansVersion: 'ANS-110',
-		collection: 'Collection',
+		collection: 'AO-Test-Collection',
 		comment: 'comment',
-		contractManifest:
-			'{"evaluationOptions":{"sourceType":"redstone-sequencer","allowBigInt":true,"internalWrites":true,"unsafeClient":"skip","useConstructor":true}}',
 		document: 'Document',
 		followDataProtocol: 'Follow',
 		license: 'dE0rmDfl9_OWjkDznNEXHaSO_JohJkRolvMzaCroUdw',
 		profileVersions: {
 			'1': 'Account-0.3',
 		},
-		smartweaveAppName: 'SmartWeaveContract',
-		smartweaveAppVersion: '0.3.0',
 		ticker: 'ATOMIC ASSET',
 		title: (title: string) => `${title}`,
 	},

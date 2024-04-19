@@ -10,7 +10,8 @@ import { getGQLData } from 'gql';
 import { Button } from 'components/atoms/Button';
 import { Loader } from 'components/atoms/Loader';
 import { Modal } from 'components/molecules/Modal';
-import { ASSET_CONTRACT, CONTENT_TYPES, GATEWAYS, REDIRECTS, TAGS, UPLOAD_CONFIG } from 'helpers/config';
+import { AOS, CONTENT_TYPES, GATEWAYS, REDIRECTS, TAGS, UPLOAD_CONFIG } from 'helpers/config';
+import { getTxEndpoint } from 'helpers/endpoints';
 import { TagType, UploadType } from 'helpers/types';
 import { base64ToUint8Array, fileToBuffer, getBase64Data, getDataURLContentType } from 'helpers/utils';
 import { hideDocumentBody, showDocumentBody } from 'helpers/window';
@@ -44,18 +45,18 @@ export default function Upload() {
 	const [collectionResponseError, setCollectionResponseError] = React.useState<string | null>(null);
 
 	// TODO
-	// React.useEffect(() => {
-	// 	const handleBeforeUnload = (e: any) => {
-	// 		e.preventDefault();
-	// 		e.returnValue = '';
-	// 	};
+	React.useEffect(() => {
+		const handleBeforeUnload = (e: any) => {
+			e.preventDefault();
+			e.returnValue = '';
+		};
 
-	// 	window.addEventListener('beforeunload', handleBeforeUnload);
+		window.addEventListener('beforeunload', handleBeforeUnload);
 
-	// 	return () => {
-	// 		window.removeEventListener('beforeunload', handleBeforeUnload);
-	// 	};
-	// }, [uploadReducer]);
+		return () => {
+			window.removeEventListener('beforeunload', handleBeforeUnload);
+		};
+	}, [uploadReducer]);
 
 	React.useEffect(() => {
 		if (!arProvider.wallet) dispatch(uploadActions.setUploadDisabled(true));
@@ -129,21 +130,7 @@ export default function Upload() {
 				{ name: TAGS.keys.contentType, value: CONTENT_TYPES.json },
 				{ name: TAGS.keys.initState, value: initStateCollectionJson },
 				{ name: TAGS.keys.creator, value: arProvider.walletAddress },
-				// { name: TAGS.keys.dataProtocol, value: TAGS.values.collection }, // TODO
-				{ name: TAGS.keys.dataProtocol, value: 'AO-Test-Collection' },
-				{
-					name: TAGS.keys.smartweaveAppName,
-					value: TAGS.values.smartweaveAppName,
-				},
-				{
-					name: TAGS.keys.smartweaveAppVersion,
-					value: TAGS.values.smartweaveAppVersion,
-				},
-				{ name: TAGS.keys.contractSrc, value: ASSET_CONTRACT.src },
-				{
-					name: TAGS.keys.contractManifest,
-					value: TAGS.values.contractManifest,
-				},
+				{ name: TAGS.keys.dataProtocol, value: TAGS.values.collection },
 				{
 					name: TAGS.keys.ans110.title,
 					value: uploadReducer.data.title,
@@ -241,9 +228,6 @@ export default function Upload() {
 					initStateAssetJson = JSON.stringify(initStateAssetJson);
 
 					const assetTags: TagType[] = [
-						// { name: TAGS.keys.contractSrc, value: ASSET_CONTRACT.src },
-						// { name: TAGS.keys.smartweaveAppName, value: TAGS.values.smartweaveAppName },
-						// { name: TAGS.keys.smartweaveAppVersion, value: TAGS.values.smartweaveAppVersion },
 						{ name: TAGS.keys.contentType, value: type },
 						{ name: TAGS.keys.initState, value: initStateAssetJson },
 						{ name: TAGS.keys.initialOwner, value: arProvider.walletAddress },
@@ -266,15 +250,11 @@ export default function Upload() {
 
 					const aos = connect();
 
-					const TOKEN_PROCESS_SRC = 'jlqBStsJjDr7hK_5ODYk68aUwbjWVPJosQbUbXN9_70';
-					const MODULE = 'SBNb1qPQ1TDwpD_mboxm2YllmMLXpWw4U8P9Ff8W9vk';
-					const SCHEDULER = '_GQ33BkPtZrqxA84vM8Zk-N2aO0toNNu_C-l-rawrBA';
-
 					let processSrc = null;
 					const buffer: any = await fileToBuffer(data.file);
 
 					try {
-						const processSrcFetch = await fetch(`https://arweave.net/${TOKEN_PROCESS_SRC}`);
+						const processSrcFetch = await fetch(getTxEndpoint(AOS.tokenProcess));
 						if (processSrcFetch.ok) {
 							processSrc = await processSrcFetch.text();
 						}
@@ -290,14 +270,12 @@ export default function Upload() {
 					}
 
 					const processId = await aos.spawn({
-						module: MODULE,
-						scheduler: SCHEDULER,
+						module: AOS.module,
+						scheduler: AOS.scheduler,
 						signer: createDataItemSigner(globalThis.arweaveWallet),
 						tags: assetTags,
 						data: buffer,
 					});
-
-					console.log(processId);
 
 					let fetchedAssetId: string;
 					let retryCount: number = 0;
@@ -338,9 +316,6 @@ export default function Upload() {
 					});
 
 					console.log(evalResult);
-
-					// const txResponse = await uploader.uploadData(buffer as any, { tags: assetTags } as any);
-					// const contractResponse = await createContract({ assetId: txResponse.data.id });
 
 					if (evalResult) uploadedAssetsList.push(processId);
 
