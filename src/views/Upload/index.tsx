@@ -44,7 +44,6 @@ export default function Upload() {
 	const [collectionResponse, setCollectionResponse] = React.useState<string | null>(null);
 	const [collectionResponseError, setCollectionResponseError] = React.useState<string | null>(null);
 
-	// TODO
 	React.useEffect(() => {
 		const handleBeforeUnload = (e: any) => {
 			e.preventDefault();
