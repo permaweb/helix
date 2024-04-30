@@ -1,14 +1,8 @@
 import Arweave from 'arweave';
-import { defaultCacheOptions, LoggerFactory, WarpFactory } from 'warp-contracts';
-import { DeployPlugin } from 'warp-contracts-plugin-deploy';
+import { dryrun } from '@permaweb/aoconnect';
 
-import { getGQLData } from 'gql';
-
-import { API_CONFIG, CONTENT_TYPES, CONTRACT_CONFIG, GATEWAYS } from 'helpers/config';
+import { API_CONFIG, CONTENT_TYPES, GATEWAYS } from 'helpers/config';
 import { TagType } from 'helpers/types';
-import { log, logValue } from 'helpers/utils';
-
-LoggerFactory.INST.logLevel('fatal');
 
 const arweave = Arweave.init({
 	host: GATEWAYS.arweave,
@@ -17,11 +11,6 @@ const arweave = Arweave.init({
 	timeout: API_CONFIG.timeout,
 	logging: API_CONFIG.logging,
 });
-
-const warp = WarpFactory.forMainnet({
-	...defaultCacheOptions,
-	inMemory: true,
-}).use(new DeployPlugin());
 
 export async function createTransaction(args: { content: any; contentType: string; tags: TagType[] }) {
 	let finalContent: any;
@@ -43,59 +32,17 @@ export async function createTransaction(args: { content: any; contentType: strin
 	}
 }
 
-export async function createContract(args: { assetId: string }) {
-	try {
-		let fetchedAssetId: string;
-		while (!fetchedAssetId) {
-			await new Promise((r) => setTimeout(r, 2000));
-			const gqlResponse = await getGQLData({
-				gateway: GATEWAYS.arweave,
-				ids: [args.assetId],
-				tagFilters: null,
-				owners: null,
-				cursor: null,
-				reduxCursor: null,
-				cursorObjectKey: null,
-			});
+export async function readHandler(args: { processId: string; action: string; data: any }): Promise<any> {
+	const response = await dryrun({
+		process: args.processId,
+		tags: [{ name: 'Action', value: args.action }],
+		data: JSON.stringify(args.data),
+	});
 
-			if (gqlResponse && gqlResponse.data.length) {
-				logValue(`Fetched transaction`, gqlResponse.data[0].node.id, 0);
-				fetchedAssetId = gqlResponse.data[0].node.id;
-			} else {
-				logValue(`Transaction not found`, args.assetId, 0);
-			}
-		}
-
-		const { contractTxId } = await warp.register(fetchedAssetId, CONTRACT_CONFIG.node as any);
-		logValue(`Deployed contract`, contractTxId, 0);
-		return contractTxId;
-	} catch (e: any) {
-		logValue(`Error deploying contract - Asset ID`, args.assetId, 1);
-
-		const errorString = e.toString();
-		if (errorString.indexOf('500') > -1) {
-			return null;
-		}
-
-		if (errorString.indexOf('502') > -1 || errorString.indexOf('504') > -1 || errorString.indexOf('FetchError') > -1) {
-			let retries = 5;
-			for (let i = 0; i < retries; i++) {
-				await new Promise((r) => setTimeout(r, 2000));
-				try {
-					log(`Retrying warp ...`, null);
-					const { contractTxId } = await warp.register(args.assetId, CONTRACT_CONFIG.node as any);
-					log(`Retry succeeded`, 0);
-					return contractTxId;
-				} catch (e2: any) {
-					logValue(`Error deploying contract - Asset ID`, args.assetId, 1);
-					continue;
-				}
-			}
-		}
+	if (response.Messages && response.Messages.length && response.Messages[0].Data) {
+		return JSON.parse(response.Messages[0].Data);
 	}
-
-	throw new Error(`Contract deployment retries failed ...`);
 }
 
-export * from './assets';
 export * from './follow';
+export * from './profiles';

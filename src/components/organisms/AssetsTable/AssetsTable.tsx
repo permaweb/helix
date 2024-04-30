@@ -6,7 +6,7 @@ import { getAssetIdsByUser, getGQLData } from 'gql';
 import { Checkbox } from 'components/atoms/Checkbox';
 import { Loader } from 'components/atoms/Loader';
 import { Table } from 'components/molecules/Table';
-import { GATEWAYS, PAGINATORS, REDIRECTS, STORAGE, TAGS, TRADE_SOURCES } from 'helpers/config';
+import { GATEWAYS, PAGINATORS, REDIRECTS, STORAGE, TAGS } from 'helpers/config';
 import { AlignType, CursorEnum, GQLNodeResponseType, GroupIndexType } from 'helpers/types';
 import { formatAddress, getTagValue } from 'helpers/utils';
 import { useArweaveProvider } from 'providers/ArweaveProvider';
@@ -52,7 +52,7 @@ export default function AssetsTable(props: { useIdAction: boolean }) {
 				setLoading(true);
 				try {
 					const groups: GroupIndexType = [];
-					const ids = await getAssetIdsByUser({ walletAddress: arProvider.walletAddress });
+					const ids = await getAssetIdsByUser({ address: arProvider.walletAddress });
 					if (ids && ids.length) {
 						setIdCount(ids.length);
 						const groupIndex = new Map(groups.map((group: any) => [group.index, group.ids]));
@@ -201,8 +201,6 @@ export default function AssetsTable(props: { useIdAction: boolean }) {
 				const title = titleTag !== STORAGE.none ? titleTag : formatAddress(element.node.id, false);
 				const displayTitle = title ? title : language.titleNotFound;
 
-				const contractSrc = getTagValue(element.node.tags, TAGS.keys.contractSrc);
-
 				let idChecked = false;
 				if (uploadReducer.data && uploadReducer.data.idList) {
 					idChecked = uploadReducer.data.idList.includes(element.node.id);
@@ -217,11 +215,7 @@ export default function AssetsTable(props: { useIdAction: boolean }) {
 				if (props.useIdAction) {
 					data.select = (
 						<S.CWrapper>
-							<Checkbox
-								checked={idChecked}
-								handleSelect={() => handleId(element.node.id)}
-								disabled={!TRADE_SOURCES.includes(contractSrc) && useDisable}
-							/>
+							<Checkbox checked={idChecked} handleSelect={() => handleId(element.node.id)} disabled={useDisable} />
 						</S.CWrapper>
 					);
 				}
@@ -255,7 +249,7 @@ export default function AssetsTable(props: { useIdAction: boolean }) {
 							title={`${language.assets} (${idCount})`}
 							action={null}
 							header={getTableHeader()}
-							data={getTableData(currentRecords, true)}
+							data={getTableData(currentRecords, false)}
 							recordsPerPage={PAGINATORS.assetTable}
 							showPageNumbers={false}
 							handleCursorFetch={(cursor: string | null) => setCurrentTableCursor(cursor)}

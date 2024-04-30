@@ -218,15 +218,16 @@ export const BNavItemFlex = styled(BNavItem)`
 `;
 
 export const PWrapper = styled.div`
-	height: 100vh;
+	height: calc(100vh - 15px);
 	width: ${STYLING.dimensions.nav.panelWidthOpen};
 	max-width: 90vw;
 	position: fixed;
-	top: 0;
-	left: 0;
+	top: 7.5px;
+	left: 7.5px;
 	transition: width 50ms ease-out;
 	background: ${(props) => props.theme.colors.container.primary.background};
-	border-right: 1px solid ${(props) => props.theme.colors.border.primary};
+	border: 1px solid ${(props) => props.theme.colors.border.primary};
+	border-radius: ${STYLING.dimensions.radius.primary};
 	animation: ${openLeft} 200ms;
 `;
 

@@ -7,12 +7,12 @@ import { ArweaveWebWallet } from 'arweave-wallet-connector';
 import { ArconnectSigner } from 'arbundles';
 import { Othent } from 'permaweb-sdk/dist/helpers/wallet';
 
-import { getCurrentProfile } from 'gql';
+import { getProfile } from 'api';
 
 import { Modal } from 'components/molecules/Modal';
 import { API_CONFIG, APP, AR_WALLETS, ASSETS, GATEWAYS, WALLET_PERMISSIONS } from 'helpers/config';
 import { getARBalanceEndpoint, getTurboBalanceEndpoint } from 'helpers/endpoints';
-import { ProfileType, WalletEnum } from 'helpers/types';
+import { ProfileHeaderType, WalletEnum } from 'helpers/types';
 import { getARAmountFromWinc } from 'helpers/utils';
 import { useLanguageProvider } from 'providers/LanguageProvider';
 
@@ -28,7 +28,7 @@ interface ArweaveContextState {
 	handleDisconnect: () => void;
 	walletModalVisible: boolean;
 	setWalletModalVisible: (open: boolean) => void;
-	profile: any;
+	profile: ProfileHeaderType;
 	turboBalance: number | string | null;
 	getTurboBalance: () => void;
 }
@@ -83,7 +83,7 @@ export function ArweaveProvider(props: ArweaveProviderProps) {
 	const [walletAddress, setWalletAddress] = React.useState<string | null>(null);
 	const [availableBalance, setAvailableBalance] = React.useState<number | null>(null);
 	const [turboBalance, setTurboBalance] = React.useState<number | string | null>(null);
-	const [profile, setProfile] = React.useState<ProfileType | null>(null);
+	const [profile, setProfile] = React.useState<ProfileHeaderType | null>(null);
 
 	React.useEffect(() => {
 		(async function () {
@@ -113,7 +113,7 @@ export function ArweaveProvider(props: ArweaveProviderProps) {
 		(async function () {
 			if (wallet && walletAddress) {
 				try {
-					setProfile(await getCurrentProfile({ address: walletAddress }));
+					setProfile(await getProfile({ address: walletAddress }));
 				} catch (e: any) {
 					console.error(e);
 				}

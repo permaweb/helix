@@ -1,8 +1,7 @@
 import React from 'react';
 import { ReactSVG } from 'react-svg';
 
-import { getFullProfile } from 'permaweb-sdk/dist/gql';
-import { FullProfileType } from 'permaweb-sdk/dist/helpers/types';
+import { getProfile } from 'api';
 
 import { Button } from 'components/atoms/Button';
 import { Loader } from 'components/atoms/Loader';
@@ -10,6 +9,7 @@ import { AssetsTable } from 'components/organisms/AssetsTable';
 import { CollectionsTable } from 'components/organisms/CollectionsTable';
 import { ASSETS, REDIRECTS } from 'helpers/config';
 import { getTxEndpoint } from 'helpers/endpoints';
+import { ProfileHeaderType } from 'helpers/types';
 import { checkAddress, formatAddress } from 'helpers/utils';
 import { useLanguageProvider } from 'providers/LanguageProvider';
 
@@ -22,7 +22,7 @@ export default function Profile(props: { address: string }) {
 	const [loading, setLoading] = React.useState<boolean>(false);
 	const [copied, setCopied] = React.useState<boolean>(false);
 
-	const [fullProfile, setFullProfile] = React.useState<FullProfileType | null>(null);
+	const [fullProfile, setFullProfile] = React.useState<ProfileHeaderType | null>(null);
 
 	const copyAddress = React.useCallback(async () => {
 		if (fullProfile && fullProfile.walletAddress) {
@@ -39,7 +39,7 @@ export default function Profile(props: { address: string }) {
 			if (props.address && checkAddress(props.address)) {
 				setLoading(true);
 				try {
-					const currentProfile = await getFullProfile({ address: props.address });
+					const currentProfile = await getProfile({ address: props.address });
 					setFullProfile(currentProfile);
 				} catch (e: any) {
 					console.error(e);
@@ -54,8 +54,8 @@ export default function Profile(props: { address: string }) {
 		return <ReactSVG src={ASSETS.user} />;
 	}
 
-	function getHandle() {
-		return fullProfile.handle ? `@${fullProfile.handle}` : formatAddress(fullProfile.walletAddress, false);
+	function getUsername() {
+		return fullProfile.username ? `@${fullProfile.username}` : formatAddress(fullProfile.walletAddress, false);
 	}
 
 	function getHeaderDetails() {
@@ -63,7 +63,7 @@ export default function Profile(props: { address: string }) {
 			<S.HeaderHA>
 				<h4>{fullProfile.displayName ? fullProfile.displayName : formatAddress(fullProfile.walletAddress, false)}</h4>
 				<S.HeaderInfoDetail>
-					<span>{`${getHandle()}`}</span>
+					<span>{`${getUsername()}`}</span>
 				</S.HeaderInfoDetail>
 				<S.HeaderAddress onClick={copyAddress}>
 					<ReactSVG src={ASSETS.wallet} />
@@ -74,7 +74,7 @@ export default function Profile(props: { address: string }) {
 		);
 	}
 
-	function getProfile() {
+	function getProfileData() {
 		if (fullProfile) {
 			return (
 				<>
@@ -109,5 +109,5 @@ export default function Profile(props: { address: string }) {
 		}
 	}
 
-	return <>{getProfile()}</>;
+	return <>{getProfileData()}</>;
 }

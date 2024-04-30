@@ -247,28 +247,21 @@ export type TableHeaderType = {
 
 export type ActiveFieldAddType = 'title' | 'description';
 
-export type PagingType = {
-	limit: number;
-	items: number;
-	page: number;
-};
-
-export type BalanceType = {
-	contract_tx_id: string;
-	token_ticker: string;
-	token_name: string;
-	balance: string;
-	sort_key: string;
-};
-
-export type UserBalancesType = {
-	paging: PagingType;
-	balances: BalanceType[];
-};
-
 export type GroupIndexType = { index: string; ids: string[] }[];
 
 export type NotificationResponseType = {
 	status: boolean;
 	message: string | null;
 };
+
+export type AOProfileType = {
+	id: string;
+	walletAddress: string;
+	displayName: string | null;
+	username: string | null;
+	bio: string | null;
+	avatar: string | null;
+	banner: string | null;
+};
+
+export type ProfileHeaderType = AOProfileType;

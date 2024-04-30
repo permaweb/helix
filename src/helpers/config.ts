@@ -50,6 +50,7 @@ export const AOS = {
 	module: 'SBNb1qPQ1TDwpD_mboxm2YllmMLXpWw4U8P9Ff8W9vk',
 	scheduler: '_GQ33BkPtZrqxA84vM8Zk-N2aO0toNNu_C-l-rawrBA',
 	tokenProcess: 'jlqBStsJjDr7hK_5ODYk68aUwbjWVPJosQbUbXN9_70',
+	profileRegistry: 'kFYMezhjcPCZLr2EkkwzIXP5A64QmtME6Bxa8bGmbzI',
 };
 
 export const ASSETS = {
@@ -157,12 +158,6 @@ export const TAGS = {
 		title: (title: string) => `${title}`,
 	},
 };
-
-export const ASSET_CONTRACT = {
-	src: 'Of9pi--Gj7hCTawhgxOwbuWnFI1h24TTgO5pw8ENJNQ',
-};
-
-export const TRADE_SOURCES = [ASSET_CONTRACT.src, 'h9v17KHV4SXwdW2-JHU6a23f6R0YtbXZJJht8LfP8QM'];
 
 function createURLs() {
 	const base = `/`;
@@ -277,10 +272,6 @@ export const UPLOAD_CONFIG = {
 	node2: 'https://turbo.ardrive.io',
 	batchSize: 1,
 	chunkSize: 7500000,
-};
-
-export const CONTRACT_CONFIG = {
-	node: 'arweave',
 };
 
 export const UPLOAD_STEPS: UploadStepType[] = ['details', 'license', 'checks'];

@@ -10,6 +10,7 @@ import { getGQLData } from 'gql';
 import { Button } from 'components/atoms/Button';
 import { Loader } from 'components/atoms/Loader';
 import { Modal } from 'components/molecules/Modal';
+import { AssetsTable } from 'components/organisms/AssetsTable';
 import { AOS, CONTENT_TYPES, GATEWAYS, REDIRECTS, TAGS, UPLOAD_CONFIG } from 'helpers/config';
 import { getTxEndpoint } from 'helpers/endpoints';
 import { TagType, UploadType } from 'helpers/types';
@@ -19,8 +20,6 @@ import { useArweaveProvider } from 'providers/ArweaveProvider';
 import { useLanguageProvider } from 'providers/LanguageProvider';
 import { RootState } from 'store';
 import * as uploadActions from 'store/upload/actions';
-
-import { AssetsTable } from '../../components/organisms/AssetsTable';
 
 import * as S from './styles';
 import { UploadAssets } from './UploadAssets';
@@ -213,23 +212,8 @@ export default function Upload() {
 				const balance = uploadReducer.data.useFractionalTokens ? Number(uploadReducer.data.contentTokens) : 1;
 
 				try {
-					let initStateAssetJson: any = {
-						balances: {
-							[arProvider.walletAddress]: balance,
-						},
-						title: title,
-						description: description,
-						ticker: TAGS.values.ticker,
-						dateCreated: dateTime,
-						claimable: [],
-					};
-
-					initStateAssetJson = JSON.stringify(initStateAssetJson);
-
 					const assetTags: TagType[] = [
 						{ name: TAGS.keys.contentType, value: type },
-						{ name: TAGS.keys.initState, value: initStateAssetJson },
-						{ name: TAGS.keys.initialOwner, value: arProvider.walletAddress },
 						{ name: TAGS.keys.ans110.title, value: title },
 						{ name: TAGS.keys.ans110.description, value: description },
 						{ name: TAGS.keys.ans110.type, value: type },
@@ -262,6 +246,7 @@ export default function Upload() {
 					}
 
 					if (processSrc) {
+						processSrc = processSrc.replace('[Owner]', `['${arProvider.profile.id}']`);
 						processSrc = processSrc.replaceAll('<NAME>', title);
 						processSrc = processSrc.replaceAll('<TICKER>', 'ATOMIC');
 						processSrc = processSrc.replaceAll('<DENOMINATION>', '1');
@@ -316,7 +301,18 @@ export default function Upload() {
 
 					console.log(evalResult);
 
-					if (evalResult) uploadedAssetsList.push(processId);
+					if (evalResult) {
+						const updateProfileResponse = await aos.message({
+							process: arProvider.profile.id,
+							signer: createDataItemSigner(globalThis.arweaveWallet),
+							tags: [{ name: 'Action', value: 'Add-Uploaded-Asset' }],
+							data: JSON.stringify({ Id: processId, Quantity: balance }),
+						});
+
+						console.log(updateProfileResponse);
+
+						uploadedAssetsList.push(processId);
+					}
 
 					if (index < uploadReducer.data.contentList.length) setUploadPercentage(0);
 				} catch (e: any) {
@@ -481,6 +477,8 @@ export function uploadChecksPassed(arProvider: any, uploadReducer: any) {
 			return (
 				arProvider.wallet &&
 				arProvider.walletAddress &&
+				arProvider.profile &&
+				arProvider.profile.id &&
 				uploadReducer.data.title &&
 				uploadReducer.data.description &&
 				uploadReducer.data.topics &&
@@ -492,6 +490,8 @@ export function uploadChecksPassed(arProvider: any, uploadReducer: any) {
 			return (
 				arProvider.wallet &&
 				arProvider.walletAddress &&
+				arProvider.profile &&
+				arProvider.profile.id &&
 				uploadReducer.data.topics &&
 				uploadReducer.data.topics.length &&
 				uploadReducer.data.contentList &&

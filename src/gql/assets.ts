@@ -1,18 +1,16 @@
+import { readHandler } from 'api';
 import { getGQLData, getProfiles } from 'gql';
 
-import { ASSETS, DEFAULT_THUMBNAIL, STORAGE, TAGS } from 'helpers/config';
-import { getBalancesEndpoint } from 'helpers/endpoints';
+import { AOS, ASSETS, DEFAULT_THUMBNAIL, STORAGE, TAGS } from 'helpers/config';
 import {
 	AGQLResponseType,
 	AssetType,
-	BalanceType,
 	CursorEnum,
 	GQLNodeResponseType,
 	LicenseValueType,
 	ProfileType,
 	TagType,
 	UDLType,
-	UserBalancesType,
 } from 'helpers/types';
 import { getTagValue } from 'helpers/utils';
 
@@ -43,27 +41,29 @@ export async function getAssetById(args: { id: string; gateway: string }): Promi
 	}
 }
 
-export async function getAssetIdsByUser(args: { walletAddress: string }): Promise<string[]> {
-	try {
-		const result: any = await fetch(getBalancesEndpoint(args.walletAddress));
-		if (result.status === 200) {
-			const balances = ((await result.json()) as UserBalancesType).balances;
+export async function getAssetIdsByUser(args: { address: string }): Promise<string[]> {
+	const profileLookup = await readHandler({
+		processId: AOS.profileRegistry,
+		action: 'Get-Profiles-By-Address',
+		data: { Address: args.address },
+	});
 
-			const assetIds = balances
-				.filter((balance: BalanceType) => {
-					return balance.balance && parseInt(balance.balance) !== 0;
-				})
-				.map((balance: BalanceType) => {
-					return balance.contract_tx_id;
-				});
-
-			return assetIds;
-		} else {
-			return [];
-		}
-	} catch (e: any) {
-		return [];
+	let activeProfileId: string;
+	if (profileLookup && profileLookup.length > 0 && profileLookup[0].ProfileId) {
+		activeProfileId = profileLookup[0].ProfileId;
 	}
+
+	if (activeProfileId) {
+		const fetchedProfile = await readHandler({
+			processId: activeProfileId,
+			action: 'Info',
+			data: null,
+		});
+
+		if (fetchedProfile) {
+			return fetchedProfile.Assets.map((asset: { Id: string; Quantity: string }) => asset.Id);
+		} else return [];
+	} else return [];
 }
 
 export function structureAsset(element: GQLNodeResponseType, profiles: ProfileType[] | null): AssetType {
