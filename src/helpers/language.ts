@@ -100,6 +100,7 @@ export const language = {
 		insufficientBalance: `Insufficient Upload Balance`,
 		invalidAmountTurbo: `Amount must be between $5 - $10,000`,
 		invalidContentTokens: `Value must be between 0 - 1,000,000`,
+		inProgress: `In progress`,
 		length: `Length`,
 		license: `License`,
 		licenseTags: {

@@ -35,7 +35,7 @@ export default function Upload() {
 	const language = languageProvider.object[languageProvider.current];
 
 	const [uploadIndex, setUploadIndex] = React.useState<number>(0);
-	const [uploadPercentage, setUploadPercentage] = React.useState<number>(0);
+	const [_uploadPercentage, setUploadPercentage] = React.useState<number>(0);
 
 	const [assetsResponse, setAssetsResponse] = React.useState<string | null>(null);
 	const [assetsResponseError, setAssetsResponseError] = React.useState<string | null>(null);
@@ -177,24 +177,6 @@ export default function Upload() {
 			for (const data of uploadReducer.data.contentList) {
 				index = index + 1;
 				setUploadIndex(index);
-
-				// const irys = new ArweaveWebIrys({
-				// 	url: UPLOAD_CONFIG.node2,
-				// 	wallet: { provider: arProvider.wallet },
-				// });
-				// await irys.ready();
-
-				// let uploader = irys.uploader.chunkedUploader;
-				// uploader.setBatchSize(UPLOAD_CONFIG.batchSize);
-				// uploader.setChunkSize(UPLOAD_CONFIG.chunkSize);
-
-				// uploader.on('chunkUpload', (chunkInfo) => {
-				// 	setUploadPercentage(Math.floor((chunkInfo.totalUploaded / data.file.size) * 100));
-				// });
-
-				// uploader.on('chunkError', (e) => {
-				// 	console.error(e);
-				// });
 
 				const dateTime = new Date().getTime().toString();
 
@@ -412,12 +394,9 @@ export default function Upload() {
 								<S.AMessage>
 									<span>{language.uploadingFileCount(uploadIndex, uploadReducer.data.contentList.length)}</span>
 								</S.AMessage>
-								<S.AProgress percentage={uploadPercentage.toString()}>
-									<div />
-									<span>{`${language.uploadStatus}:`}</span>
-									&nbsp;
-									<S.APercentage>{`${uploadPercentage.toString()}%`}</S.APercentage>
-								</S.AProgress>
+								<S.ActionWrapper loading={'true'}>
+									<span>{`${language.inProgress}...`}</span>
+								</S.ActionWrapper>
 							</>
 						) : (
 							<Loader sm relative />
