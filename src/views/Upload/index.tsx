@@ -248,7 +248,7 @@ export default function Upload() {
 					while (!fetchedAssetId) {
 						await new Promise((r) => setTimeout(r, 2000));
 						const gqlResponse = await getGQLData({
-							gateway: GATEWAYS.arweave,
+							gateway: GATEWAYS.goldsky,
 							ids: [processId],
 							tagFilters: null,
 							owners: null,
