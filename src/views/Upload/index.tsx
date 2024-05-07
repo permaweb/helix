@@ -128,6 +128,7 @@ export default function Upload() {
 				{ name: TAGS.keys.contentType, value: CONTENT_TYPES.json },
 				{ name: TAGS.keys.initState, value: initStateCollectionJson },
 				{ name: TAGS.keys.creator, value: arProvider.walletAddress },
+				{ name: TAGS.keys.profileCreator, value: arProvider.profile.id },
 				{ name: TAGS.keys.dataProtocol, value: TAGS.values.collection },
 				{
 					name: TAGS.keys.ans110.title,

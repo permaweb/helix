@@ -127,6 +127,7 @@ export const TAGS = {
 		initialOwner: 'Initial-Owner',
 		license: 'License',
 		name: 'Name',
+		profileCreator: 'Profile-Creator',
 		profileIndex: 'Profile-Index',
 		protocolName: 'Protocol-Name',
 		renderWith: 'Render-With',
@@ -146,7 +147,7 @@ export const TAGS = {
 	},
 	values: {
 		ansVersion: 'ANS-110',
-		collection: 'AO-Test-Collection',
+		collection: 'AO-Collection',
 		comment: 'comment',
 		document: 'Document',
 		followDataProtocol: 'Follow',
