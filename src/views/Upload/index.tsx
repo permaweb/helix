@@ -220,7 +220,7 @@ export default function Upload() {
 					const buffer: any = await fileToBuffer(data.file);
 
 					try {
-						const processSrcFetch = await fetch(getTxEndpoint(AOS.tokenProcess));
+						const processSrcFetch = await fetch(getTxEndpoint(AOS.assetProcess));
 						if (processSrcFetch.ok) {
 							processSrc = await processSrcFetch.text();
 						}

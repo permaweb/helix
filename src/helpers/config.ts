@@ -49,7 +49,7 @@ export const APP = {
 export const AOS = {
 	module: 'SBNb1qPQ1TDwpD_mboxm2YllmMLXpWw4U8P9Ff8W9vk',
 	scheduler: '_GQ33BkPtZrqxA84vM8Zk-N2aO0toNNu_C-l-rawrBA',
-	tokenProcess: 'sfH_4ZQu0wDDSGtk59SuIN0s9KnRMRn6wXWoJknto9c',
+	assetProcess: 'y9VgAlhHThl-ZiXvzkDzwC5DEjfPegD6VAotpP3WRbs',
 	profileRegistry: 'kFYMezhjcPCZLr2EkkwzIXP5A64QmtME6Bxa8bGmbzI',
 };
 
