@@ -139,7 +139,7 @@ export const ActionWrapper = styled.div<{ loading: boolean | string }>`
 		position: relative;
 		z-index: 1;
 		color: ${(props) => props.theme.colors.font.light1};
-		font-size: ${(props) => props.theme.typography.size.lg} !important;
+		font-size: ${(props) => props.theme.typography.size.base} !important;
 		font-weight: ${(props) => props.theme.typography.weight.xxBold};
 		text-shadow: 0 0 20px ${(props) => props.theme.colors.font.dark1};
 		font-family: ${(props) => props.theme.typography.family.alt1};

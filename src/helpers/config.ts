@@ -49,7 +49,9 @@ export const APP = {
 export const AOS = {
 	module: 'SBNb1qPQ1TDwpD_mboxm2YllmMLXpWw4U8P9Ff8W9vk',
 	scheduler: '_GQ33BkPtZrqxA84vM8Zk-N2aO0toNNu_C-l-rawrBA',
-	assetProcess: 'y9VgAlhHThl-ZiXvzkDzwC5DEjfPegD6VAotpP3WRbs',
+	assetSrc: 'y9VgAlhHThl-ZiXvzkDzwC5DEjfPegD6VAotpP3WRbs',
+	collectionsRegistry: 'YwDYeqpBKURVp3cvSEosefl4LBsfmMTW7QSkauv3pas',
+	collectionSrc: 'rBmDKRx36r1JpyqaD2g6bxepK7tBSADCszSvD2neKSA',
 	profileRegistry: 'kFYMezhjcPCZLr2EkkwzIXP5A64QmtME6Bxa8bGmbzI',
 };
 
@@ -113,7 +115,8 @@ export const TAGS = {
 		avatar: 'Avatar',
 		banner: 'Banner',
 		channelTitle: 'Channel-Title',
-		collectionCode: 'Collection-Code',
+		collectionId: 'Collection-Id',
+		collectionName: 'Collection-Name',
 		contentLength: 'Content-Length',
 		contentType: 'Content-Type',
 		contractManifest: 'Contract-Manifest',

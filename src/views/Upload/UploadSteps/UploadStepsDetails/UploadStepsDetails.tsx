@@ -222,7 +222,7 @@ export default function UploadStepsDetails() {
 						/>
 					)}
 				</S.COWrapper>
-				{uploadReducer.uploadType === 'collection' && (
+				{/* {uploadReducer.uploadType === 'collection' && (
 					<FormField
 						label={language.collectionCode}
 						value={uploadReducer.data.collectionCode}
@@ -231,7 +231,7 @@ export default function UploadStepsDetails() {
 						invalid={{ status: false, message: null }}
 						tooltip={language.collectionCodeInfo}
 					/>
-				)}
+				)} */}
 				<S.TWrapper>
 					<S.THeader>
 						<span>{formatRequiredField(language.assetTopics)}</span>
