@@ -80,7 +80,7 @@ export const IWrapper = styled.div<{ disabled: boolean }>`
 		display: block;
 		position: absolute;
 		right: 37.5px;
-		top: 25px;
+		top: 31.5px;
 		opacity: ${(props) => (props.disabled ? '0.5' : '1')};
 	}
 	span {
@@ -90,6 +90,7 @@ export const IWrapper = styled.div<{ disabled: boolean }>`
 		color: ${(props) => props.theme.colors.font.primary};
 	}
 	svg {
+		height: 17.5px;
 		width: 17.5px;
 	}
 `;

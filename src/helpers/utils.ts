@@ -197,3 +197,16 @@ export function getDisplayValue(value: string) {
 	result = result.charAt(0).toUpperCase() + result.slice(1);
 	return result;
 }
+
+export function stripFileExtension(fileName) {
+	// Split the file name by dot
+	const parts = fileName.split('.');
+
+	// If there's no dot, return the original file name
+	if (parts.length === 1) {
+		return fileName;
+	}
+
+	// Remove the last part (extension) and join the remaining parts back together
+	return parts.slice(0, -1).join('.');
+}

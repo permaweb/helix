@@ -38,6 +38,7 @@ import user from 'assets/user.svg';
 import volumeActive from 'assets/volume-active.svg';
 import volumeInactive from 'assets/volume-inactive.svg';
 import wallet from 'assets/wallet.svg';
+import wrappedAr from 'assets/wrapped-ar.svg';
 import x from 'assets/x.svg';
 
 import { UploadStepType, WalletEnum } from './types';
@@ -51,7 +52,7 @@ export const AOS = {
 	scheduler: '_GQ33BkPtZrqxA84vM8Zk-N2aO0toNNu_C-l-rawrBA',
 	assetSrc: 'y9VgAlhHThl-ZiXvzkDzwC5DEjfPegD6VAotpP3WRbs',
 	collectionsRegistry: 'YwDYeqpBKURVp3cvSEosefl4LBsfmMTW7QSkauv3pas',
-	collectionSrc: 'rBmDKRx36r1JpyqaD2g6bxepK7tBSADCszSvD2neKSA',
+	collectionSrc: 'e15eooIt86VjB1IDRjOMedwmtmicGtKkNWSnz8GyV4k',
 	profileRegistry: 'kFYMezhjcPCZLr2EkkwzIXP5A64QmtME6Bxa8bGmbzI',
 };
 
@@ -93,6 +94,7 @@ export const ASSETS = {
 	volumeActive: volumeActive,
 	volumeInactive: volumeInactive,
 	wallet: wallet,
+	wrappedAr: wrappedAr,
 	wallets: {
 		arconnect: arconnect,
 		arweaveApp: arweaveApp,
@@ -122,6 +124,7 @@ export const TAGS = {
 		contractManifest: 'Contract-Manifest',
 		contractSrc: 'Contract-Src',
 		creator: 'Creator',
+		currency: 'Currency',
 		dataProtocol: 'Data-Protocol',
 		dataSource: 'Data-Source',
 		dateCreated: 'Date-Created',
@@ -155,6 +158,7 @@ export const TAGS = {
 		document: 'Document',
 		followDataProtocol: 'Follow',
 		license: 'dE0rmDfl9_OWjkDznNEXHaSO_JohJkRolvMzaCroUdw',
+		licenseCurrency: 'xU9zFkq3X2ZQ6olwNVvr1vUWIjc3kXTWr7xKQD6dh10',
 		profileVersions: {
 			'1': 'Account-0.3',
 		},
@@ -257,6 +261,9 @@ export const AR_PROFILE = {
 };
 
 export const DEFAULT_THUMBNAIL = 'nmEZucV8rT47rAh1gA3HO-PQTZ0qCKTS6oqUT4D09Pk';
+
+export const DEFAULT_UCM_BANNER = 'eXCtpVbcd_jZ0dmU2PZ8focaKxBGECBQ8wMib7sIVPo';
+export const DEFAULT_UCM_THUMBNAIL = 'lJovHqM9hwNjHV5JoY9NGWtt0WD-5D4gOqNL2VWW5jk';
 
 export const COMMENT_SPEC = {
 	protcolId: 'comment',

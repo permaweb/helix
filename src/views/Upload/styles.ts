@@ -196,3 +196,10 @@ export const AMessage = styled.div`
 		line-height: 1.5;
 	}
 `;
+
+export const AMessageAlt = styled(AMessage)`
+	span {
+		color: ${(props) => props.theme.colors.font.primary};
+		font-family: ${(props) => props.theme.typography.family.alt1};
+	}
+`;

@@ -297,11 +297,11 @@ export default function UploadStepsLicense() {
 			switch (derivationsTerm.id) {
 				case concatLicenseTag(licenseParams.derivations.options.suboptions.monthlyFee):
 				case concatLicenseTag(licenseParams.derivations.options.suboptions.oneTimeFee):
-					return <ReactSVG src={ASSETS.u} />;
+					return <ReactSVG src={ASSETS.wrappedAr} />;
 				case concatLicenseTag(licenseParams.derivations.options.suboptions.revenueShare):
 					return <span>%</span>;
 				default:
-					return <ReactSVG src={ASSETS.u} />;
+					return <ReactSVG src={ASSETS.wrappedAr} />;
 			}
 		} else return null;
 	}
@@ -311,11 +311,11 @@ export default function UploadStepsLicense() {
 			switch (commercialUseTerm.id) {
 				case concatLicenseTag(licenseParams.commercialUse.options.suboptions.monthlyFee):
 				case concatLicenseTag(licenseParams.commercialUse.options.suboptions.oneTimeFee):
-					return <ReactSVG src={ASSETS.u} />;
+					return <ReactSVG src={ASSETS.wrappedAr} />;
 				case concatLicenseTag(licenseParams.commercialUse.options.suboptions.revenueShare):
 					return <span>%</span>;
 				default:
-					return <ReactSVG src={ASSETS.u} />;
+					return <ReactSVG src={ASSETS.wrappedAr} />;
 			}
 		} else return null;
 	}
@@ -382,7 +382,7 @@ export default function UploadStepsLicense() {
 					disabled={disabled}
 					hideErrorMessage
 				/>
-				<ReactSVG src={ASSETS.u} />
+				<ReactSVG src={ASSETS.wrappedAr} />
 			</S.IWrapper>
 		);
 	}
@@ -448,7 +448,7 @@ export default function UploadStepsLicense() {
 						disabled={!accessFee || accessFee.id === concatLicenseTag(licenseParams.access.options.none) || !hasLicense}
 						hideErrorMessage
 					/>
-					<ReactSVG src={ASSETS.u} />
+					<ReactSVG src={ASSETS.wrappedAr} />
 				</S.IWrapper>
 			</S.FlexWrapper>
 			<S.FlexWrapper>

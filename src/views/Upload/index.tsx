@@ -2,7 +2,6 @@ import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { connect, createDataItemSigner } from '@permaweb/aoconnect';
-import { DEFAULT_COLLECTION_BANNER, DEFAULT_COLLECTION_THUMB } from 'permaweb-orderbook';
 
 import { createTransaction, messageResults } from 'api';
 import { getGQLData } from 'gql';
@@ -11,10 +10,24 @@ import { Button } from 'components/atoms/Button';
 import { Loader } from 'components/atoms/Loader';
 import { Modal } from 'components/molecules/Modal';
 import { AssetsTable } from 'components/organisms/AssetsTable';
-import { AOS, CONTENT_TYPES, GATEWAYS, REDIRECTS, TAGS } from 'helpers/config';
+import {
+	AOS,
+	CONTENT_TYPES,
+	DEFAULT_UCM_BANNER,
+	DEFAULT_UCM_THUMBNAIL,
+	GATEWAYS,
+	REDIRECTS,
+	TAGS,
+} from 'helpers/config';
 import { getTxEndpoint } from 'helpers/endpoints';
 import { TagType, UploadType } from 'helpers/types';
-import { base64ToUint8Array, fileToBuffer, getBase64Data, getDataURLContentType } from 'helpers/utils';
+import {
+	base64ToUint8Array,
+	fileToBuffer,
+	getBase64Data,
+	getDataURLContentType,
+	stripFileExtension,
+} from 'helpers/utils';
 import { hideDocumentBody, showDocumentBody } from 'helpers/window';
 import { useArweaveProvider } from 'providers/ArweaveProvider';
 import { useLanguageProvider } from 'providers/LanguageProvider';
@@ -198,21 +211,18 @@ export default function Upload() {
 				processSrc = processSrc.replaceAll('<NAME>', uploadReducer.data.title);
 				processSrc = processSrc.replaceAll('<DESCRIPTION>', uploadReducer.data.description);
 				processSrc = processSrc.replaceAll('<CREATOR>', arProvider.profile.id);
-				processSrc = processSrc.replaceAll('<BANNER>', bannerTx ? bannerTx : DEFAULT_COLLECTION_BANNER);
-				processSrc = processSrc.replaceAll('<THUMBNAIL>', thumbnailTx ? thumbnailTx : DEFAULT_COLLECTION_THUMB);
+				processSrc = processSrc.replaceAll('<BANNER>', bannerTx ? bannerTx : DEFAULT_UCM_BANNER);
+				processSrc = processSrc.replaceAll('<THUMBNAIL>', thumbnailTx ? thumbnailTx : DEFAULT_UCM_THUMBNAIL);
 
 				processSrc = processSrc.replaceAll('<DATECREATED>', dateTime);
 				processSrc = processSrc.replaceAll('<LASTUPDATE>', dateTime);
 			}
-
-			console.log(processSrc);
 
 			const processId = await aos.spawn({
 				module: AOS.module,
 				scheduler: AOS.scheduler,
 				signer: createDataItemSigner(globalThis.arweaveWallet),
 				tags: collectionTags,
-				// data: Buffer.alloc(10)
 			});
 
 			console.log(`Collection process: ${processId}`);
@@ -256,15 +266,21 @@ export default function Upload() {
 			});
 
 			if (evalResult) {
+				const registryTags = [
+					{ name: 'Action', value: 'Add-Collection' },
+					{ name: 'CollectionId', value: processId },
+					{ name: 'Name', value: uploadReducer.data.title },
+					{ name: 'Creator', value: arProvider.profile.id },
+					{ name: 'DateCreated', value: dateTime },
+				];
+
+				if (bannerTx) registryTags.push({ name: 'Banner', value: bannerTx });
+				if (thumbnailTx) registryTags.push({ name: 'Thumbnail', value: thumbnailTx });
+
 				const updateRegistryResponse = await aos.message({
 					process: AOS.collectionsRegistry,
 					signer: createDataItemSigner(globalThis.arweaveWallet),
-					tags: [
-						{ name: 'Action', value: 'Add-Collection' },
-						{ name: 'CollectionId', value: processId },
-						{ name: 'Name', value: uploadReducer.data.title },
-						{ name: 'Creator', value: arProvider.profile.id },
-					],
+					tags: registryTags,
 				});
 
 				console.log(updateRegistryResponse);
@@ -291,22 +307,19 @@ export default function Upload() {
 
 				const dateTime = new Date().getTime().toString();
 
-				const title = data.title
-					? data.title
-					: uploadReducer.data.title
-					? `${uploadReducer.data.title} #${index}`
-					: data.file.name;
+				const title = data.title ? data.title : stripFileExtension(data.file.name);
 				const description = data.description
 					? data.description
 					: uploadReducer.data.description
 					? uploadReducer.data.description
-					: data.file.name;
+					: stripFileExtension(data.file.name);
 				const type = data.file.type;
 				const balance = uploadReducer.data.useFractionalTokens ? Number(uploadReducer.data.contentTokens) : 1;
 
 				try {
 					const assetTags: TagType[] = [
 						{ name: TAGS.keys.contentType, value: type },
+						{ name: TAGS.keys.creator, value: arProvider.profile.id },
 						{ name: TAGS.keys.ans110.title, value: title },
 						{ name: TAGS.keys.ans110.description, value: description },
 						{ name: TAGS.keys.ans110.type, value: type },
@@ -488,9 +501,9 @@ export default function Upload() {
 								<S.AMessage>
 									<span>{language.assetUploadingInfo(uploadReducer.uploadType === 'collection')}</span>
 								</S.AMessage>
-								<S.AMessage>
+								<S.AMessageAlt>
 									<span>{language.uploadingFileCount(uploadIndex, uploadReducer.data.contentList.length)}</span>
-								</S.AMessage>
+								</S.AMessageAlt>
 								<S.ActionWrapper loading={'true'}>
 									<span>{`${language.inProgress}...`}</span>
 								</S.ActionWrapper>
@@ -577,7 +590,10 @@ export function uploadChecksPassed(arProvider: any, uploadReducer: any) {
 }
 
 function buildLicenseTags(licenseObject: any) {
-	let licenseTags: TagType[] = [{ name: TAGS.keys.license, value: TAGS.values.license }];
+	let licenseTags: TagType[] = [
+		{ name: TAGS.keys.license, value: TAGS.values.license },
+		{ name: TAGS.keys.currency, value: TAGS.values.licenseCurrency },
+	];
 	if (licenseObject.accessFee && licenseObject.accessFee.value) {
 		licenseTags.push({
 			name: 'Access-Fee',
