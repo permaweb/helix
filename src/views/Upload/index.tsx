@@ -86,9 +86,9 @@ export default function Upload() {
 				case 'collection':
 					try {
 						const collectionId = await handleUploadCollection();
-						const assetIds = await handleUploadAssets(collectionId);
 
-						console.log(assetIds);
+						const assetIds = await handleUploadAssets(collectionId);
+						if (uploadReducer.data.idList) assetIds.push(...uploadReducer.data.idList);
 
 						const updateAssetsResponse = await messageResults({
 							processId: arProvider.profile.id,
@@ -174,7 +174,6 @@ export default function Upload() {
 				{ name: TAGS.keys.contentType, value: CONTENT_TYPES.json },
 				{ name: TAGS.keys.creator, value: arProvider.walletAddress },
 				{ name: TAGS.keys.profileCreator, value: arProvider.profile.id },
-				// { name: TAGS.keys.dataProtocol, value: TAGS.values.collection },
 				{
 					name: TAGS.keys.ans110.title,
 					value: uploadReducer.data.title,

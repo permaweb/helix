@@ -129,6 +129,16 @@ export type FullProfileType = ProfileType & {
 	bio: string;
 };
 
+export type CollectionType = {
+	id: string;
+	title: string;
+	description: string | null;
+	creator: string;
+	dateCreated: string;
+	banner: string | null;
+	thumbnail: string | null;
+};
+
 export enum WalletEnum {
 	arConnect = 'arconnect',
 	arweaveApp = 'arweave.app',
