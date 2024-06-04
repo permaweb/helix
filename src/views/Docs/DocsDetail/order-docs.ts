@@ -27,4 +27,12 @@ export const docsOrder = [
 		name: 'List collection assets (UCM)',
 		path: 'listing-assets',
 	},
+	{
+		name: 'Creating best practices',
+		path: 'creating-best-practices',
+	},
+	{
+		name: 'Why create atomic assets',
+		path: 'why-create-atomic-assets',
+	},
 ];
