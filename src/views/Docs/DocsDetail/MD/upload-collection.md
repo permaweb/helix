@@ -1,4 +1,4 @@
-# Upload an atomic asset collection
+## Upload an atomic asset collection
 
 Create an atomic asset collection from either existing atomic assets or uploading new atomic assets.
 
@@ -6,7 +6,7 @@ Create an atomic asset collection from either existing atomic assets or uploadin
 - To upload atomic assets and edit metadata, follow the steps in the last section.
 - To add existing atomic assets to the collection, choose existing assets by checking off the box next to the assets.
 
-## Collection details
+### Collection details
 
 - Title - Title of the collection displayed on the UCM.
 - Description - Description of the collection displayed on the UCM.

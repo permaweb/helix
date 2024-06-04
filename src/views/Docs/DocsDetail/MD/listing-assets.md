@@ -1,4 +1,4 @@
-# Listing atomic assets on the UCM
+## Listing atomic assets on the UCM
 
 From Helix you can list your atomic asset collections on the Universal Content Marketplace (UCM).
 
