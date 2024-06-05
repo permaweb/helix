@@ -1,10 +1,10 @@
-# Upload single atomic assets
+## Upload single atomic assets
 
 - Click **Select files to upload** and select the assets that you would like to upload.
 - Under **Actions** you can select **Edit title** and **Edit description** for each asset to be uploaded.
   Under the list of assets, the upload cost in Turbo Credits will be displayed.
 
-## Asset details
+### Asset details
 
 **Fractional vs single asset ownership**
 
@@ -15,4 +15,4 @@
 
 **Asset topics**
 
-- Select topics that best describe your atomic assets. Add as many custom topics as needed. These topics assist in discoverability on the permaweb. Learn more about asset discoverability tags (ANS-110) [here](https://github.com/ArweaveTeam/arweave-standards/blob/master/ans/ANS-110.md).
+- Select topics that best describe your atomic assets. Add as many custom topics as needed. These topics assist in discoverability on the permaweb. Learn more about asset discoverability tags (ANS-110) [here](https://specs.g8way.io/#/view/SYHBhGAmBo6fgAkINNoRtumOzxNB8-JFv2tPhBuNk5c).

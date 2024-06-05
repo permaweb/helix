@@ -1,10 +1,22 @@
-# Attach a license to your atomic assets and collections
+## Attach a license to your atomic assets
 
-After uploading your atomic assets and configuring metadata you will proceed to the next screen to attach licensing rights to your work with the Universal Data License. Link to the full UDL [here](https://orgsxgbx4x37hfuoidzzzuixdwsi57e2eetei2ew6mzwqkxikhoa.arweave.net/dE0rmDfl9_OWjkDznNEXHaSO_JohJkRolvMzaCroUdw).
+After uploading your atomic assets and configuring metadata you will proceed to the next screen to attach licensing rights to your work with the Universal Data License.
 
 To upload an atomic asset without attaching a license, uncheck the box next to **"This asset will contain a license"**.
 
-## UDL parameters
+### What is the Universal Data License (UDL)?
+
+The Universal Data License defines the terms and conditions for using media assets on the permaweb. The UDL establishes a framework for licensing digital media such as images, videos, audio, graphics and more. Instead of platforms setting the terms and conditions, on the permaweb creators define how their media can be utilized. Link to the full UDL [here](https://udlicense.arweave.dev/).
+
+Since platforms built on the Universal Content Marketplace (UCM) protocol are in their "early" release, not all UDL parameters are currently supported. Please check with the marketplace platforms for more information about how UDL is supported on their platform.
+
+### UDL early release
+
+Since UDL is in its "early" release, not all UDL parameters are currently supported on Helix. Stay tuned for more updates related to UDL capabilites on Helix and other permaweb applications.
+
+Read the UDL v.02 release blog post [here](https://mirror.xyz/0x64eA438bd2784F2C52a9095Ec0F6158f847182d9/RPzz5-8jh_eWCdqn-K51DIkk5i_gQTTmRAwdvm7OihI).
+
+### UDL parameters
 
 - Access Fee - Fee a user must pay to access the content
   - One time - Pay once to access content forever.
