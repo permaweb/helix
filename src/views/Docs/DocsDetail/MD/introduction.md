@@ -1,4 +1,4 @@
-# Welcome to Helix
+## Welcome to Helix
 
 Helix is your introduction to uploading atomic assets to Arweave’s permaweb. Learn how to upload digital content to the permaweb and attach license rights with the Universal Data License (UDL).
 
