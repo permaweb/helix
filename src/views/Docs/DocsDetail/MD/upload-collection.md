@@ -1,4 +1,4 @@
-## Upload an atomic asset collection
+### Upload an atomic asset collection
 
 Create an atomic asset collection from either existing atomic assets or uploading new atomic assets.
 

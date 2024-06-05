@@ -18,7 +18,7 @@ Creating on the permaweb opens the doors to instant sharing and engagement acros
 
 Creating on the permaweb provides an opportunity to capture value from your creative endeavors. With the economic freedom offered by atomic assets, creators can monetize their work directly, bypassing traditional intermediaries and unlocking new revenue streams.
 
-Creators can also set the terms for how their content can be used with the Universal Data License (UDL). Creators can upload atomic assets with UDL tags in the metadata, indicating how the media is licensed. This programmable data license gives creators full control over how their atomic assets are accessed and used. Learn more about UDL [here](#).
+Creators can also set the terms for how their content can be used with the Universal Data License (UDL). Creators can upload atomic assets with UDL tags in the metadata, indicating how the media is licensed. This programmable data license gives creators full control over how their atomic assets are accessed and used.
 
 #### Conclusion
 
