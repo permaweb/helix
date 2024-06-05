@@ -44,7 +44,7 @@ export async function getAssetById(args: { id: string; gateway: string }): Promi
 export async function getAssetIdsByUser(args: { address: string }): Promise<string[]> {
 	const profileLookup = await readHandler({
 		processId: AOS.profileRegistry,
-		action: 'Get-Profiles-By-Address',
+		action: 'Get-Profiles-By-Delegate',
 		data: { Address: args.address },
 	});
 

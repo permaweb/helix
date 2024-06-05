@@ -56,18 +56,19 @@ export default function Upload() {
 	const [collectionResponse, setCollectionResponse] = React.useState<string | null>(null);
 	const [collectionResponseError, setCollectionResponseError] = React.useState<string | null>(null);
 
-	React.useEffect(() => {
-		const handleBeforeUnload = (e: any) => {
-			e.preventDefault();
-			e.returnValue = '';
-		};
+	// TODO
+	// React.useEffect(() => {
+	// 	const handleBeforeUnload = (e: any) => {
+	// 		e.preventDefault();
+	// 		e.returnValue = '';
+	// 	};
 
-		window.addEventListener('beforeunload', handleBeforeUnload);
+	// 	window.addEventListener('beforeunload', handleBeforeUnload);
 
-		return () => {
-			window.removeEventListener('beforeunload', handleBeforeUnload);
-		};
-	}, [uploadReducer]);
+	// 	return () => {
+	// 		window.removeEventListener('beforeunload', handleBeforeUnload);
+	// 	};
+	// }, [uploadReducer]);
 
 	React.useEffect(() => {
 		if (!arProvider.wallet) dispatch(uploadActions.setUploadDisabled(true));
@@ -188,6 +189,7 @@ export default function Upload() {
 					name: TAGS.keys.name,
 					value: uploadReducer.data.title,
 				},
+				{ name: 'Action', value: 'Add-Collection' },
 			];
 
 			if (bannerTx) collectionTags.push({ name: TAGS.keys.banner, value: bannerTx });
@@ -284,6 +286,17 @@ export default function Upload() {
 
 				console.log(updateRegistryResponse);
 
+				const profileCollectionsUpdate = await aos.message({
+					process: processId,
+					signer: createDataItemSigner(globalThis.arweaveWallet),
+					tags: [
+						{ name: 'Action', value: 'Add-Collection-To-Profile' },
+						{ name: 'ProfileProcess', value: arProvider.profile.id },
+					],
+				});
+
+				console.log(profileCollectionsUpdate);
+
 				return processId;
 			} else {
 				return null;
@@ -324,6 +337,7 @@ export default function Upload() {
 						{ name: TAGS.keys.ans110.type, value: type },
 						{ name: TAGS.keys.ans110.implements, value: TAGS.values.ansVersion },
 						{ name: TAGS.keys.dateCreated, value: dateTime },
+						{ name: 'Action', value: 'Add-Uploaded-Asset' },
 					];
 
 					uploadReducer.data.topics.forEach((topic: string) =>
@@ -409,10 +423,21 @@ export default function Upload() {
 					});
 
 					if (evalResult) {
+						// const updateProfileResponse = await aos.message({
+						// 	process: arProvider.profile.id,
+						// 	signer: createDataItemSigner(globalThis.arweaveWallet),
+						// 	tags: [{ name: 'Action', value: 'Add-Uploaded-Asset' }],
+						// 	data: JSON.stringify({ Id: processId, Quantity: balance }),
+						// });
+
 						const updateProfileResponse = await aos.message({
-							process: arProvider.profile.id,
+							process: processId,
 							signer: createDataItemSigner(globalThis.arweaveWallet),
-							tags: [{ name: 'Action', value: 'Add-Uploaded-Asset' }],
+							tags: [
+								{ name: 'Action', value: 'Add-Asset-To-Profile' },
+								{ name: 'ProfileProcess', value: arProvider.profile.id },
+								{ name: 'Quantity', value: balance.toString() },
+							],
 							data: JSON.stringify({ Id: processId, Quantity: balance }),
 						});
 

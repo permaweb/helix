@@ -48,12 +48,12 @@ export const APP = {
 };
 
 export const AOS = {
-	module: 'SBNb1qPQ1TDwpD_mboxm2YllmMLXpWw4U8P9Ff8W9vk',
+	module: 'nI_jcZgPd0rcsnjaHtaaJPpMCW847ou-3RGA5_W3aZg',
 	scheduler: '_GQ33BkPtZrqxA84vM8Zk-N2aO0toNNu_C-l-rawrBA',
-	assetSrc: 'y9VgAlhHThl-ZiXvzkDzwC5DEjfPegD6VAotpP3WRbs',
+	assetSrc: '00c9tFArqJiCl7wTGkEQcSO7lCDQQ1wh8OmS-y6G-AY',
 	collectionsRegistry: 'YwDYeqpBKURVp3cvSEosefl4LBsfmMTW7QSkauv3pas',
-	collectionSrc: 'e15eooIt86VjB1IDRjOMedwmtmicGtKkNWSnz8GyV4k',
-	profileRegistry: 'kFYMezhjcPCZLr2EkkwzIXP5A64QmtME6Bxa8bGmbzI',
+	collectionSrc: '2ZDuM2VUCN8WHoAKOOjiH4_7Apq0ZHKnTWdLppxCdGY',
+	profileRegistry: 'tURWyfiTCESFL7avuJsH-_Yoc1q9xlakoKV6DLjxkIw',
 };
 
 export const ASSETS = {
@@ -244,10 +244,7 @@ export const CONTENT_TYPES = {
 	textPlain: 'text/plain',
 };
 
-export const AR_WALLETS = [
-	{ type: WalletEnum.arConnect, logo: ASSETS.wallets.arconnect },
-	{ type: WalletEnum.othent, logo: ASSETS.wallets.othent },
-];
+export const AR_WALLETS = [{ type: WalletEnum.arConnect, logo: ASSETS.wallets.arconnect }];
 
 export const WALLET_PERMISSIONS = ['ACCESS_ADDRESS', 'ACCESS_PUBLIC_KEY', 'SIGN_TRANSACTION', 'DISPATCH', 'SIGNATURE'];
 

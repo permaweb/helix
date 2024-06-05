@@ -16,7 +16,7 @@ export async function getProfile(args: { address: string }): Promise<ProfileHead
 
 	const profileLookup = await readHandler({
 		processId: AOS.profileRegistry,
-		action: 'Get-Profiles-By-Address',
+		action: 'Get-Profiles-By-Delegate',
 		data: { Address: args.address },
 	});
 
@@ -35,12 +35,12 @@ export async function getProfile(args: { address: string }): Promise<ProfileHead
 		if (fetchedProfile) {
 			return {
 				id: activeProfileId,
-				walletAddress: args.address,
+				walletAddress: fetchedProfile.Owner || null,
 				displayName: fetchedProfile.Profile.DisplayName || null,
-				username: fetchedProfile.Profile.Username || null,
-				bio: fetchedProfile.Profile.Bio || null,
-				avatar: fetchedProfile.Profile.Avatar || null,
-				banner: fetchedProfile.Profile.Banner || null,
+				username: fetchedProfile.Profile.UserName || null,
+				bio: fetchedProfile.Profile.Description || null,
+				avatar: fetchedProfile.Profile.ProfileImage || null,
+				banner: fetchedProfile.Profile.CoverImage || null,
 			};
 		} else return emptyProfile;
 	} else return emptyProfile;

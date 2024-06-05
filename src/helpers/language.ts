@@ -215,7 +215,7 @@ export const language = {
 		stamped: `Stamped`,
 		submit: `Submit`,
 		successfullyFunded: `Successfully funded`,
-		supportedFileTypes: `Any file type is supported for upload`,
+		supportedFileTypes: `Any file type is supported for upload. The current upload size limit per file is 10 MB.`,
 		terms: `Terms`,
 		title: `Title`,
 		titleNotFound: `Title not found`,

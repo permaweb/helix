@@ -275,3 +275,10 @@ export type AOProfileType = {
 };
 
 export type ProfileHeaderType = AOProfileType;
+
+export type RegistryProfileType = {
+	id: string;
+	avatar: string | null;
+	username: string;
+	bio?: string;
+};
