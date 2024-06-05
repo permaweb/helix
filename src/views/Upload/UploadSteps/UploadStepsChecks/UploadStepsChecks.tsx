@@ -110,7 +110,7 @@ export default function UploadStepsChecks() {
 								license: TAGS.values.license,
 								access: {
 									value: `${uploadReducer.data.license.accessFee.value}-${uploadReducer.data.license.accessFee.amount}`,
-									icon: ASSETS.u,
+									icon: ASSETS.wrappedAr,
 								},
 								derivations: getLicenseValuePayment(
 									`${uploadReducer.data.license.derivations.value}-${uploadReducer.data.license.derivations.terms.value}-${uploadReducer.data.license.derivations.terms.amount}`

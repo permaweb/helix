@@ -310,7 +310,7 @@ export const ALLOWED_ASSET_TYPES_DISPLAY = [];
 export const CURRENCIES = {
 	u: {
 		label: 'U',
-		icon: ASSETS.u,
+		icon: ASSETS.wrappedAr,
 	},
 };
 
@@ -320,6 +320,7 @@ export const REDIRECTS = {
 		collection: (id: string) => `https://bazar.arweave.dev/#/collection/${id}`,
 		profile: (id: string) => `https://bazar.arweave.dev/#/profile/${id}`,
 	},
+	udl: 'https://udlicense.arweave.dev/',
 };
 
 export const DRE_NODE = 'https://dre-u.warp.cc/contract';

@@ -2,8 +2,7 @@ import { ReactSVG } from 'react-svg';
 
 import { Button } from 'components/atoms/Button';
 import { TxAddress } from 'components/atoms/TxAddress';
-import { ASSETS } from 'helpers/config';
-import { getTxEndpoint } from 'helpers/endpoints';
+import { ASSETS, REDIRECTS } from 'helpers/config';
 import { checkAddress, getDisplayValue, splitLicenseTag } from 'helpers/utils';
 import { useLanguageProvider } from 'providers/LanguageProvider';
 
@@ -70,7 +69,7 @@ export default function AssetDetailLicenses(props: IProps) {
 						<Button
 							type={'alt2'}
 							label={language.viewLicense}
-							handlePress={() => window.open(getTxEndpoint(props.asset.license.license), '_blank')}
+							handlePress={() => window.open(REDIRECTS.udl, '_blank')}
 							disabled={false}
 							noMinWidth
 						/>

@@ -132,7 +132,7 @@ function structureLicense(tags: TagType[]): UDLType {
 
 	let access: LicenseValueType | null = null;
 	const accessTag = getTagValue(tags, TAGS.keys.udl.accessFee);
-	if (accessTag !== STORAGE.none) access = { value: accessTag, icon: ASSETS.u };
+	if (accessTag !== STORAGE.none) access = { value: accessTag, icon: ASSETS.wrappedAr };
 
 	let derivations: LicenseValueType | null = null;
 	const derivationsTag = getTagValue(tags, TAGS.keys.udl.derivations);
@@ -167,7 +167,7 @@ export function getLicenseValuePayment(value: string): LicenseValueType {
 	let payment: LicenseValueType = { value: value };
 	if (value !== 'Disallowed') {
 		if (value.includes('Revenue-Share')) payment.endText = '%';
-		if (value.includes('Monthly-Fee') || value.includes('One-Time-Fee')) payment.icon = ASSETS.u;
+		if (value.includes('Monthly-Fee') || value.includes('One-Time-Fee')) payment.icon = ASSETS.wrappedAr;
 	}
 
 	return payment;
