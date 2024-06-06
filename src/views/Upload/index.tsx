@@ -53,22 +53,22 @@ export default function Upload() {
 	const [assetsResponse, setAssetsResponse] = React.useState<string | null>(null);
 	const [assetsResponseError, setAssetsResponseError] = React.useState<string | null>(null);
 
+	const [collectionProcessId, setCollectionProcessId] = React.useState<string | null>(null);
 	const [collectionResponse, setCollectionResponse] = React.useState<string | null>(null);
 	const [collectionResponseError, setCollectionResponseError] = React.useState<string | null>(null);
 
-	// TODO
-	// React.useEffect(() => {
-	// 	const handleBeforeUnload = (e: any) => {
-	// 		e.preventDefault();
-	// 		e.returnValue = '';
-	// 	};
+	React.useEffect(() => {
+		const handleBeforeUnload = (e: any) => {
+			e.preventDefault();
+			e.returnValue = '';
+		};
 
-	// 	window.addEventListener('beforeunload', handleBeforeUnload);
+		window.addEventListener('beforeunload', handleBeforeUnload);
 
-	// 	return () => {
-	// 		window.removeEventListener('beforeunload', handleBeforeUnload);
-	// 	};
-	// }, [uploadReducer]);
+		return () => {
+			window.removeEventListener('beforeunload', handleBeforeUnload);
+		};
+	}, [uploadReducer]);
 
 	React.useEffect(() => {
 		if (!arProvider.wallet) dispatch(uploadActions.setUploadDisabled(true));
@@ -110,6 +110,7 @@ export default function Upload() {
 						console.log(updateAssetsResponse);
 
 						setCollectionResponse(`${language.collectionCreated}!`);
+						setCollectionProcessId(collectionId);
 					} catch (e: any) {
 						console.error(e);
 						setCollectionResponse(e.message ?? 'Error occurred');
@@ -209,8 +210,8 @@ export default function Upload() {
 			}
 
 			if (processSrc) {
-				processSrc = processSrc.replaceAll('<NAME>', uploadReducer.data.title);
-				processSrc = processSrc.replaceAll('<DESCRIPTION>', `[[ ${uploadReducer.data.description} ]]`);
+				processSrc = processSrc.replaceAll(`'<NAME>'`, `[[${uploadReducer.data.title}]]`);
+				processSrc = processSrc.replaceAll(`'<DESCRIPTION>'`, `[[${uploadReducer.data.description}]]`);
 				processSrc = processSrc.replaceAll('<CREATOR>', arProvider.profile.id);
 				processSrc = processSrc.replaceAll('<BANNER>', bannerTx ? bannerTx : DEFAULT_UCM_BANNER);
 				processSrc = processSrc.replaceAll('<THUMBNAIL>', thumbnailTx ? thumbnailTx : DEFAULT_UCM_THUMBNAIL);
@@ -549,11 +550,11 @@ export default function Upload() {
 						</S.MInfo>
 						<S.MActions>
 							<Button type={'primary'} label={language.close} handlePress={handleClear} noMinWidth />
-							{collectionResponse && (
+							{collectionProcessId && (
 								<Button
 									type={'alt1'}
 									label={language.viewCollection}
-									handlePress={() => window.open(REDIRECTS.bazar.collection(collectionResponse), '_blank')}
+									handlePress={() => window.open(REDIRECTS.bazar.collection(collectionProcessId), '_blank')}
 									disabled={false}
 									noMinWidth
 								/>
