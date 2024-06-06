@@ -86,13 +86,15 @@ export default function Profile(props: { address: string }) {
 							<S.HeaderAvatar>{getAvatar()}</S.HeaderAvatar>
 							{getHeaderDetails()}
 							<S.HeaderActions>
-								<Button
-									type={'alt1'}
-									label={language.viewOnBazar}
-									handlePress={() => window.open(REDIRECTS.bazar.profile(props.address), '_blank')}
-									icon={ASSETS.bazar}
-									noMinWidth
-								/>
+								{fullProfile && fullProfile.id && (
+									<Button
+										type={'alt1'}
+										label={language.viewOnBazar}
+										handlePress={() => window.open(REDIRECTS.bazar.profile(fullProfile.id), '_blank')}
+										icon={ASSETS.bazar}
+										noMinWidth
+									/>
+								)}
 							</S.HeaderActions>
 						</S.HeaderInfo>
 						<S.Body>
