@@ -11,28 +11,31 @@ import { ASSETS, REDIRECTS } from 'helpers/config';
 import { getTxEndpoint } from 'helpers/endpoints';
 import { ProfileHeaderType } from 'helpers/types';
 import { checkAddress, formatAddress } from 'helpers/utils';
+import { useArweaveProvider } from 'providers/ArweaveProvider';
 import { useLanguageProvider } from 'providers/LanguageProvider';
 
 import * as S from './styles';
 
 export default function Profile(props: { address: string }) {
+	const arProvider = useArweaveProvider();
+
 	const languageProvider = useLanguageProvider();
 	const language = languageProvider.object[languageProvider.current];
 
 	const [loading, setLoading] = React.useState<boolean>(false);
-	const [copied, setCopied] = React.useState<boolean>(false);
+	// const [copied, setCopied] = React.useState<boolean>(false);
 
 	const [fullProfile, setFullProfile] = React.useState<ProfileHeaderType | null>(null);
 
-	const copyAddress = React.useCallback(async () => {
-		if (fullProfile && fullProfile.walletAddress) {
-			if (fullProfile.walletAddress.length > 0) {
-				await navigator.clipboard.writeText(fullProfile.walletAddress);
-				setCopied(true);
-				setTimeout(() => setCopied(false), 2000);
-			}
-		}
-	}, [fullProfile]);
+	// const copyAddress = React.useCallback(async () => {
+	// 	if (fullProfile && fullProfile.walletAddress) {
+	// 		if (fullProfile.walletAddress.length > 0) {
+	// 			await navigator.clipboard.writeText(fullProfile.walletAddress);
+	// 			setCopied(true);
+	// 			setTimeout(() => setCopied(false), 2000);
+	// 		}
+	// 	}
+	// }, [fullProfile]);
 
 	React.useEffect(() => {
 		(async function () {
@@ -47,7 +50,7 @@ export default function Profile(props: { address: string }) {
 				setLoading(false);
 			}
 		})();
-	}, [props.address]);
+	}, [props.address, arProvider.profile]);
 
 	function getAvatar() {
 		if (fullProfile && fullProfile.avatar) return <img src={getTxEndpoint(fullProfile.avatar)} />;
@@ -65,11 +68,11 @@ export default function Profile(props: { address: string }) {
 				<S.HeaderInfoDetail>
 					<span>{`${getUsername()}`}</span>
 				</S.HeaderInfoDetail>
-				<S.HeaderAddress onClick={copyAddress}>
+				{/* <S.HeaderAddress onClick={copyAddress}>
 					<ReactSVG src={ASSETS.wallet} />
 					<p>{formatAddress(fullProfile.walletAddress, false)}</p>
 					{copied && <span>{`${language.copied}!`}</span>}
-				</S.HeaderAddress>
+				</S.HeaderAddress> */}
 			</S.HeaderHA>
 		);
 	}

@@ -15,6 +15,7 @@ export const PWrapper = styled.div`
 `;
 
 export const LAction = styled.button`
+	margin: 0 0 0 20px;
 	span {
 		color: ${(props) => props.theme.colors.font.primary};
 		font-family: ${(props) => props.theme.typography.family.alt1};

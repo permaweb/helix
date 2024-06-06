@@ -1,7 +1,7 @@
 import Arweave from 'arweave';
-import { createDataItemSigner, dryrun, message, results } from '@permaweb/aoconnect';
+import { createDataItemSigner, dryrun, message, result, results } from '@permaweb/aoconnect';
 
-import { API_CONFIG, CONTENT_TYPES, GATEWAYS } from 'helpers/config';
+import { AOS, API_CONFIG, CONTENT_TYPES, GATEWAYS } from 'helpers/config';
 import { TagType } from 'helpers/types';
 import { getTagValue } from 'helpers/utils';
 
@@ -33,6 +33,53 @@ export async function createTransaction(args: { content: any; contentType: strin
 	}
 }
 
+export async function getProfileByWalletAddress(args: { address: string }): Promise<any | null> {
+	const emptyProfile = {
+		id: null,
+		walletAddress: args.address,
+		displayName: null,
+		username: null,
+		bio: null,
+		avatar: null,
+		banner: null,
+	};
+
+	try {
+		const profileLookup = await readHandler({
+			processId: AOS.profileRegistry,
+			action: 'Get-Profiles-By-Delegate',
+			data: { Address: args.address },
+		});
+
+		let activeProfileId: string;
+		if (profileLookup && profileLookup.length > 0 && profileLookup[0].ProfileId) {
+			activeProfileId = profileLookup[0].ProfileId;
+		}
+
+		if (activeProfileId) {
+			const fetchedProfile = await readHandler({
+				processId: activeProfileId,
+				action: 'Info',
+				data: null,
+			});
+
+			if (fetchedProfile) {
+				return {
+					id: activeProfileId,
+					walletAddress: fetchedProfile.Owner || null,
+					displayName: fetchedProfile.Profile.DisplayName || null,
+					username: fetchedProfile.Profile.UserName || null,
+					bio: fetchedProfile.Profile.Description || null,
+					avatar: fetchedProfile.Profile.ProfileImage || null,
+					banner: fetchedProfile.Profile.CoverImage || null,
+				};
+			} else return emptyProfile;
+		} else return emptyProfile;
+	} catch (e: any) {
+		throw new Error(e);
+	}
+}
+
 export async function readHandler(args: {
 	processId: string;
 	action: string;
@@ -59,6 +106,64 @@ export async function readHandler(args: {
 				}, {});
 			}
 		}
+	}
+}
+
+export async function messageResult(args: {
+	processId: string;
+	wallet: any;
+	action: string;
+	tags: TagType[] | null;
+	data: any;
+	useRawData?: boolean;
+}): Promise<any> {
+	try {
+		const tags = [{ name: 'Action', value: args.action }];
+		if (args.tags) tags.push(...args.tags);
+
+		const data = args.useRawData ? args.data : JSON.stringify(args.data);
+
+		const txId = await message({
+			process: args.processId,
+			signer: createDataItemSigner(args.wallet),
+			tags: tags,
+			data: data,
+		});
+
+		const { Messages } = await result({ message: txId, process: args.processId });
+
+		if (Messages && Messages.length) {
+			const response = {};
+
+			Messages.forEach((message: any) => {
+				const action = getTagValue(message.Tags, 'Action') || args.action;
+
+				let responseData = null;
+				const messageData = message.Data;
+
+				if (messageData) {
+					try {
+						responseData = JSON.parse(messageData);
+					} catch {
+						responseData = messageData;
+					}
+				}
+
+				const responseStatus = getTagValue(message.Tags, 'Status');
+				const responseMessage = getTagValue(message.Tags, 'Message');
+
+				response[action] = {
+					id: txId,
+					status: responseStatus,
+					message: responseMessage,
+					data: responseData,
+				};
+			});
+
+			return response;
+		} else return null;
+	} catch (e) {
+		console.error(e);
 	}
 }
 

@@ -1,19 +1,20 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
 import { ReactSVG } from 'react-svg';
 
-import { createTransaction } from 'api';
-import { getCurrentProfile, getFullProfile } from 'gql';
+import { connect, createDataItemSigner } from '@permaweb/aoconnect';
+
+import { createTransaction, messageResult } from 'api';
+import { getGQLData } from 'gql';
 
 import { Button } from 'components/atoms/Button';
 import { Checkbox } from 'components/atoms/Checkbox';
 import { FormField } from 'components/atoms/FormField';
+import { Notification } from 'components/atoms/Notification';
 import { TextArea } from 'components/atoms/TextArea';
-import { Modal } from 'components/molecules/Modal';
-import { ALLOWED_AVATAR_TYPES, ALLOWED_BANNER_TYPES, ASSETS, CONTENT_TYPES, TAGS, URLS } from 'helpers/config';
+import { AOS, ASSETS, GATEWAYS, TAGS } from 'helpers/config';
 import { getTxEndpoint } from 'helpers/endpoints';
-import { FullProfileType, TagType } from 'helpers/types';
-import { base64ToUint8Array, checkAddress, getBase64Data, getDataURLContentType } from 'helpers/utils';
+import { NotificationType } from 'helpers/types';
+import { checkAddress, getBase64Data, getDataURLContentType } from 'helpers/utils';
 import { useArweaveProvider } from 'providers/ArweaveProvider';
 import { useLanguageProvider } from 'providers/LanguageProvider';
 import { WalletBlock } from 'wallet/WalletBlock';
@@ -22,10 +23,10 @@ import * as S from './styles';
 import { IProps } from './types';
 
 const MAX_BIO_LENGTH = 500;
+const ALLOWED_BANNER_TYPES = 'image/png, image/jpeg, image/gif';
+const ALLOWED_AVATAR_TYPES = 'image/png, image/jpeg, image/gif';
 
 export default function ProfileManage(props: IProps) {
-	const navigate = useNavigate();
-
 	const arProvider = useArweaveProvider();
 
 	const languageProvider = useLanguageProvider();
@@ -34,140 +35,223 @@ export default function ProfileManage(props: IProps) {
 	const bannerInputRef = React.useRef<any>(null);
 	const avatarInputRef = React.useRef<any>(null);
 
-	const [handle, setHandle] = React.useState<string>('');
-	const [channelTitle, setChannelTitle] = React.useState<string>('');
+	const [name, setName] = React.useState<string>('');
+	const [username, setUsername] = React.useState<string>('');
 	const [bio, setBio] = React.useState<string>('');
 	const [banner, setBanner] = React.useState<any>(null);
 	const [avatar, setAvatar] = React.useState<any>(null);
-	const [useHandleForChannel, setUseHandleForChannel] = React.useState<boolean>(true);
+	const [usernameAsDisplayName, setUsernameAsDisplayName] = React.useState<boolean>(false);
 
 	const [loading, setLoading] = React.useState<boolean>(false);
-	const [fullProfile, setFullProfile] = React.useState<FullProfileType | null>(null);
-	const [profileResponse, setProfileResponse] = React.useState<string | null>(null);
-
-	const [profileExists, setProfileExists] = React.useState<boolean>(false);
+	const [profileResponse, setProfileResponse] = React.useState<NotificationType | null>(null);
 
 	React.useEffect(() => {
-		(async function () {
-			if (!props.initial && arProvider.walletAddress) {
-				setFullProfile(await getFullProfile({ address: arProvider.walletAddress }));
-			}
-		})();
-	}, [props.initial, arProvider.walletAddress]);
-
-	React.useEffect(() => {
-		if (fullProfile) {
-			setHandle(fullProfile.handle ?? '');
-			setChannelTitle(fullProfile.channelTitle ?? '');
-			setBio(fullProfile.bio ?? '');
-			setBanner(fullProfile.banner ?? '');
-			setAvatar(fullProfile.avatar ?? '');
-			setUseHandleForChannel(false);
+		if (props.profile) {
+			setUsername(props.profile.username ?? '');
+			setName(props.profile.displayName ?? '');
+			setBio(props.profile.bio ?? '');
+			setBanner(props.profile.banner ?? null);
+			setAvatar(props.profile.avatar ?? null);
 		}
-	}, [fullProfile]);
+	}, [props.profile]);
 
 	React.useEffect(() => {
-		(async function () {
-			if (arProvider.walletAddress) {
-				try {
-					setProfileExists((await getCurrentProfile({ address: arProvider.walletAddress })).txId !== null);
-				} catch (e: any) {
-					console.error(e);
-				}
-			}
-		})();
-	}, [arProvider.walletAddress, arProvider.profile]);
+		if (usernameAsDisplayName) setName(username);
+	}, [usernameAsDisplayName, username]);
 
-	React.useEffect(() => {
-		if (useHandleForChannel) setChannelTitle(handle);
-	}, [useHandleForChannel, handle]);
+	function handleUpdate() {
+		arProvider.setToggleProfileUpdate(!arProvider.toggleProfileUpdate);
+		if (props.handleUpdate) props.handleUpdate();
+	}
 
 	async function handleSubmit() {
-		if (arProvider.walletAddress && handle && channelTitle) {
+		if (arProvider.wallet) {
 			setLoading(true);
 
-			const dateTime = new Date().getTime().toString();
-
-			let profileTx: any = null;
-			let bannerTx: any = null;
-			let avatarTx: any = null;
-
-			if (banner) {
-				if (checkAddress(banner)) bannerTx = banner;
-				else {
-					try {
-						const thumbnailContentType = getDataURLContentType(banner);
-						const base64Data = getBase64Data(banner);
-						const uint8ArrayData = base64ToUint8Array(base64Data);
-
-						bannerTx = await createTransaction({
-							content: uint8ArrayData,
-							contentType: thumbnailContentType,
-							tags: [{ name: TAGS.keys.contentType, value: thumbnailContentType }],
-						});
-					} catch (e: any) {
-						console.error(e);
-					}
-				}
-			}
-
-			if (avatar) {
-				if (checkAddress(avatar)) avatarTx = avatar;
-				else {
-					try {
-						const thumbnailContentType = getDataURLContentType(avatar);
-						const base64Data = getBase64Data(avatar);
-						const uint8ArrayData = base64ToUint8Array(base64Data);
-
-						avatarTx = await createTransaction({
-							content: uint8ArrayData,
-							contentType: thumbnailContentType,
-							tags: [{ name: TAGS.keys.contentType, value: thumbnailContentType }],
-						});
-					} catch (e: any) {
-						console.error(e);
-					}
-				}
-			}
-
-			let content: any = {
-				walletAddress: arProvider.walletAddress,
-				handle: handle,
-				channelTitle: channelTitle,
-				bio: bio,
+			const data: any = {
+				DisplayName: name,
+				UserName: username,
+				Description: bio,
 			};
 
-			const updatedProfileIndex =
-				fullProfile && fullProfile.profileIndex ? (parseInt(fullProfile.profileIndex) + 1).toString() : '1';
+			let bannerTx: any = null;
+			if (banner) {
+				if (checkAddress(banner)) {
+					bannerTx = banner;
+				} else {
+					try {
+						const bannerContentType = getDataURLContentType(banner);
+						const base64Data = getBase64Data(banner);
+						const bufferData = Buffer.from(base64Data, 'base64');
 
-			const tags: TagType[] = [
-				{ name: TAGS.keys.contentType, value: CONTENT_TYPES.json },
-				{ name: TAGS.keys.initialOwner, value: arProvider.walletAddress },
-				{ name: TAGS.keys.handle, value: handle },
-				{ name: TAGS.keys.channelTitle, value: channelTitle },
-				{ name: TAGS.keys.protocolName, value: TAGS.values.profileVersions['1'] },
-				{ name: TAGS.keys.profileIndex, value: updatedProfileIndex },
-				{ name: TAGS.keys.dateCreated, value: dateTime },
-			];
+						bannerTx = await createTransaction({
+							content: bufferData,
+							contentType: bannerContentType,
+							tags: [{ name: TAGS.keys.contentType, value: bannerContentType }],
+						});
+					} catch (e: any) {
+						console.error(e);
+					}
+				}
+			}
 
-			if (bannerTx) {
-				content.banner = bannerTx;
-				tags.push({ name: TAGS.keys.banner, value: bannerTx });
+			let avatarTx: any = null;
+			if (avatar) {
+				if (checkAddress(avatar)) {
+					avatarTx = avatar;
+				} else {
+					try {
+						const avatarContentType = getDataURLContentType(avatar);
+						const base64Data = getBase64Data(avatar);
+						const bufferData = Buffer.from(base64Data, 'base64');
+
+						avatarTx = await createTransaction({
+							content: bufferData,
+							contentType: avatarContentType,
+							tags: [{ name: TAGS.keys.contentType, value: avatarContentType }],
+						});
+					} catch (e: any) {
+						console.error(e);
+					}
+				}
 			}
-			if (avatarTx) {
-				content.avatar = avatarTx;
-				tags.push({ name: TAGS.keys.avatar, value: avatarTx });
-			}
+
+			if (bannerTx) data.CoverImage = bannerTx;
+			if (avatarTx) data.ProfileImage = avatarTx;
 
 			try {
-				profileTx = await createTransaction({
-					content: content,
-					contentType: CONTENT_TYPES.json,
-					tags: tags,
-				});
-				setProfileResponse(profileTx);
+				if (props.profile && props.profile.id) {
+					let updateResponse = await messageResult({
+						processId: props.profile.id,
+						action: 'Update-Profile',
+						tags: null,
+						data: data,
+						wallet: arProvider.wallet,
+					});
+					if (updateResponse && updateResponse['Profile-Success']) {
+						setProfileResponse({
+							message: `${language.profileUpdated}!`,
+							status: 'success',
+						});
+						handleUpdate();
+					} else {
+						console.log(updateResponse);
+						setProfileResponse({
+							message: language.errorUpdatingProfile,
+							status: 'warning',
+						});
+					}
+				} else {
+					const aos = connect();
+
+					let processSrc = null;
+					try {
+						const processSrcFetch = await fetch(getTxEndpoint(AOS.profileSrc));
+						if (processSrcFetch.ok) {
+							processSrc = await processSrcFetch.text();
+
+							const dateTime = new Date().getTime().toString();
+
+							const profileTags: { name: string; value: string }[] = [
+								{ name: 'Date-Created', value: dateTime },
+								{ name: 'Action', value: 'CreateProfile' },
+							];
+
+							console.log('Spawning profile process...');
+							const processId = await aos.spawn({
+								module: AOS.module,
+								scheduler: AOS.scheduler,
+								signer: createDataItemSigner(arProvider.wallet),
+								tags: profileTags,
+							});
+
+							console.log(`Process Id -`, processId);
+
+							console.log('Fetching profile process...');
+							let fetchedAssetId: string;
+							let retryCount: number = 0;
+							while (!fetchedAssetId) {
+								await new Promise((r) => setTimeout(r, 2000));
+								const gqlResponse = await getGQLData({
+									gateway: GATEWAYS.goldsky,
+									ids: [processId],
+									tagFilters: null,
+									owners: null,
+									cursor: null,
+									reduxCursor: null,
+									cursorObjectKey: null,
+								});
+
+								if (gqlResponse && gqlResponse.data.length) {
+									console.log(`Fetched transaction -`, gqlResponse.data[0].node.id);
+									fetchedAssetId = gqlResponse.data[0].node.id;
+								} else {
+									console.log(`Transaction not found -`, processId);
+									retryCount++;
+									if (retryCount >= 10) {
+										throw new Error(`Profile not found, please try again`);
+									}
+								}
+							}
+							if (fetchedAssetId) {
+								console.log('Sending source eval...');
+								const evalMessage = await aos.message({
+									process: processId,
+									signer: createDataItemSigner(arProvider.wallet),
+									tags: [{ name: 'Action', value: 'Eval' }],
+									data: processSrc,
+								});
+
+								console.log(evalMessage);
+
+								const evalResult = await aos.result({
+									message: evalMessage,
+									process: processId,
+								});
+
+								console.log(evalResult);
+
+								await new Promise((r) => setTimeout(r, 1000));
+
+								console.log('Updating profile data...');
+								let updateResponse = await messageResult({
+									processId: processId,
+									action: 'Update-Profile',
+									tags: null,
+									data: data,
+									wallet: arProvider.wallet,
+								});
+
+								if (updateResponse && updateResponse['Profile-Success']) {
+									setProfileResponse({
+										message: `${language.profileCreated}!`,
+										status: 'success',
+									});
+									handleUpdate();
+								} else {
+									console.log(updateResponse);
+									setProfileResponse(language.errorUpdatingProfile);
+									setProfileResponse({
+										message: language.errorUpdatingProfile,
+										status: 'warning',
+									});
+								}
+							} else {
+								setProfileResponse({
+									message: language.errorUpdatingProfile,
+									status: 'warning',
+								});
+							}
+						}
+					} catch (e: any) {
+						setProfileResponse({
+							message: e.message ?? language.errorUpdatingProfile,
+							status: 'warning',
+						});
+					}
+				}
 			} catch (e: any) {
-				console.error(e);
+				setProfileResponse(e.message ?? e);
 			}
 			setLoading(false);
 		}
@@ -177,7 +261,7 @@ export default function ProfileManage(props: IProps) {
 		if (bio && bio.length > MAX_BIO_LENGTH) {
 			return {
 				status: true,
-				message: `${language.charLimitReached} (${bio.length} / ${MAX_BIO_LENGTH})`,
+				message: `${language.maxCharsReached} (${bio.length} / ${MAX_BIO_LENGTH})`,
 			};
 		}
 		return { status: false, message: null };
@@ -214,7 +298,7 @@ export default function ProfileManage(props: IProps) {
 		if (banner) return <img src={checkAddress(banner) ? getTxEndpoint(banner) : banner} />;
 		return (
 			<>
-				<ReactSVG src={ASSETS.image} />
+				<ReactSVG src={ASSETS.media} />
 				<span>{language.uploadBanner}</span>
 			</>
 		);
@@ -235,51 +319,14 @@ export default function ProfileManage(props: IProps) {
 		else {
 			return (
 				<>
-					<S.Wrapper className={'max-view-wrapper'}>
-						<S.Header>
-							<h4>{props.initial ? language.signUp : language.editProfile}</h4>
-						</S.Header>
+					<S.Wrapper>
 						<S.Body>
-							<S.Form className={'border-wrapper-primary'}>
-								<FormField
-									label={language.handle}
-									value={handle}
-									onChange={(e: any) => setHandle(e.target.value)}
-									disabled={loading || (!props.initial && !fullProfile)}
-									invalid={{ status: false, message: null }}
-									required
-								/>
-								<FormField
-									label={language.channelTitle}
-									value={channelTitle}
-									onChange={(e: any) => setChannelTitle(e.target.value)}
-									disabled={loading || (!props.initial && !fullProfile) || useHandleForChannel}
-									invalid={{ status: false, message: null }}
-									required
-									hideErrorMessage
-								/>
-								<S.CWrapper>
-									<span>{language.useHandleForChannel}</span>
-									<Checkbox
-										checked={useHandleForChannel}
-										handleSelect={() => setUseHandleForChannel(!useHandleForChannel)}
-										disabled={loading}
-									/>
-								</S.CWrapper>
-								<TextArea
-									label={language.bio}
-									value={bio}
-									onChange={(e: any) => setBio(e.target.value)}
-									disabled={loading || (!props.initial && !fullProfile)}
-									invalid={getInvalidBio()}
-								/>
-							</S.Form>
 							<S.PWrapper>
 								<S.BWrapper>
 									<S.BInput
 										hasBanner={banner !== null}
 										onClick={() => bannerInputRef.current.click()}
-										disabled={loading || (!props.initial && !fullProfile)}
+										disabled={loading}
 									>
 										{getBannerWrapper()}
 									</S.BInput>
@@ -287,13 +334,13 @@ export default function ProfileManage(props: IProps) {
 										ref={bannerInputRef}
 										type={'file'}
 										onChange={(e: any) => handleFileChange(e, 'banner')}
-										disabled={loading || (!props.initial && !fullProfile)}
+										disabled={loading}
 										accept={ALLOWED_BANNER_TYPES}
 									/>
 									<S.AInput
 										hasAvatar={avatar !== null}
 										onClick={() => avatarInputRef.current.click()}
-										disabled={loading || (!props.initial && !fullProfile)}
+										disabled={loading}
 									>
 										{getAvatarWrapper()}
 									</S.AInput>
@@ -301,7 +348,7 @@ export default function ProfileManage(props: IProps) {
 										ref={avatarInputRef}
 										type={'file'}
 										onChange={(e: any) => handleFileChange(e, 'avatar')}
-										disabled={loading || (!props.initial && !fullProfile)}
+										disabled={loading}
 										accept={ALLOWED_AVATAR_TYPES}
 									/>
 								</S.BWrapper>
@@ -310,80 +357,72 @@ export default function ProfileManage(props: IProps) {
 										type={'primary'}
 										label={language.removeAvatar}
 										handlePress={() => setAvatar(null)}
-										disabled={loading || !avatar || (!props.initial && !fullProfile)}
+										disabled={loading || !avatar}
 									/>
 									<Button
 										type={'primary'}
 										label={language.removeBanner}
 										handlePress={() => setBanner(null)}
-										disabled={loading || !banner || (!props.initial && !fullProfile)}
+										disabled={loading || !banner}
 									/>
 								</S.PActions>
-								<S.SWrapper className={'border-wrapper-alt1'}>
-									<S.SSection>
-										<span>{language.handle}</span>
-										<p>{handle ? handle : '-'}</p>
-									</S.SSection>
-									<S.SSection>
-										<span>{language.channelTitle}</span>
-										<p>{channelTitle ? channelTitle : '-'}</p>
-									</S.SSection>
-									<S.SSection>
-										<span>{language.bio}</span>
-										<p>{bio ? bio : '-'}</p>
-									</S.SSection>
-								</S.SWrapper>
-								<S.SAction>
-									<Button
-										type={'alt1'}
-										label={language.submit}
-										handlePress={handleSubmit}
-										disabled={!handle || !channelTitle || loading}
-										loading={loading || (!props.initial && !fullProfile)}
-									/>
-								</S.SAction>
 							</S.PWrapper>
+							<S.Form>
+								<S.TForm className={'border-wrapper-alt2'}>
+									<FormField
+										label={language.name}
+										value={name}
+										onChange={(e: any) => setName(e.target.value)}
+										disabled={loading || usernameAsDisplayName}
+										invalid={{ status: false, message: null }}
+										required
+										hideErrorMessage
+									/>
+									<FormField
+										label={language.handle}
+										value={username}
+										onChange={(e: any) => setUsername(e.target.value)}
+										disabled={loading}
+										invalid={{ status: false, message: null }}
+										hideErrorMessage
+										required
+									/>
+								</S.TForm>
+								<TextArea
+									label={language.bio}
+									value={bio}
+									onChange={(e: any) => setBio(e.target.value)}
+									disabled={loading}
+									invalid={getInvalidBio()}
+								/>
+							</S.Form>
+							<S.SAction>
+								{(!props.profile || !props.profile.id) && loading && (
+									<S.Message>
+										<span>{`${language.profileCreatingInfo}...`}</span>
+									</S.Message>
+								)}
+								{props.handleClose && (
+									<Button
+										type={'primary'}
+										label={language.close}
+										handlePress={() => props.handleClose(true)}
+										disabled={loading}
+										loading={false}
+									/>
+								)}
+								<Button
+									type={'alt1'}
+									label={language.save}
+									handlePress={handleSubmit}
+									disabled={!username || !name || loading}
+									loading={loading}
+								/>
+							</S.SAction>
 						</S.Body>
 					</S.Wrapper>
 					{profileResponse && (
-						<Modal
-							header={props.initial ? language.profileCreated : language.profileUpdated}
-							handleClose={() => setProfileResponse(null)}
-						>
-							<S.MWrapper>
-								<S.MInfo>
-									<span>{props.initial ? language.profileCreatedInfo : language.profileUpdatedInfo}</span>
-								</S.MInfo>
-								<S.MActions>
-									<Button type={'primary'} label={language.close} handlePress={() => setProfileResponse(null)} />
-									<Button
-										type={'alt1'}
-										label={language.viewProfile}
-										handlePress={() => navigate(URLS.profileChannel(arProvider.walletAddress))}
-										disabled={false}
-										formSubmit
-									/>
-								</S.MActions>
-							</S.MWrapper>
-						</Modal>
-					)}
-					{profileExists && props.initial && (
-						<Modal header={language.profileExists} handleClose={null}>
-							<S.MWrapper>
-								<S.MInfo>
-									<span>{language.profileExistsInfo}</span>
-								</S.MInfo>
-								<S.MActions>
-									<Button
-										type={'alt1'}
-										label={language.viewProfile}
-										handlePress={() => navigate(URLS.profileChannel(arProvider.walletAddress))}
-										disabled={false}
-										formSubmit
-									/>
-								</S.MActions>
-							</S.MWrapper>
-						</Modal>
+						<Notification message={profileResponse.message} callback={() => setProfileResponse(null)} />
 					)}
 				</>
 			);

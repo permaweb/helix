@@ -21,6 +21,7 @@ import info from 'assets/info.svg';
 import landing from 'assets/landing.svg';
 import link from 'assets/link.svg';
 import logo from 'assets/logo.svg';
+import media from 'assets/media.svg';
 import menu from 'assets/menu.svg';
 import miniPlayerActive from 'assets/miniplayer-active.svg';
 import miniPlayerInactive from 'assets/miniplayer-inactive.svg';
@@ -56,6 +57,7 @@ export const AOS = {
 	collectionsRegistry: 'TFWDmf8a3_nw43GCm_CuYlYoylHAjCcFGbgHfDaGcsg',
 	collectionSrc: '2ZDuM2VUCN8WHoAKOOjiH4_7Apq0ZHKnTWdLppxCdGY',
 	profileRegistry: 'SNy4m-DrqxWl01YqGM4sxI8qCni-58re8uuJLvZPypY',
+	profileSrc: 'pbrl1fkS3_SZP3RqqPIjbt3-f81L9vIpV2_OnUmxqGQ',
 };
 
 export const ASSETS = {
@@ -80,6 +82,7 @@ export const ASSETS = {
 	landing: landing,
 	link: link,
 	logo: logo,
+	media: media,
 	menu: menu,
 	miniPlayerActive: miniPlayerActive,
 	miniPlayerInactive: miniPlayerInactive,
@@ -315,9 +318,9 @@ export const CURRENCIES = {
 
 export const REDIRECTS = {
 	bazar: {
-		asset: (id: string) => `https://bazar.arweave.dev/#/asset/${id}`,
-		collection: (id: string) => `https://bazar.arweave.dev/#/collection/${id}`,
-		profile: (id: string) => `https://bazar.arweave.dev/#/profile/${id}`,
+		asset: (id: string) => `https://ao-bazar.arweave.dev/#/asset/${id}`,
+		collection: (id: string) => `https://ao-bazar.arweave.dev/#/collection/${id}`,
+		profile: (id: string) => `https://ao-bazar.arweave.dev/#/profile/${id}`,
 	},
 	udl: 'https://udlicense.arweave.dev/',
 };

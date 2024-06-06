@@ -282,3 +282,8 @@ export type RegistryProfileType = {
 	username: string;
 	bio?: string;
 };
+
+export type NotificationType = {
+	message: string;
+	status: 'success' | 'warning';
+};
