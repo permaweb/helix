@@ -71,11 +71,7 @@ function WalletList(props: { handleConnect: any }) {
 	return (
 		<S.WalletListContainer>
 			{AR_WALLETS.map((wallet: any, index: number) => (
-				<S.WalletListItem
-					key={index}
-					onClick={() => props.handleConnect(wallet.type)}
-					className={'border-wrapper-alt2'}
-				>
+				<S.WalletListItem key={index} onClick={() => props.handleConnect(wallet.type)}>
 					<img src={`${wallet.logo}`} alt={''} />
 					<span>{wallet.type.charAt(0).toUpperCase() + wallet.type.slice(1)}</span>
 				</S.WalletListItem>
