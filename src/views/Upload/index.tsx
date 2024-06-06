@@ -210,7 +210,7 @@ export default function Upload() {
 
 			if (processSrc) {
 				processSrc = processSrc.replaceAll('<NAME>', uploadReducer.data.title);
-				processSrc = processSrc.replaceAll('<DESCRIPTION>', uploadReducer.data.description);
+				processSrc = processSrc.replaceAll('<DESCRIPTION>', `[[ ${uploadReducer.data.description} ]]`);
 				processSrc = processSrc.replaceAll('<CREATOR>', arProvider.profile.id);
 				processSrc = processSrc.replaceAll('<BANNER>', bannerTx ? bannerTx : DEFAULT_UCM_BANNER);
 				processSrc = processSrc.replaceAll('<THUMBNAIL>', thumbnailTx ? thumbnailTx : DEFAULT_UCM_THUMBNAIL);
