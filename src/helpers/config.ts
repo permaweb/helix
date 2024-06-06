@@ -48,12 +48,14 @@ export const APP = {
 };
 
 export const AOS = {
-	module: 'nI_jcZgPd0rcsnjaHtaaJPpMCW847ou-3RGA5_W3aZg',
+	module: 'sBmq5pehE1_Ed5YBs4DGV4FMftoKwo_cVVsCpPND36Q',
 	scheduler: '_GQ33BkPtZrqxA84vM8Zk-N2aO0toNNu_C-l-rawrBA',
 	assetSrc: '00c9tFArqJiCl7wTGkEQcSO7lCDQQ1wh8OmS-y6G-AY',
-	collectionsRegistry: 'YwDYeqpBKURVp3cvSEosefl4LBsfmMTW7QSkauv3pas',
+	defaultToken: 'xU9zFkq3X2ZQ6olwNVvr1vUWIjc3kXTWr7xKQD6dh10',
+	pixl: 'DM3FoZUq_yebASPhgd8pEIRIzDW6muXEhxz5-JwbZwo',
+	collectionsRegistry: 'TFWDmf8a3_nw43GCm_CuYlYoylHAjCcFGbgHfDaGcsg',
 	collectionSrc: '2ZDuM2VUCN8WHoAKOOjiH4_7Apq0ZHKnTWdLppxCdGY',
-	profileRegistry: 'tURWyfiTCESFL7avuJsH-_Yoc1q9xlakoKV6DLjxkIw',
+	profileRegistry: 'SNy4m-DrqxWl01YqGM4sxI8qCni-58re8uuJLvZPypY',
 };
 
 export const ASSETS = {

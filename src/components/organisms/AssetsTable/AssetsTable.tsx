@@ -85,7 +85,7 @@ export default function AssetsTable(props: { useIdAction: boolean }) {
 				setLoading(false);
 			}
 		})();
-	}, [arProvider.walletAddress]);
+	}, [arProvider.walletAddress, uploadReducer.uploadActive]);
 
 	React.useEffect(() => {
 		(async function () {

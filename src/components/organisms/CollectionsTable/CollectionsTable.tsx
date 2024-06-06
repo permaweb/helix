@@ -1,4 +1,5 @@
 import React from 'react';
+import { useSelector } from 'react-redux';
 
 import { readHandler } from 'api';
 
@@ -19,6 +20,7 @@ import { AlignType, CollectionType } from 'helpers/types';
 import { formatAddress } from 'helpers/utils';
 import { useArweaveProvider } from 'providers/ArweaveProvider';
 import { useLanguageProvider } from 'providers/LanguageProvider';
+import { RootState } from 'store';
 
 // import { CloseHandler } from 'wrappers/CloseHandler';
 import * as S from './styles';
@@ -242,6 +244,8 @@ import * as S from './styles';
 export default function CollectionsTable() {
 	const arProvider = useArweaveProvider();
 
+	const uploadReducer = useSelector((state: RootState) => state.uploadReducer);
+
 	const languageProvider = useLanguageProvider();
 	const language = languageProvider.object[languageProvider.current];
 
@@ -286,7 +290,7 @@ export default function CollectionsTable() {
 				setLoading(false);
 			}
 		})();
-	}, [arProvider.profile]);
+	}, [arProvider.profile, uploadReducer.uploadActive]);
 
 	function getTableHeader() {
 		const header: any = {};
