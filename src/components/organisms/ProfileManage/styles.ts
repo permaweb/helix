@@ -21,19 +21,27 @@ export const Body = styled.div`
 	display: flex;
 	justify-content: center;
 	flex-wrap: wrap;
-	gap: 40px;
-	margin: 20px 0 0 0;
+	gap: 10px;
+	padding: 20px;
 `;
 
 export const Form = styled.div`
 	height: fit-content;
-	min-width: 450px;
-	width: calc(40% - 20px);
-	padding: 20px 20px 0 20px;
+	width: 100%;
 	@media (max-width: calc(${STYLING.cutoffs.initial} + 105px)) {
 		min-width: 0;
 		width: 100%;
 		flex: none;
+	}
+`;
+
+export const TForm = styled.div`
+	margin: 20px 0 30px 0;
+	padding: 20px;
+	> * {
+		&:last-child {
+			margin: 20px 0 0 0;
+		}
 	}
 `;
 
@@ -55,11 +63,18 @@ export const PWrapper = styled.div`
 export const CWrapper = styled.div`
 	display: flex;
 	align-items: center;
-	margin: 0 0 30px 0;
 	span {
-		margin: 0 6.5px 0 0;
 		font-size: ${(props) => props.theme.typography.size.xSmall} !important;
-		font-weight: ${(props) => props.theme.typography.weight.medium} !important;
+		font-weight: ${(props) => props.theme.typography.weight.bold} !important;
+		display: block;
+		max-width: 75%;
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+	}
+
+	.c-wrapper-checkbox {
+		margin: 4.5px 0 0 7.5px;
 	}
 `;
 
@@ -71,8 +86,8 @@ export const BWrapper = styled.div`
 export const BInput = styled.button<{ hasBanner: boolean }>`
 	height: 200px;
 	width: 100%;
-	background: ${(props) => props.theme.colors.container.primary.background};
-	border: ${(props) => (props.hasBanner ? `none` : `1px dashed ${props.theme.colors.border.primary}`)};
+	background: ${(props) => props.theme.colors.container.primary.active};
+	border: ${(props) => (props.hasBanner ? `none` : `1px dashed ${props.theme.colors.border.alt2}`)};
 	border-radius: ${STYLING.dimensions.radius.primary};
 	overflow: hidden;
 	span {
@@ -81,10 +96,10 @@ export const BInput = styled.button<{ hasBanner: boolean }>`
 		font-weight: ${(props) => props.theme.typography.weight.bold};
 	}
 	svg {
-		height: 32.5px;
-		width: 40px;
+		height: 35px;
+		width: 35px;
 		margin: 0 0 10px 0;
-		fill: ${(props) => props.theme.colors.font.alt1};
+		stroke: ${(props) => props.theme.colors.font.alt1};
 	}
 	img {
 		height: 200px;
@@ -93,12 +108,12 @@ export const BInput = styled.button<{ hasBanner: boolean }>`
 	}
 	&:hover {
 		border: 1px dashed ${(props) => props.theme.colors.border.alt2};
-		background: ${(props) => props.theme.colors.container.primary.active};
+		background: ${(props) => props.theme.colors.container.alt1.background};
 		span {
 			color: ${(props) => props.theme.colors.font.primary};
 		}
 		svg {
-			fill: ${(props) => props.theme.colors.font.primary};
+			stroke: ${(props) => props.theme.colors.font.primary};
 		}
 	}
 	&:focus {
@@ -111,11 +126,16 @@ export const BInput = styled.button<{ hasBanner: boolean }>`
 			color: ${(props) => props.theme.colors.button.primary.disabled.color};
 		}
 		svg {
-			fill: ${(props) => props.theme.colors.button.primary.disabled.color};
+			stroke: ${(props) => props.theme.colors.button.primary.disabled.color};
+			g {
+				.svg-primary-fill {
+					fill: ${(props) => props.theme.colors.button.primary.disabled.color};
+				}
+			}
 		}
 	}
 	${(props) =>
-		props.hasBanner
+		props.hasBanner && !props.disabled
 			? `
         pointer-events: all;
         ::after {
@@ -130,7 +150,7 @@ export const BInput = styled.button<{ hasBanner: boolean }>`
             background-color: ${props.theme.colors.overlay.alt1};
 			border-radius: ${STYLING.dimensions.radius.primary};
             opacity: 0;
-            transition: all 75ms;
+            transition: all 100ms;
         }
         
         &:hover::after {
@@ -150,8 +170,8 @@ export const BInput = styled.button<{ hasBanner: boolean }>`
 export const AInput = styled.button<{ hasAvatar: boolean }>`
 	height: 115px;
 	width: 115px;
-	background: ${(props) => props.theme.colors.container.primary.background};
-	border: ${(props) => (props.hasAvatar ? `none` : `1px dashed ${props.theme.colors.border.primary}`)};
+	background: ${(props) => props.theme.colors.container.primary.active};
+	border: ${(props) => (props.hasAvatar ? `none` : `1px dashed ${props.theme.colors.border.alt2}`)};
 	border-radius: 50%;
 	position: absolute;
 	bottom: -55px;
@@ -164,10 +184,10 @@ export const AInput = styled.button<{ hasAvatar: boolean }>`
 		font-weight: ${(props) => props.theme.typography.weight.bold};
 	}
 	svg {
-		height: 20.5px;
-		width: 30px;
+		height: 25px;
+		width: 25px;
 		margin: 0 0 5px 0;
-		stroke: ${(props) => props.theme.colors.font.alt1};
+		color: ${(props) => props.theme.colors.font.alt1};
 	}
 	img {
 		height: 100%;
@@ -177,12 +197,12 @@ export const AInput = styled.button<{ hasAvatar: boolean }>`
 	}
 	&:hover {
 		border: 1px dashed ${(props) => props.theme.colors.border.alt2};
-		background: ${(props) => props.theme.colors.container.primary.active};
+		background: ${(props) => props.theme.colors.container.alt1.background};
 		span {
 			color: ${(props) => props.theme.colors.font.primary};
 		}
 		svg {
-			stroke: ${(props) => props.theme.colors.font.primary};
+			color: ${(props) => props.theme.colors.font.primary};
 		}
 	}
 	&:focus {
@@ -195,11 +215,11 @@ export const AInput = styled.button<{ hasAvatar: boolean }>`
 			color: ${(props) => props.theme.colors.button.primary.disabled.color};
 		}
 		svg {
-			stroke: ${(props) => props.theme.colors.button.primary.disabled.color};
+			color: ${(props) => props.theme.colors.button.primary.disabled.color};
 		}
 	}
 	${(props) =>
-		props.hasAvatar
+		props.hasAvatar && !props.disabled
 			? `
         pointer-events: all;
         ::after {
@@ -214,7 +234,7 @@ export const AInput = styled.button<{ hasAvatar: boolean }>`
             background-color: ${props.theme.colors.overlay.alt1};
 			border-radius: ${STYLING.dimensions.radius.primary};
             opacity: 0;
-            transition: all 75ms;
+            transition: all 100ms;
         }
         &:hover::after {
             opacity: 1;
@@ -241,36 +261,26 @@ export const PActions = styled.div`
 	}
 `;
 
-export const SWrapper = styled.div`
-	margin: 60px 0 0 0;
-	padding: 20px;
-	> * {
-		&:not(:last-child) {
-			margin: 0 0 15px 0;
-		}
-		&:last-child {
-			margin: 0;
-		}
-	}
-`;
-
-export const SSection = styled.div`
-	span {
-		color: ${(props) => props.theme.colors.font.alt1};
-		font-size: ${(props) => props.theme.typography.size.xxSmall};
-		font-weight: ${(props) => props.theme.typography.weight.medium};
-	}
-	p {
-		color: ${(props) => props.theme.colors.font.primary};
-		font-size: ${(props) => props.theme.typography.size.base};
-		font-weight: ${(props) => props.theme.typography.weight.bold};
-		overflow-wrap: anywhere;
-	}
-`;
-
 export const SAction = styled.div`
-	width: fit-content;
-	margin: 40px 0 0 auto !important;
+	width: 100%;
+	display: flex;
+	justify-content: flex-end;
+	align-items: center;
+	flex-wrap: wrap;
+	gap: 15px;
+	position: relative;
+`;
+
+export const Message = styled.div`
+	position: absolute;
+	left: 0;
+	span {
+		color: ${(props) => props.theme.colors.font.primary};
+		font-family: ${(props) => props.theme.typography.family.alt1};
+		font-size: ${(props) => props.theme.typography.size.small};
+		font-weight: ${(props) => props.theme.typography.weight.bold};
+		line-height: 1.5;
+	}
 `;
 
 export const MWrapper = styled.div`

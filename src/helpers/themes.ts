@@ -159,6 +159,12 @@ export const theme = (currentTheme: any): DefaultTheme => ({
 			alt8: {
 				background: currentTheme.dark1,
 			},
+			alt9: {
+				background: currentTheme.primary1,
+			},
+			alt10: {
+				background: currentTheme.primary2,
+			},
 		},
 		font: {
 			primary: currentTheme.neutralA1,
@@ -168,6 +174,7 @@ export const theme = (currentTheme: any): DefaultTheme => ({
 			alt4: currentTheme.neutral1,
 			alt5: currentTheme.primary2,
 			light1: currentTheme.light1,
+			dark1: currentTheme.dark1,
 		},
 		form: {
 			background: currentTheme.neutral1,

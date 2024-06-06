@@ -197,7 +197,7 @@ export const BNavItemFlex = styled(BNavItem)`
 	border-radius: ${STYLING.dimensions.radius.primary};
 	padding: 0 15px 2.5px 15px;
 	border-left: none;
-	border: 1.5px solid ${(props) => (props.active ? props.theme.colors.border.alt2 : props.theme.colors.border.primary)};
+	border: 1px solid ${(props) => (props.active ? props.theme.colors.border.alt2 : props.theme.colors.border.primary)};
 	a {
 		display: flex;
 		align-items: center;
@@ -210,7 +210,7 @@ export const BNavItemFlex = styled(BNavItem)`
 		font-size: ${(props) => props.theme.typography.size.small};
 	}
 	&:hover {
-		border: 1.5px solid ${(props) => props.theme.colors.border.alt2};
+		border: 1px solid ${(props) => props.theme.colors.border.alt2};
 	}
 	&:before {
 		display: none;
@@ -218,15 +218,16 @@ export const BNavItemFlex = styled(BNavItem)`
 `;
 
 export const PWrapper = styled.div`
-	height: 100vh;
+	height: calc(100vh - 15px);
 	width: ${STYLING.dimensions.nav.panelWidthOpen};
 	max-width: 90vw;
 	position: fixed;
-	top: 0;
-	left: 0;
+	top: 7.5px;
+	left: 7.5px;
 	transition: width 50ms ease-out;
 	background: ${(props) => props.theme.colors.container.primary.background};
-	border-right: 1px solid ${(props) => props.theme.colors.border.primary};
+	border: 1px solid ${(props) => props.theme.colors.border.primary};
+	border-radius: ${STYLING.dimensions.radius.primary};
 	animation: ${openLeft} 200ms;
 `;
 

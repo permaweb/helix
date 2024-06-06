@@ -21,6 +21,7 @@ module.exports = {
 								'arbundles',
 								'@irys/sdk',
 								'^warp',
+								'@permaweb/aoconnect',
 								'^permaweb-orderbook',
 								'^permaweb-sdk',
 								'^@permaweb/stampjs',

@@ -12,7 +12,7 @@ import { TurboBalanceFund } from 'components/molecules/TurboBalanceFund';
 import { ALLOWED_ASSET_TYPES, ASSETS } from 'helpers/config';
 import { getTurboCostWincEndpoint } from 'helpers/endpoints';
 import { ActiveFieldAddType, AlignType, FileMetadataType, SequenceType } from 'helpers/types';
-import { formatTurboAmount, getARAmountFromWinc } from 'helpers/utils';
+import { formatTurboAmount, getARAmountFromWinc, stripFileExtension } from 'helpers/utils';
 import { useArweaveProvider } from 'providers/ArweaveProvider';
 import { useLanguageProvider } from 'providers/LanguageProvider';
 import { RootState } from 'store';
@@ -316,7 +316,7 @@ export default function UploadAssets() {
 				);
 				return {
 					data: {
-						fileName: data.title ? data.title : data.file.name,
+						fileName: data.title ? data.title : stripFileExtension(data.file.name),
 						description: (
 							<S.DDataWrapper>
 								<p>{`[ ${data.description ? '✓' : 'x'} ]`}</p>

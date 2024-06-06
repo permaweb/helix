@@ -1,10 +1,9 @@
-// tooltip={language.thumbnailInfo}
-
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { ReactSVG } from 'react-svg';
 
 import { Button } from 'components/atoms/Button';
+import { IconButton } from 'components/atoms/IconButton';
 import { Loader } from 'components/atoms/Loader';
 import { Modal } from 'components/molecules/Modal';
 import { ALLOWED_THUMBNAIL_TYPES, ASSETS } from 'helpers/config';
@@ -28,6 +27,7 @@ export default function UploadThumbnail() {
 	const [generatingThumbnails, setGeneratingThumbnails] = React.useState<boolean>(false);
 	const [activeThumbnailIndex, setActiveThumbnailIndex] = React.useState<number | null>(null);
 	const [thumbnails, setThumbnails] = React.useState([]);
+	const [showTooltip, setShowTooltip] = React.useState<boolean>(false);
 
 	const [showPlayer, setShowPlayer] = React.useState<boolean>(false);
 	const [videoSrc, setVideoSrc] = React.useState('');
@@ -140,6 +140,13 @@ export default function UploadThumbnail() {
 			<S.Wrapper>
 				<S.Header>
 					<p>{language.thumbnail}</p>
+					<IconButton
+						type={'primary'}
+						active={false}
+						src={ASSETS.info}
+						handlePress={() => setShowTooltip(!showTooltip)}
+						dimensions={{ wrapper: 22.5, icon: 13.5 }}
+					/>
 				</S.Header>
 				<S.Body>
 					<S.Select disabled={uploadReducer.uploadActive} onClick={() => fileInputRef.current.click()}>
@@ -192,6 +199,13 @@ export default function UploadThumbnail() {
 							<Button type={'alt1'} label={language.upload} handlePress={handleCreateThumbnail} />
 						</S.MActions>
 					</S.MWrapper>
+				</Modal>
+			)}
+			{showTooltip && (
+				<Modal header={language.thumbnail} handleClose={() => setShowTooltip(false)}>
+					<S.Tooltip>
+						<p>{language.thumbnailInfo}</p>
+					</S.Tooltip>
 				</Modal>
 			)}
 		</>

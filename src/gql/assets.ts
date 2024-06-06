@@ -1,18 +1,16 @@
+import { readHandler } from 'api';
 import { getGQLData, getProfiles } from 'gql';
 
-import { ASSETS, DEFAULT_THUMBNAIL, STORAGE, TAGS } from 'helpers/config';
-import { getBalancesEndpoint } from 'helpers/endpoints';
+import { AOS, ASSETS, DEFAULT_THUMBNAIL, STORAGE, TAGS } from 'helpers/config';
 import {
 	AGQLResponseType,
 	AssetType,
-	BalanceType,
 	CursorEnum,
 	GQLNodeResponseType,
 	LicenseValueType,
 	ProfileType,
 	TagType,
 	UDLType,
-	UserBalancesType,
 } from 'helpers/types';
 import { getTagValue } from 'helpers/utils';
 
@@ -43,27 +41,32 @@ export async function getAssetById(args: { id: string; gateway: string }): Promi
 	}
 }
 
-export async function getAssetIdsByUser(args: { walletAddress: string }): Promise<string[]> {
-	try {
-		const result: any = await fetch(getBalancesEndpoint(args.walletAddress));
-		if (result.status === 200) {
-			const balances = ((await result.json()) as UserBalancesType).balances;
+export async function getAssetIdsByUser(args: { address: string }): Promise<string[]> {
+	const profileLookup = await readHandler({
+		processId: AOS.profileRegistry,
+		action: 'Get-Profiles-By-Delegate',
+		data: { Address: args.address },
+	});
 
-			const assetIds = balances
-				.filter((balance: BalanceType) => {
-					return balance.balance && parseInt(balance.balance) !== 0;
-				})
-				.map((balance: BalanceType) => {
-					return balance.contract_tx_id;
-				});
-
-			return assetIds;
-		} else {
-			return [];
-		}
-	} catch (e: any) {
-		return [];
+	let activeProfileId: string;
+	if (profileLookup && profileLookup.length > 0 && profileLookup[0].ProfileId) {
+		activeProfileId = profileLookup[0].ProfileId;
 	}
+
+	if (activeProfileId) {
+		const fetchedProfile = await readHandler({
+			processId: activeProfileId,
+			action: 'Info',
+			data: null,
+		});
+
+		if (fetchedProfile) {
+			const swapIds = [AOS.defaultToken, AOS.pixl];
+			return fetchedProfile.Assets.map((asset: { Id: string; Quantity: string }) => asset.Id).filter(
+				(id: string) => !swapIds.includes(id)
+			);
+		} else return [];
+	} else return [];
 }
 
 export function structureAsset(element: GQLNodeResponseType, profiles: ProfileType[] | null): AssetType {
@@ -132,7 +135,7 @@ function structureLicense(tags: TagType[]): UDLType {
 
 	let access: LicenseValueType | null = null;
 	const accessTag = getTagValue(tags, TAGS.keys.udl.accessFee);
-	if (accessTag !== STORAGE.none) access = { value: accessTag, icon: ASSETS.u };
+	if (accessTag !== STORAGE.none) access = { value: accessTag, icon: ASSETS.wrappedAr };
 
 	let derivations: LicenseValueType | null = null;
 	const derivationsTag = getTagValue(tags, TAGS.keys.udl.derivations);
@@ -167,7 +170,7 @@ export function getLicenseValuePayment(value: string): LicenseValueType {
 	let payment: LicenseValueType = { value: value };
 	if (value !== 'Disallowed') {
 		if (value.includes('Revenue-Share')) payment.endText = '%';
-		if (value.includes('Monthly-Fee') || value.includes('One-Time-Fee')) payment.icon = ASSETS.u;
+		if (value.includes('Monthly-Fee') || value.includes('One-Time-Fee')) payment.icon = ASSETS.wrappedAr;
 	}
 
 	return payment;

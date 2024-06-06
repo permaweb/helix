@@ -6,7 +6,7 @@
 	"author": "",
 	"license": "ISC",
 	"scripts": {
-		"start": "NODE_ENV=development webpack serve --port 3000",
+		"start": "NODE_ENV=development webpack serve --port 3001",
 		"format": "eslint --fix . && npx prettier --write .",
 		"test": "npm test",
 		"test:verbose": "npm test -- --verbose",
@@ -17,6 +17,7 @@
 	},
 	"dependencies": {
 		"@irys/sdk": "^0.1.0-a1",
+		"@permaweb/aoconnect": "0.0.51",
 		"@permaweb/stampjs": "0.6.1",
 		"@stripe/react-stripe-js": "^2.4.0",
 		"@stripe/stripe-js": "^2.4.0",
@@ -36,10 +37,7 @@
 		"redux-thunk": "^2.4.2",
 		"styled-components": "^5.3.6",
 		"timers-browserify": "^2.0.12",
-		"typescript": "^5.3.3",
-		"warp-contracts": "1.4.26",
-		"warp-contracts-plugin-deploy": "1.0.8",
-		"warp-contracts-plugin-signature": "1.0.15-beta.1"
+		"typescript": "^5.3.3"
 	},
 	"devDependencies": {
 		"@babel/core": "^7.20.12",

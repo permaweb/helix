@@ -21,6 +21,7 @@ import info from 'assets/info.svg';
 import landing from 'assets/landing.svg';
 import link from 'assets/link.svg';
 import logo from 'assets/logo.svg';
+import media from 'assets/media.svg';
 import menu from 'assets/menu.svg';
 import miniPlayerActive from 'assets/miniplayer-active.svg';
 import miniPlayerInactive from 'assets/miniplayer-inactive.svg';
@@ -38,12 +39,25 @@ import user from 'assets/user.svg';
 import volumeActive from 'assets/volume-active.svg';
 import volumeInactive from 'assets/volume-inactive.svg';
 import wallet from 'assets/wallet.svg';
+import wrappedAr from 'assets/wrapped-ar.svg';
 import x from 'assets/x.svg';
 
 import { UploadStepType, WalletEnum } from './types';
 
 export const APP = {
 	name: 'Helix',
+};
+
+export const AOS = {
+	module: 'sBmq5pehE1_Ed5YBs4DGV4FMftoKwo_cVVsCpPND36Q',
+	scheduler: '_GQ33BkPtZrqxA84vM8Zk-N2aO0toNNu_C-l-rawrBA',
+	assetSrc: '00c9tFArqJiCl7wTGkEQcSO7lCDQQ1wh8OmS-y6G-AY',
+	defaultToken: 'xU9zFkq3X2ZQ6olwNVvr1vUWIjc3kXTWr7xKQD6dh10',
+	pixl: 'DM3FoZUq_yebASPhgd8pEIRIzDW6muXEhxz5-JwbZwo',
+	collectionsRegistry: 'TFWDmf8a3_nw43GCm_CuYlYoylHAjCcFGbgHfDaGcsg',
+	collectionSrc: '2ZDuM2VUCN8WHoAKOOjiH4_7Apq0ZHKnTWdLppxCdGY',
+	profileRegistry: 'SNy4m-DrqxWl01YqGM4sxI8qCni-58re8uuJLvZPypY',
+	profileSrc: 'pbrl1fkS3_SZP3RqqPIjbt3-f81L9vIpV2_OnUmxqGQ',
 };
 
 export const ASSETS = {
@@ -68,6 +82,7 @@ export const ASSETS = {
 	landing: landing,
 	link: link,
 	logo: logo,
+	media: media,
 	menu: menu,
 	miniPlayerActive: miniPlayerActive,
 	miniPlayerInactive: miniPlayerInactive,
@@ -84,6 +99,7 @@ export const ASSETS = {
 	volumeActive: volumeActive,
 	volumeInactive: volumeInactive,
 	wallet: wallet,
+	wrappedAr: wrappedAr,
 	wallets: {
 		arconnect: arconnect,
 		arweaveApp: arweaveApp,
@@ -106,12 +122,14 @@ export const TAGS = {
 		avatar: 'Avatar',
 		banner: 'Banner',
 		channelTitle: 'Channel-Title',
-		collectionCode: 'Collection-Code',
+		collectionId: 'Collection-Id',
+		collectionName: 'Collection-Name',
 		contentLength: 'Content-Length',
 		contentType: 'Content-Type',
 		contractManifest: 'Contract-Manifest',
 		contractSrc: 'Contract-Src',
 		creator: 'Creator',
+		currency: 'Currency',
 		dataProtocol: 'Data-Protocol',
 		dataSource: 'Data-Source',
 		dateCreated: 'Date-Created',
@@ -120,6 +138,7 @@ export const TAGS = {
 		initialOwner: 'Initial-Owner',
 		license: 'License',
 		name: 'Name',
+		profileCreator: 'Profile-Creator',
 		profileIndex: 'Profile-Index',
 		protocolName: 'Protocol-Name',
 		renderWith: 'Render-With',
@@ -139,28 +158,19 @@ export const TAGS = {
 	},
 	values: {
 		ansVersion: 'ANS-110',
-		collection: 'Collection',
+		collection: 'AO-Collection',
 		comment: 'comment',
-		contractManifest:
-			'{"evaluationOptions":{"sourceType":"redstone-sequencer","allowBigInt":true,"internalWrites":true,"unsafeClient":"skip","useConstructor":true}}',
 		document: 'Document',
 		followDataProtocol: 'Follow',
 		license: 'dE0rmDfl9_OWjkDznNEXHaSO_JohJkRolvMzaCroUdw',
+		licenseCurrency: 'xU9zFkq3X2ZQ6olwNVvr1vUWIjc3kXTWr7xKQD6dh10',
 		profileVersions: {
 			'1': 'Account-0.3',
 		},
-		smartweaveAppName: 'SmartWeaveContract',
-		smartweaveAppVersion: '0.3.0',
 		ticker: 'ATOMIC ASSET',
 		title: (title: string) => `${title}`,
 	},
 };
-
-export const ASSET_CONTRACT = {
-	src: 'Of9pi--Gj7hCTawhgxOwbuWnFI1h24TTgO5pw8ENJNQ',
-};
-
-export const TRADE_SOURCES = [ASSET_CONTRACT.src, 'h9v17KHV4SXwdW2-JHU6a23f6R0YtbXZJJht8LfP8QM'];
 
 function createURLs() {
 	const base = `/`;
@@ -239,10 +249,7 @@ export const CONTENT_TYPES = {
 	textPlain: 'text/plain',
 };
 
-export const AR_WALLETS = [
-	{ type: WalletEnum.arConnect, logo: ASSETS.wallets.arconnect },
-	{ type: WalletEnum.othent, logo: ASSETS.wallets.othent },
-];
+export const AR_WALLETS = [{ type: WalletEnum.arConnect, logo: ASSETS.wallets.arconnect }];
 
 export const WALLET_PERMISSIONS = ['ACCESS_ADDRESS', 'ACCESS_PUBLIC_KEY', 'SIGN_TRANSACTION', 'DISPATCH', 'SIGNATURE'];
 
@@ -256,6 +263,9 @@ export const AR_PROFILE = {
 };
 
 export const DEFAULT_THUMBNAIL = 'nmEZucV8rT47rAh1gA3HO-PQTZ0qCKTS6oqUT4D09Pk';
+
+export const DEFAULT_UCM_BANNER = 'eXCtpVbcd_jZ0dmU2PZ8focaKxBGECBQ8wMib7sIVPo';
+export const DEFAULT_UCM_THUMBNAIL = 'lJovHqM9hwNjHV5JoY9NGWtt0WD-5D4gOqNL2VWW5jk';
 
 export const COMMENT_SPEC = {
 	protcolId: 'comment',
@@ -275,10 +285,6 @@ export const UPLOAD_CONFIG = {
 	node2: 'https://turbo.ardrive.io',
 	batchSize: 1,
 	chunkSize: 7500000,
-};
-
-export const CONTRACT_CONFIG = {
-	node: 'arweave',
 };
 
 export const UPLOAD_STEPS: UploadStepType[] = ['details', 'license', 'checks'];
@@ -306,16 +312,17 @@ export const ALLOWED_ASSET_TYPES_DISPLAY = [];
 export const CURRENCIES = {
 	u: {
 		label: 'U',
-		icon: ASSETS.u,
+		icon: ASSETS.wrappedAr,
 	},
 };
 
 export const REDIRECTS = {
 	bazar: {
-		asset: (id: string) => `https://bazar.arweave.dev/#/asset/${id}`,
-		collection: (id: string) => `https://bazar.arweave.dev/#/collection/${id}`,
-		profile: (id: string) => `https://bazar.arweave.dev/#/profile/${id}`,
+		asset: (id: string) => `https://ao-bazar.arweave.dev/#/asset/${id}`,
+		collection: (id: string) => `https://ao-bazar.arweave.dev/#/collection/${id}`,
+		profile: (id: string) => `https://ao-bazar.arweave.dev/#/profile/${id}`,
 	},
+	udl: 'https://udlicense.arweave.dev/',
 };
 
 export const DRE_NODE = 'https://dre-u.warp.cc/contract';

@@ -1,8 +1,7 @@
 import React from 'react';
 import { ReactSVG } from 'react-svg';
 
-import { getFullProfile } from 'permaweb-sdk/dist/gql';
-import { FullProfileType } from 'permaweb-sdk/dist/helpers/types';
+import { getProfile } from 'api';
 
 import { Button } from 'components/atoms/Button';
 import { Loader } from 'components/atoms/Loader';
@@ -10,36 +9,40 @@ import { AssetsTable } from 'components/organisms/AssetsTable';
 import { CollectionsTable } from 'components/organisms/CollectionsTable';
 import { ASSETS, REDIRECTS } from 'helpers/config';
 import { getTxEndpoint } from 'helpers/endpoints';
+import { ProfileHeaderType } from 'helpers/types';
 import { checkAddress, formatAddress } from 'helpers/utils';
+import { useArweaveProvider } from 'providers/ArweaveProvider';
 import { useLanguageProvider } from 'providers/LanguageProvider';
 
 import * as S from './styles';
 
 export default function Profile(props: { address: string }) {
+	const arProvider = useArweaveProvider();
+
 	const languageProvider = useLanguageProvider();
 	const language = languageProvider.object[languageProvider.current];
 
 	const [loading, setLoading] = React.useState<boolean>(false);
-	const [copied, setCopied] = React.useState<boolean>(false);
+	// const [copied, setCopied] = React.useState<boolean>(false);
 
-	const [fullProfile, setFullProfile] = React.useState<FullProfileType | null>(null);
+	const [fullProfile, setFullProfile] = React.useState<ProfileHeaderType | null>(null);
 
-	const copyAddress = React.useCallback(async () => {
-		if (fullProfile && fullProfile.walletAddress) {
-			if (fullProfile.walletAddress.length > 0) {
-				await navigator.clipboard.writeText(fullProfile.walletAddress);
-				setCopied(true);
-				setTimeout(() => setCopied(false), 2000);
-			}
-		}
-	}, [fullProfile]);
+	// const copyAddress = React.useCallback(async () => {
+	// 	if (fullProfile && fullProfile.walletAddress) {
+	// 		if (fullProfile.walletAddress.length > 0) {
+	// 			await navigator.clipboard.writeText(fullProfile.walletAddress);
+	// 			setCopied(true);
+	// 			setTimeout(() => setCopied(false), 2000);
+	// 		}
+	// 	}
+	// }, [fullProfile]);
 
 	React.useEffect(() => {
 		(async function () {
 			if (props.address && checkAddress(props.address)) {
 				setLoading(true);
 				try {
-					const currentProfile = await getFullProfile({ address: props.address });
+					const currentProfile = await getProfile({ address: props.address });
 					setFullProfile(currentProfile);
 				} catch (e: any) {
 					console.error(e);
@@ -47,15 +50,15 @@ export default function Profile(props: { address: string }) {
 				setLoading(false);
 			}
 		})();
-	}, [props.address]);
+	}, [props.address, arProvider.profile]);
 
 	function getAvatar() {
 		if (fullProfile && fullProfile.avatar) return <img src={getTxEndpoint(fullProfile.avatar)} />;
 		return <ReactSVG src={ASSETS.user} />;
 	}
 
-	function getHandle() {
-		return fullProfile.handle ? `@${fullProfile.handle}` : formatAddress(fullProfile.walletAddress, false);
+	function getUsername() {
+		return fullProfile.username ? `@${fullProfile.username}` : formatAddress(fullProfile.walletAddress, false);
 	}
 
 	function getHeaderDetails() {
@@ -63,18 +66,18 @@ export default function Profile(props: { address: string }) {
 			<S.HeaderHA>
 				<h4>{fullProfile.displayName ? fullProfile.displayName : formatAddress(fullProfile.walletAddress, false)}</h4>
 				<S.HeaderInfoDetail>
-					<span>{`${getHandle()}`}</span>
+					<span>{`${getUsername()}`}</span>
 				</S.HeaderInfoDetail>
-				<S.HeaderAddress onClick={copyAddress}>
+				{/* <S.HeaderAddress onClick={copyAddress}>
 					<ReactSVG src={ASSETS.wallet} />
 					<p>{formatAddress(fullProfile.walletAddress, false)}</p>
 					{copied && <span>{`${language.copied}!`}</span>}
-				</S.HeaderAddress>
+				</S.HeaderAddress> */}
 			</S.HeaderHA>
 		);
 	}
 
-	function getProfile() {
+	function getProfileData() {
 		if (fullProfile) {
 			return (
 				<>
@@ -109,5 +112,5 @@ export default function Profile(props: { address: string }) {
 		}
 	}
 
-	return <>{getProfile()}</>;
+	return <>{getProfileData()}</>;
 }

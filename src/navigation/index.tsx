@@ -3,7 +3,7 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { ReactSVG } from 'react-svg';
 
 import { IconButton } from 'components/atoms/IconButton';
-import { Search } from 'components/molecules/Search';
+// import { Search } from 'components/molecules/Search';
 import { ASSETS, STYLING, URLS } from 'helpers/config';
 import { NavPathType } from 'helpers/types';
 import * as windowUtils from 'helpers/window';
@@ -97,9 +97,9 @@ export default function Navigation() {
 			<S.Wrapper>
 				{getMenu()}
 				<S.SEWrapper>
-					<S.SWrapper>
+					{/* <S.SWrapper>
 						<Search />
-					</S.SWrapper>
+					</S.SWrapper> */}
 					<S.EWrapper>
 						<S.TWrapper>
 							<IconButton
