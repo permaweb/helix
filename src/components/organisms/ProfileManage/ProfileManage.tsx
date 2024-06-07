@@ -7,7 +7,6 @@ import { createTransaction, messageResult } from 'api';
 import { getGQLData } from 'gql';
 
 import { Button } from 'components/atoms/Button';
-import { Checkbox } from 'components/atoms/Checkbox';
 import { FormField } from 'components/atoms/FormField';
 import { Notification } from 'components/atoms/Notification';
 import { TextArea } from 'components/atoms/TextArea';
@@ -40,7 +39,6 @@ export default function ProfileManage(props: IProps) {
 	const [bio, setBio] = React.useState<string>('');
 	const [banner, setBanner] = React.useState<any>(null);
 	const [avatar, setAvatar] = React.useState<any>(null);
-	const [usernameAsDisplayName, setUsernameAsDisplayName] = React.useState<boolean>(false);
 
 	const [loading, setLoading] = React.useState<boolean>(false);
 	const [profileResponse, setProfileResponse] = React.useState<NotificationType | null>(null);
@@ -50,14 +48,10 @@ export default function ProfileManage(props: IProps) {
 			setUsername(props.profile.username ?? '');
 			setName(props.profile.displayName ?? '');
 			setBio(props.profile.bio ?? '');
-			setBanner(props.profile.banner ?? null);
-			setAvatar(props.profile.avatar ?? null);
+			setBanner(props.profile.banner && checkAddress(props.profile.banner) ? props.profile.banner : null);
+			setAvatar(props.profile.avatar && checkAddress(props.profile.avatar) ? props.profile.avatar : null);
 		}
 	}, [props.profile]);
-
-	React.useEffect(() => {
-		if (usernameAsDisplayName) setName(username);
-	}, [usernameAsDisplayName, username]);
 
 	function handleUpdate() {
 		arProvider.setToggleProfileUpdate(!arProvider.toggleProfileUpdate);
@@ -116,8 +110,8 @@ export default function ProfileManage(props: IProps) {
 				}
 			}
 
-			if (bannerTx) data.CoverImage = bannerTx;
-			if (avatarTx) data.ProfileImage = avatarTx;
+			data.CoverImage = bannerTx || 'None';
+			data.ProfileImage = avatarTx || 'None';
 
 			try {
 				if (props.profile && props.profile.id) {
@@ -373,7 +367,7 @@ export default function ProfileManage(props: IProps) {
 										label={language.name}
 										value={name}
 										onChange={(e: any) => setName(e.target.value)}
-										disabled={loading || usernameAsDisplayName}
+										disabled={loading}
 										invalid={{ status: false, message: null }}
 										required
 										hideErrorMessage
