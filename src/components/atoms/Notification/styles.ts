@@ -14,11 +14,12 @@ export const Wrapper = styled.div`
 	align-items: center;
 	padding: 11.5px 17.5px;
 	background: ${(props) => props.theme.colors.container.alt3.background};
+	border: 1px solid ${(props) => props.theme.colors.border.primary};
 	border-radius: ${STYLING.dimensions.radius.primary};
 `;
 
 export const Message = styled.span`
-	color: ${(props) => props.theme.colors.font.alt2};
+	color: ${(props) => props.theme.colors.font.primary};
 	font-weight: ${(props) => props.theme.typography.weight.bold};
 	font-size: ${(props) => props.theme.typography.size.xSmall};
 `;

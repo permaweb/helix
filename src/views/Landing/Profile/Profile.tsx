@@ -53,7 +53,8 @@ export default function Profile(props: { address: string }) {
 	}, [props.address, arProvider.profile]);
 
 	function getAvatar() {
-		if (fullProfile && fullProfile.avatar) return <img src={getTxEndpoint(fullProfile.avatar)} />;
+		if (fullProfile && fullProfile.avatar && checkAddress(fullProfile.avatar))
+			return <img src={getTxEndpoint(fullProfile.avatar)} />;
 		return <ReactSVG src={ASSETS.user} />;
 	}
 
