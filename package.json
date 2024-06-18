@@ -11,9 +11,9 @@
 		"test": "npm test",
 		"test:verbose": "npm test -- --verbose",
 		"test:coverage": "CI=true npm test -- --env=jsdom --coverage",
+		"prepare": "husky install",
 		"build": "NODE_ENV=production webpack",
-		"deploy": "npm run build && permaweb-deploy",
-		"prepare": "husky install"
+		"deploy-main": "npm run build && permaweb-deploy --ant-contract QLmTyC3QJKb6EbBikqtH3ImlUh96O0HIUuk_qXBeHh8"
 	},
 	"dependencies": {
 		"@irys/sdk": "^0.1.0-a1",
@@ -37,7 +37,8 @@
 		"redux-thunk": "^2.4.2",
 		"styled-components": "^5.3.6",
 		"timers-browserify": "^2.0.12",
-		"typescript": "^5.3.3"
+		"typescript": "^5.3.3",
+		"yargs": "^17.7.2"
 	},
 	"devDependencies": {
 		"@babel/core": "^7.20.12",
@@ -69,7 +70,7 @@
 		"npm-force-resolutions": "^0.0.10",
 		"os-browserify": "^0.3.0",
 		"path-browserify": "^1.0.1",
-		"permaweb-deploy": "1.0.0",
+		"permaweb-deploy": "1.0.1",
 		"prettier": "^2.8.3",
 		"process": "^0.11.10",
 		"raw-loader": "^4.0.2",

@@ -23,6 +23,6 @@
 		"jsx": "react-jsx",
 		"downlevelIteration": true
 	},
-	"include": ["src/**/*.ts", "src/**/*.tsx"],
+	"include": ["src/**/*.ts", "src/**/*.tsx", "src/views/Upload/styles.ts"],
 	"exclude": ["./tests", "./dist"]
 }

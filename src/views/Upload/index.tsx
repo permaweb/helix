@@ -88,29 +88,33 @@ export default function Upload() {
 					try {
 						const collectionId = await handleUploadCollection();
 
-						const assetIds = await handleUploadAssets(collectionId);
-						if (uploadReducer.data.idList) assetIds.push(...uploadReducer.data.idList);
+						if (collectionId) {
+							const assetIds = await handleUploadAssets(collectionId);
+							if (uploadReducer.data.idList) assetIds.push(...uploadReducer.data.idList);
 
-						const updateAssetsResponse = await messageResults({
-							processId: arProvider.profile.id,
-							action: 'Run-Action',
-							wallet: arProvider.wallet,
-							tags: null,
-							data: {
-								Target: collectionId,
-								Action: 'Update-Assets',
-								Input: JSON.stringify({
-									AssetIds: assetIds,
-									UpdateType: 'Add',
-								}),
-							},
-							handler: 'Update-Assets',
-						});
+							const updateAssetsResponse = await messageResults({
+								processId: arProvider.profile.id,
+								action: 'Run-Action',
+								wallet: arProvider.wallet,
+								tags: null,
+								data: {
+									Target: collectionId,
+									Action: 'Update-Assets',
+									Input: JSON.stringify({
+										AssetIds: assetIds,
+										UpdateType: 'Add',
+									}),
+								},
+								handler: 'Update-Assets',
+							});
 
-						console.log(updateAssetsResponse);
+							console.log(updateAssetsResponse);
 
-						setCollectionResponse(`${language.collectionCreated}!`);
-						setCollectionProcessId(collectionId);
+							setCollectionResponse(`${language.collectionCreated}!`);
+							setCollectionProcessId(collectionId);
+						} else {
+							console.error('Error creating collection');
+						}
 					} catch (e: any) {
 						console.error(e);
 						setCollectionResponse(e.message ?? 'Error occurred');
