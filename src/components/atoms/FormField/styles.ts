@@ -20,6 +20,7 @@ export const TWrapper = styled.div`
 	align-items: center;
 	padding: 0 2.5px 0 0;
 	button {
+		padding: 4.5px 0 0 0;
 		svg {
 			margin: 0 0 1.5px 0;
 		}

@@ -99,7 +99,7 @@ export const MHeader = styled.div`
 
 export const MMessage = styled.div`
 	margin: 0 0 30px 0;
-	padding 10px 12.5px;
+	padding: 10px 12.5px;
 	span {
 		color: ${(props) => props.theme.colors.font.primary};
 		font-size: ${(props) => props.theme.typography.size.xSmall};
@@ -107,10 +107,16 @@ export const MMessage = styled.div`
 	}
 `;
 
+export const MFooter = styled.div`
+	margin: 20px 0 0 0;
+	display: flex;
+	align-items: flex-end;
+`;
+
 export const MActions = styled.div`
 	width: fit-content;
 	display: flex;
-	margin: 20px 0 0 auto;
+	margin: 0 0 0 auto;
 	> * {
 		&:not(:last-child) {
 			margin: 0 15px 0 0;
@@ -118,5 +124,13 @@ export const MActions = styled.div`
 		&:last-child {
 			margin: 0;
 		}
+	}
+`;
+
+export const MFetchWrapper = styled.div`
+	span {
+		color: ${(props) => props.theme.colors.font.alt1};
+		font-size: ${(props) => props.theme.typography.size.xSmall};
+		font-weight: ${(props) => props.theme.typography.weight.bold};
 	}
 `;

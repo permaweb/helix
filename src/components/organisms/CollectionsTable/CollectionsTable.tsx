@@ -1,245 +1,266 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
 
-import { readHandler } from 'api';
+import { messageResults, readHandler } from 'api';
 
-// import Arweave from 'arweave';
-// import { DeployPlugin } from 'warp-contracts-plugin-deploy';
-// import { InjectedArweaveSigner } from 'warp-contracts-plugin-signature';
-// import { OrderBook, OrderBookType } from 'permaweb-orderbook';
-// import { getGQLData } from 'gql';
-// import { Button } from 'components/atoms/Button';
-// import { FormField } from 'components/atoms/FormField';
-// import { IconButton } from 'components/atoms/IconButton';
+import { Button } from 'components/atoms/Button';
+import { FormField } from 'components/atoms/FormField';
+import { IconButton } from 'components/atoms/IconButton';
 import { Loader } from 'components/atoms/Loader';
-// import { Modal } from 'components/molecules/Modal';
+import { Notification } from 'components/atoms/Notification';
+import { Modal } from 'components/molecules/Modal';
 import { Table } from 'components/molecules/Table';
-import { AOS, PAGINATORS, REDIRECTS } from 'helpers/config';
-// import { getTxEndpoint } from 'helpers/endpoints';
+import { AOS, ASSETS, PAGINATORS, REDIRECTS } from 'helpers/config';
 import { AlignType, CollectionType } from 'helpers/types';
-import { formatAddress } from 'helpers/utils';
+import { checkAddress, formatAddress } from 'helpers/utils';
 import { useArweaveProvider } from 'providers/ArweaveProvider';
 import { useLanguageProvider } from 'providers/LanguageProvider';
 import { RootState } from 'store';
+import { CloseHandler } from 'wrappers/CloseHandler';
 
-// import { CloseHandler } from 'wrappers/CloseHandler';
 import * as S from './styles';
 
-// function CollectionDropdown(props: { id: string; title: string }) {
-// 	const arProvider = useArweaveProvider();
+function CollectionDropdown(props: { id: string; title: string }) {
+	const arProvider = useArweaveProvider();
 
-// 	const languageProvider = useLanguageProvider();
-// 	const language = languageProvider.object[languageProvider.current];
+	const languageProvider = useLanguageProvider();
+	const language = languageProvider.object[languageProvider.current];
 
-// 	const [price, setPrice] = React.useState<number>(0);
-// 	const [percentage, setPercentage] = React.useState<number>(100);
+	const [collection, setCollection] = React.useState<any>(null);
+	const [fetchingcCollection, setFetchingCollection] = React.useState<any>(null);
 
-// 	const [open, setOpen] = React.useState<boolean>(false);
-// 	const [listingModalOpen, setListingModalOpen] = React.useState<boolean>(false);
+	const [price, setPrice] = React.useState<number>(0);
+	const [percentage, setPercentage] = React.useState<number>(100);
 
-// 	const [loading, setLoading] = React.useState<boolean>(false);
-// 	const [orderBook, setOrderBook] = React.useState<OrderBookType | null>(null);
-// 	const [response, setResponse] = React.useState<{ status: boolean; message: string }>(null);
+	const [open, setOpen] = React.useState<boolean>(false);
+	const [listingModalOpen, setListingModalOpen] = React.useState<boolean>(false);
 
-// 	React.useEffect(() => {
-// 		const arweave = Arweave.init({
-// 			host: GATEWAYS.arweave,
-// 			port: API_CONFIG.port,
-// 			protocol: API_CONFIG.protocol,
-// 			timeout: API_CONFIG.timeout,
-// 			logging: API_CONFIG.logging,
-// 		});
+	const [loading, setLoading] = React.useState<boolean>(false);
+	const [response, setResponse] = React.useState<{ status: boolean; message: string }>(null);
 
-// 		const warp = WarpFactory.forMainnet({
-// 			...defaultCacheOptions,
-// 			inMemory: true,
-// 		}).use(new DeployPlugin());
+	React.useEffect(() => {
+		(async function () {
+			if (props.id && checkAddress(props.id) && listingModalOpen && !collection) {
+				setFetchingCollection(true);
+				try {
+					const fetchResponse = await readHandler({
+						processId: props.id,
+						action: 'Info',
+					});
 
-// 		setOrderBook(
-// 			OrderBook.init({
-// 				currency: CURRENCIES.u.label as 'U',
-// 				arweaveGet: arweave,
-// 				arweavePost: arweave,
-// 				bundlrKey: arProvider.wallet ? arProvider.wallet : null,
-// 				warp: warp,
-// 				warpDreNode: DRE_NODE,
-// 			})
-// 		);
-// 	}, [arProvider.wallet, DRE_NODE]);
+					if (fetchResponse && fetchResponse.Assets) setCollection(fetchResponse);
+				} catch (e: any) {
+					console.error(e);
+				}
+				setFetchingCollection(false);
+			}
+		})();
+	}, [props.id, listingModalOpen]);
 
-// 	async function handleSubmit() {
-// 		if (arProvider.wallet && orderBook) {
-// 			setLoading(true);
-// 			try {
-// 				const collectionObj = {
-// 					collectionId: props.id,
-// 					price: price,
-// 					percentage: percentage,
-// 				};
+	async function handleSubmit() {
+		if (
+			arProvider.wallet &&
+			arProvider.profile &&
+			arProvider.profile.id &&
+			collection &&
+			collection.Assets &&
+			collection.Assets.length
+		) {
+			setLoading(true);
+			try {
+				for (let i = 0; i < collection.Assets.length; i++) {
+					try {
+						const balance = await readHandler({
+							processId: collection.Assets[i],
+							action: 'Balance',
+							data: {
+								Target: arProvider.profile.id,
+							},
+						});
 
-// 				const signer = new InjectedArweaveSigner(arProvider.wallet);
-// 				signer.getAddress = window.arweaveWallet.getActiveAddress;
-// 				await signer.setPublicKey();
+						if (balance > 0) {
+							const pair = [collection.Assets[i], AOS.defaultToken];
+							const dominantToken = pair[0];
+							const swapToken = pair[1];
+							const recipient = AOS.ucm;
 
-// 				const collectionManifest = await (await fetch(getTxEndpoint(collectionObj.collectionId))).json();
-// 				const items = collectionManifest.items;
-// 				const assetStates = {};
+							const quantity = Math.floor((percentage / 100) * balance).toString();
+							const unitPrice = (price * Math.pow(10, 12)).toString();
 
-// 				for (let i = 0; i < items.length; i++) {
-// 					const assetState = await orderBook.env.arClient.read(items[i]);
-// 					const walletQty = assetState.balances[arProvider.walletAddress];
-// 					assetStates[items[i]] = assetState;
-// 					if (!walletQty) {
-// 						log(`No balance on asset ${items[i]}`, 1);
-// 					}
-// 				}
+							const transferTags = [
+								{ name: 'Target', value: dominantToken },
+								{ name: 'Recipient', value: recipient },
+								{ name: 'Quantity', value: quantity },
+								{ name: 'X-Order-Action', value: 'Create-Order' },
+								{ name: 'X-Swap-Token', value: swapToken },
+								{ name: 'X-Price', value: unitPrice },
+							];
 
-// 				let errorCount: number = 0;
-// 				for (let i = 0; i < items.length; i++) {
-// 					try {
-// 						const assetState = assetStates[items[i]];
-// 						const walletQty = assetState.balances[arProvider.walletAddress];
-// 						const intendedSaleQty = Math.ceil((collectionObj.percentage / 100) * walletQty);
-// 						await orderBook.sell({
-// 							assetId: items[i],
-// 							price: collectionObj.price * 1e6,
-// 							qty: intendedSaleQty,
-// 							wallet: signer,
-// 							walletAddress: arProvider.walletAddress,
-// 						});
-// 						logValue(`Listed asset`, `${items[i]}`, 0);
-// 					} catch {
-// 						errorCount = errorCount + 1;
-// 					}
-// 				}
-// 				setResponse({
-// 					status: errorCount !== items.length,
-// 					message: `${language.listingsCreated(items.length - errorCount, items.length)}`,
-// 				});
-// 			} catch (e: any) {
-// 				console.error(e);
-// 				setResponse({ status: false, message: e.message ? e.message : language.errorOccurred });
-// 			}
-// 			setLoading(false);
-// 		}
-// 	}
+							const orderResponse: any = await messageResults({
+								processId: arProvider.profile.id,
+								action: 'Transfer',
+								wallet: arProvider.wallet,
+								tags: transferTags,
+								data: null,
+								responses: ['Transfer-Success', 'Transfer-Error'],
+								handler: 'Create-Order',
+							});
+							if (orderResponse) {
+								const message = 'Listing created!';
+								setResponse({
+									status: true,
+									message: message,
+								});
+							} else {
+								setResponse({ status: false, message: language.errorOccurred });
+							}
+						} else {
+							setResponse({
+								status: false,
+								message: 'Not enough tokens to create listings!',
+							});
+						}
+					} catch (e: any) {
+						setResponse({ status: false, message: e.message ? e.message : language.errorOccurred });
+					}
+				}
+			} catch (e: any) {
+				console.error(e);
+				setResponse({ status: false, message: e.message ? e.message : language.errorOccurred });
+			}
+			setLoading(false);
+		}
+	}
 
-// 	function handlePriceInput(e: React.ChangeEvent<HTMLInputElement>, input: 'price' | 'percentage') {
-// 		if (e.target.value === '') {
-// 			switch (input) {
-// 				case 'price':
-// 					setPrice(NaN);
-// 					break;
-// 				case 'percentage':
-// 					setPercentage(NaN);
-// 					break;
-// 			}
-// 		} else {
-// 			if (!isNaN(Number(e.target.value))) {
-// 				const value = parseFloat(e.target.value);
-// 				switch (input) {
-// 					case 'price':
-// 						setPrice(value);
-// 						break;
-// 					case 'percentage':
-// 						setPercentage(value);
-// 						break;
-// 				}
-// 			}
-// 		}
-// 	}
+	function handlePriceInput(e: React.ChangeEvent<HTMLInputElement>, input: 'price' | 'percentage') {
+		if (e.target.value === '') {
+			switch (input) {
+				case 'price':
+					setPrice(NaN);
+					break;
+				case 'percentage':
+					setPercentage(NaN);
+					break;
+			}
+		} else {
+			if (!isNaN(Number(e.target.value))) {
+				const value = parseFloat(e.target.value);
+				switch (input) {
+					case 'price':
+						setPrice(value);
+						break;
+					case 'percentage':
+						setPercentage(value);
+						break;
+				}
+			}
+		}
+	}
 
-// 	function getInvalidPercentage() {
-// 		if (percentage < 0 || percentage > 100) {
-// 			return { status: true, message: language.valuePercentage };
-// 		}
-// 		return { status: false, message: null };
-// 	}
+	function getInvalidPercentage() {
+		if (percentage < 0 || percentage > 100) {
+			return { status: true, message: language.valuePercentage };
+		}
+		return { status: false, message: null };
+	}
 
-// 	function getInvalidPrice() {
-// 		if (price < 0) {
-// 			return { status: true, message: language.valueAboveZero };
-// 		}
-// 		return { status: false, message: null };
-// 	}
+	function getInvalidPrice() {
+		if (price < 0) {
+			return { status: true, message: language.valueAboveZero };
+		}
+		return { status: false, message: null };
+	}
 
-// 	function getListingModal() {
-// 		return (
-// 			<Modal header={language.createListings} handleClose={() => setListingModalOpen(false)}>
-// 				<S.MCWrapper>
-// 					<S.MBody>
-// 						<S.MHeader>
-// 							<p>{`${language.collection}: ${props.title}`}</p>
-// 						</S.MHeader>
-// 						<FormField
-// 							type={'number'}
-// 							label={language.listingPrice}
-// 							value={isNaN(price) ? '' : price}
-// 							onChange={(e: React.ChangeEvent<HTMLInputElement>) => handlePriceInput(e, 'price')}
-// 							disabled={loading || response !== null}
-// 							invalid={getInvalidPrice()}
-// 							tooltip={language.listingPriceInfo}
-// 						/>
-// 						<FormField
-// 							type={'number'}
-// 							label={language.listingPercentage}
-// 							value={isNaN(percentage) ? '' : percentage}
-// 							onChange={(e: React.ChangeEvent<HTMLInputElement>) => handlePriceInput(e, 'percentage')}
-// 							disabled={loading || response !== null}
-// 							invalid={getInvalidPercentage()}
-// 							tooltip={language.listingPercentageInfo}
-// 						/>
-// 						{(loading || response !== null) && (
-// 							<S.MMessage className={'border-wrapper-alt1'}>
-// 								<span>{loading ? `${language.listingsCreating}...` : response.message}</span>
-// 							</S.MMessage>
-// 						)}
-// 					</S.MBody>
-// 					<S.MActions>
-// 						<Button
-// 							type={'primary'}
-// 							label={response ? language.close : language.cancel}
-// 							handlePress={() => setListingModalOpen(false)}
-// 							disabled={loading}
-// 							noMinWidth
-// 						/>
-// 						<Button
-// 							type={'alt1'}
-// 							label={response && response.status ? language.viewOnBazar : language.submit}
-// 							handlePress={() => (response ? window.open(REDIRECTS.bazar.collection(props.id)) : handleSubmit())}
-// 							disabled={loading || price <= 0 || percentage <= 0 || percentage > 100 || (response && !response.status)}
-// 							loading={loading}
-// 							noMinWidth
-// 						/>
-// 					</S.MActions>
-// 				</S.MCWrapper>
-// 			</Modal>
-// 		);
-// 	}
+	function getListingModal() {
+		return (
+			<>
+				<Modal header={language.createListings} handleClose={() => setListingModalOpen(false)}>
+					<S.MCWrapper>
+						<S.MBody>
+							<S.MHeader>
+								<p>{`${language.collection}: ${props.title}`}</p>
+							</S.MHeader>
+							<FormField
+								type={'number'}
+								label={language.listingPrice}
+								value={isNaN(price) ? '' : price}
+								onChange={(e: React.ChangeEvent<HTMLInputElement>) => handlePriceInput(e, 'price')}
+								disabled={loading || response !== null || !collection}
+								invalid={getInvalidPrice()}
+								tooltip={language.listingPriceInfo}
+							/>
+							<FormField
+								type={'number'}
+								label={language.listingPercentage}
+								value={isNaN(percentage) ? '' : percentage}
+								onChange={(e: React.ChangeEvent<HTMLInputElement>) => handlePriceInput(e, 'percentage')}
+								disabled={loading || response !== null || !collection}
+								invalid={getInvalidPercentage()}
+								tooltip={language.listingPercentageInfo}
+							/>
+							{(loading || response !== null) && (
+								<S.MMessage className={'border-wrapper-alt1'}>
+									<span>{loading ? `${language.listingsCreating}...` : response.message}</span>
+								</S.MMessage>
+							)}
+						</S.MBody>
+						<S.MFooter>
+							<S.MFetchWrapper>{fetchingcCollection && <span>{`${language.fetching}...`}</span>}</S.MFetchWrapper>
+							<S.MActions>
+								<Button
+									type={'primary'}
+									label={response ? language.close : language.cancel}
+									handlePress={() => setListingModalOpen(false)}
+									disabled={loading || !collection}
+									noMinWidth
+								/>
+								<Button
+									type={'alt1'}
+									label={response && response.status ? language.viewOnBazar : language.submit}
+									handlePress={() => (response ? window.open(REDIRECTS.bazar.collection(props.id)) : handleSubmit())}
+									disabled={
+										loading ||
+										price <= 0 ||
+										percentage <= 0 ||
+										percentage > 100 ||
+										(response && !response.status) ||
+										!collection
+									}
+									loading={loading}
+									noMinWidth
+								/>
+							</S.MActions>
+						</S.MFooter>
+					</S.MCWrapper>
+				</Modal>
+				{response && <Notification message={response.message} callback={() => setResponse(null)} />}
+			</>
+		);
+	}
 
-// 	return (
-// 		<>
-// 			<CloseHandler active={open} disabled={!open} callback={() => setOpen(false)}>
-// 				<S.DWrapper>
-// 					<IconButton
-// 						type={'primary'}
-// 						src={ASSETS.actionMenu}
-// 						handlePress={() => setOpen(!open)}
-// 						dimensions={{ wrapper: 27.5, icon: 18.5 }}
-// 					/>
-// 					{open && (
-// 						<S.DDropdown className={'border-wrapper-primary'} open={open}>
-// 							<S.LI onClick={() => setListingModalOpen(true)} disabled={false}>
-// 								{language.createListings}
-// 							</S.LI>
-// 						</S.DDropdown>
-// 					)}
-// 				</S.DWrapper>
-// 			</CloseHandler>
-// 			{listingModalOpen && getListingModal()}
-// 		</>
-// 	);
-// }
+	return (
+		<>
+			<CloseHandler active={open} disabled={!open} callback={() => setOpen(false)}>
+				<S.DWrapper>
+					<IconButton
+						type={'primary'}
+						src={ASSETS.actionMenu}
+						handlePress={() => setOpen(!open)}
+						dimensions={{ wrapper: 27.5, icon: 18.5 }}
+					/>
+					{open && (
+						<S.DDropdown className={'border-wrapper-primary'} open={open}>
+							<S.LI onClick={() => setListingModalOpen(true)} disabled={false}>
+								{language.createListings}
+							</S.LI>
+						</S.DDropdown>
+					)}
+				</S.DWrapper>
+			</CloseHandler>
+			{listingModalOpen && getListingModal()}
+		</>
+	);
+}
 
 export default function CollectionsTable() {
 	const arProvider = useArweaveProvider();
@@ -300,12 +321,11 @@ export default function CollectionsTable() {
 			display: language.title,
 		};
 
-		// TODO
-		// header.actions = {
-		// 	width: '15%',
-		// 	align: 'center' as AlignType,
-		// 	display: language.actions,
-		// };
+		header.actions = {
+			width: '15%',
+			align: 'center' as AlignType,
+			display: language.actions,
+		};
 
 		return header;
 	}
@@ -314,15 +334,15 @@ export default function CollectionsTable() {
 		if (collections && collections.length) {
 			return collections.map((collection: CollectionType) => {
 				const data: any = {};
+				const title = collection.title ?? formatAddress(collection.id, false);
 
 				data.collectionTitle = (
 					<a href={REDIRECTS.bazar.collection(collection.id)} target={'_blank'}>
-						<p>{collection.title ?? formatAddress(collection.id, false)}</p>
+						<p>{title}</p>
 					</a>
 				);
 
-				// TODO
-				// data.actions = <CollectionDropdown id={element.node.id} title={displayTitle} />;
+				data.actions = <CollectionDropdown id={collection.id} title={title} />;
 
 				return {
 					data: data,

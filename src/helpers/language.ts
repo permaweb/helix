@@ -160,7 +160,7 @@ export const language = {
 		},
 		listingPercentage: `Listing percentage (1 - 100%)`,
 		listingPercentageInfo: `This value represents the percentage of available content tokens to list for sale.`,
-		listingPrice: `Listing price ($U)`,
+		listingPrice: `Unit price (Wrapped AR)`,
 		listingPriceInfo: `This value represents the unit price for each asset that will be listed in the UCM.`,
 		listingsCreated: (start: number, end: number) => `(${start} of ${end}) listings created`,
 		listingsCreating: `Creating listings`,
