@@ -51,13 +51,13 @@ export const APP = {
 export const AOS = {
 	module: 'sBmq5pehE1_Ed5YBs4DGV4FMftoKwo_cVVsCpPND36Q',
 	scheduler: '_GQ33BkPtZrqxA84vM8Zk-N2aO0toNNu_C-l-rawrBA',
-	assetSrc: 'aOHHYaZ3c4jc6znUOptqQBpsrEdCD3p9VlcTfNOvpx0',
+	assetSrc: '00c9tFArqJiCl7wTGkEQcSO7lCDQQ1wh8OmS-y6G-AY', // replace when testing upgraded version
 	defaultToken: 'xU9zFkq3X2ZQ6olwNVvr1vUWIjc3kXTWr7xKQD6dh10',
 	pixl: 'DM3FoZUq_yebASPhgd8pEIRIzDW6muXEhxz5-JwbZwo',
-	collectionsRegistry: 'jii0UeIWYIr4etclyywNGhZVAOwwzmrK56elffh6dzA',
+	collectionsRegistry: 'jii0UeIWYIr4etclyywNGhZVAOwwzmrK56elffh6dzA', // replace for testing and the switch back to prod version
 	collectionSrc: 'VqACOKRSQPKYZZbyCsdeLggrMEZyRlv61BcTnnqC5N4',
-	profileRegistry: 'dWdBohXUJ22rfb8sSChdFh6oXJzbAtGe4tC6__52Zk4',
-	profileSrc: 'FPBiEp00mdRVTxbX4hdIaa7xkYMKVznMDEDuTsNRE3E',
+	profileRegistry: 'dWdBohXUJ22rfb8sSChdFh6oXJzbAtGe4tC6__52Zk4', // replace for testing and the switch back to prod version
+	profileSrc: 'pbrl1fkS3_SZP3RqqPIjbt3-f81L9vIpV2_OnUmxqGQ', // replace when testing upgraded version
 };
 
 export const AO_VERSIONS = {
