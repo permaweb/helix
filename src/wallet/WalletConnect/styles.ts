@@ -14,6 +14,12 @@ export const PWrapper = styled.div`
 	align-items: center;
 `;
 
+export const ProfileWrapper = styled.div`
+	@media (max-width: ${STYLING.cutoffs.initial}) {
+		display: none;
+	}
+`;
+
 export const LAction = styled.button`
 	margin: 0 0 0 20px;
 	span {

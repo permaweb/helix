@@ -5,6 +5,7 @@ import { getProfile } from 'api';
 
 import { Button } from 'components/atoms/Button';
 import { Loader } from 'components/atoms/Loader';
+import { Modal } from 'components/molecules/Modal';
 import { AssetsTable } from 'components/organisms/AssetsTable';
 import { CollectionsTable } from 'components/organisms/CollectionsTable';
 import { ASSETS, REDIRECTS } from 'helpers/config';
@@ -16,6 +17,8 @@ import { useLanguageProvider } from 'providers/LanguageProvider';
 
 import * as S from './styles';
 
+const MAX_BIO_LENGTH = 80;
+
 export default function Profile(props: { address: string }) {
 	const arProvider = useArweaveProvider();
 
@@ -26,6 +29,7 @@ export default function Profile(props: { address: string }) {
 	// const [copied, setCopied] = React.useState<boolean>(false);
 
 	const [fullProfile, setFullProfile] = React.useState<ProfileHeaderType | null>(null);
+	const [showBio, setShowBio] = React.useState<boolean>(false);
 
 	// const copyAddress = React.useCallback(async () => {
 	// 	if (fullProfile && fullProfile.walletAddress) {
@@ -69,11 +73,18 @@ export default function Profile(props: { address: string }) {
 				<S.HeaderInfoDetail>
 					<span>{`${getUsername()}`}</span>
 				</S.HeaderInfoDetail>
-				{/* <S.HeaderAddress onClick={copyAddress}>
-					<ReactSVG src={ASSETS.wallet} />
-					<p>{formatAddress(fullProfile.walletAddress, false)}</p>
-					{copied && <span>{`${language.copied}!`}</span>}
-				</S.HeaderAddress> */}
+				{fullProfile.bio && (
+					<S.HeaderInfoBio>
+						<span>
+							{fullProfile.bio.length > MAX_BIO_LENGTH
+								? fullProfile.bio.substring(0, MAX_BIO_LENGTH) + '...'
+								: fullProfile.bio}
+						</span>
+						{fullProfile.bio.length > MAX_BIO_LENGTH && (
+							<button onClick={() => setShowBio(true)}>{language.viewFullBio}</button>
+						)}
+					</S.HeaderInfoBio>
+				)}
 			</S.HeaderHA>
 		);
 	}
@@ -107,6 +118,15 @@ export default function Profile(props: { address: string }) {
 							</S.TWrapper>
 						</S.Body>
 					</S.Wrapper>
+					{showBio && fullProfile && fullProfile.bio && (
+						<Modal header={language.bio} handleClose={() => setShowBio(false)}>
+							<div className={'modal-wrapper'}>
+								<S.HeaderInfoBio>
+									<p>{fullProfile.bio}</p>
+								</S.HeaderInfoBio>
+							</div>
+						</Modal>
+					)}
 				</>
 			);
 		} else {

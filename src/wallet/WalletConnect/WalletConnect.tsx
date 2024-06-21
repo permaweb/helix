@@ -87,13 +87,15 @@ export default function WalletConnect(_props: { callback?: () => void }) {
 			>
 				<S.Wrapper>
 					<S.PWrapper>
-						{arProvider.walletAddress && (
-							<Button
-								type={'alt1'}
-								label={arProvider.profile && arProvider.profile.id ? language.editProfile : language.createProfile}
-								handlePress={() => setShowManage(true)}
-							/>
-						)}
+						<S.ProfileWrapper>
+							{arProvider.walletAddress && (
+								<Button
+									type={'alt1'}
+									label={arProvider.profile && arProvider.profile.id ? language.editProfile : language.createProfile}
+									handlePress={() => setShowManage(true)}
+								/>
+							)}
+						</S.ProfileWrapper>
 						{label && (
 							<S.LAction onClick={handlePress}>
 								<span>{label}</span>

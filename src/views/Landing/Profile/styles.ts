@@ -53,6 +53,32 @@ export const HeaderInfoDetail = styled.div`
 	}
 `;
 
+export const HeaderInfoBio = styled(HeaderInfoDetail)`
+	margin: 10px 0 0 0;
+	display: flex;
+	align-items: center;
+	flex-wrap: wrap;
+	gap: 10px;
+	p {
+		color: ${(props) => props.theme.colors.font.alt1};
+		font-size: ${(props) => props.theme.typography.size.small};
+		font-weight: ${(props) => props.theme.typography.weight.bold};
+		line-height: 1.65;
+	}
+	span {
+		color: ${(props) => props.theme.colors.font.primary};
+		font-size: ${(props) => props.theme.typography.size.small};
+	}
+	button {
+		color: ${(props) => props.theme.colors.font.primary};
+		font-size: ${(props) => props.theme.typography.size.small};
+		font-weight: ${(props) => props.theme.typography.weight.bold};
+		&:hover {
+			color: ${(props) => props.theme.colors.font.alt1};
+		}
+	}
+`;
+
 export const HeaderInfoAction = styled.div`
 	display: flex;
 	align-items: center;

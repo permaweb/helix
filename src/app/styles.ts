@@ -215,6 +215,10 @@ export const GlobalStyle = createGlobalStyle`
     animation: ${open} ${fadeIn1};
   }
 
+	.modal-wrapper {
+		padding: 0 20px 20px 20px;
+	}
+
   .scroll-wrapper {
     overflow: auto;
 
