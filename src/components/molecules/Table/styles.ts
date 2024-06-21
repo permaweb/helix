@@ -1,4 +1,4 @@
-import styled, { theme } from 'styled-components';
+import styled from 'styled-components';
 
 import { fadeIn2, open } from 'helpers/animations';
 import { STYLING } from 'helpers/config';
@@ -80,7 +80,7 @@ export const TableHeader = styled.div`
 	overflow: hidden;
 `;
 
-function getRowStyle(theme: theme, active: boolean, viewed: boolean) {
+function getRowStyle(theme: any, active: boolean, viewed: boolean) {
 	if (active) {
 		return `
 			background: ${theme.colors.table.row.active.background};
@@ -122,7 +122,7 @@ export const RowData = styled.div`
 		font-size: ${(props) => props.theme.typography.size.xSmall};
 		font-weight: ${(props) => props.theme.typography.weight.bold};
 		color: ${(props) => props.theme.colors.font.primary};
-		overflow: visible;
+		overflow: hidden;
 		text-overflow: ellipsis;
 		white-space: nowrap;
 		height: 20px;

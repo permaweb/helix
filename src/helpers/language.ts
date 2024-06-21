@@ -9,7 +9,7 @@ export const language = {
 		arweaveAppUploadBlocked: `Arweave.app is not supported for upload`,
 		assets: `Assets`,
 		assetsCreated: `Assets created`,
-		assetsCreatedInfo: `Your assets have been created. It may take some time for them to be available from your profile.`,
+		assetsCreatedInfo: `Your assets have been created. You will now be able to view them from your profile.`,
 		assetDetails: `Asset details`,
 		assetExists: `An asset with this name already exists`,
 		assetFetchConnectionRequired: `Connect a wallet to view your assets`,

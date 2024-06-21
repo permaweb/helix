@@ -132,7 +132,6 @@ export default function Upload() {
 					break;
 			}
 			dispatch(uploadActions.setUploadActive(false));
-			dispatch(uploadActions.setUploadActive(false));
 			dispatch(uploadActions.clearUpload());
 			setUploadPercentage(0);
 		}
@@ -259,52 +258,56 @@ export default function Upload() {
 				}
 			}
 
-			const evalMessage = await aos.message({
-				process: processId,
-				signer: createDataItemSigner(globalThis.arweaveWallet),
-				tags: [{ name: 'Action', value: 'Eval' }],
-				data: processSrc,
-			});
-
-			const evalResult = await aos.result({
-				message: evalMessage,
-				process: processId,
-			});
-
-			if (evalResult) {
-				const registryTags = [
-					{ name: 'Action', value: 'Add-Collection' },
-					{ name: 'CollectionId', value: processId },
-					{ name: 'Name', value: uploadReducer.data.title },
-					{ name: 'Creator', value: arProvider.profile.id },
-					{ name: 'DateCreated', value: dateTime },
-				];
-
-				if (bannerTx) registryTags.push({ name: 'Banner', value: bannerTx });
-				if (thumbnailTx) registryTags.push({ name: 'Thumbnail', value: thumbnailTx });
-
-				const updateRegistryResponse = await aos.message({
-					process: AOS.collectionsRegistry,
-					signer: createDataItemSigner(globalThis.arweaveWallet),
-					tags: registryTags,
-				});
-
-				console.log(updateRegistryResponse);
-
-				const profileCollectionsUpdate = await aos.message({
+			if (fetchedCollectionId) {
+				const evalMessage = await aos.message({
 					process: processId,
 					signer: createDataItemSigner(globalThis.arweaveWallet),
-					tags: [
-						{ name: 'Action', value: 'Add-Collection-To-Profile' },
-						{ name: 'ProfileProcess', value: arProvider.profile.id },
-					],
+					tags: [{ name: 'Action', value: 'Eval' }],
+					data: processSrc,
 				});
 
-				console.log(profileCollectionsUpdate);
+				const evalResult = await aos.result({
+					message: evalMessage,
+					process: processId,
+				});
 
-				return processId;
+				if (evalResult) {
+					const registryTags = [
+						{ name: 'Action', value: 'Add-Collection' },
+						{ name: 'CollectionId', value: processId },
+						{ name: 'Name', value: uploadReducer.data.title },
+						{ name: 'Creator', value: arProvider.profile.id },
+						{ name: 'DateCreated', value: dateTime },
+					];
+
+					if (bannerTx) registryTags.push({ name: 'Banner', value: bannerTx });
+					if (thumbnailTx) registryTags.push({ name: 'Thumbnail', value: thumbnailTx });
+
+					const updateRegistryResponse = await aos.message({
+						process: AOS.collectionsRegistry,
+						signer: createDataItemSigner(globalThis.arweaveWallet),
+						tags: registryTags,
+					});
+
+					console.log(updateRegistryResponse);
+
+					const profileCollectionsUpdate = await aos.message({
+						process: processId,
+						signer: createDataItemSigner(globalThis.arweaveWallet),
+						tags: [
+							{ name: 'Action', value: 'Add-Collection-To-Profile' },
+							{ name: 'ProfileProcess', value: arProvider.profile.id },
+						],
+					});
+
+					console.log(profileCollectionsUpdate);
+
+					return processId;
+				} else {
+					return null;
+				}
 			} else {
-				return null;
+				setCollectionResponseError('Error fetching from gateway');
 			}
 		} catch (e: any) {
 			console.error(e);
@@ -375,7 +378,7 @@ export default function Upload() {
 
 					if (processSrc) {
 						processSrc = processSrc.replace('[Owner]', `['${arProvider.profile.id}']`);
-						processSrc = processSrc.replaceAll('<NAME>', title);
+						processSrc = processSrc.replaceAll(`'<NAME>'`, `[[${title}]]`);
 						processSrc = processSrc.replaceAll('<TICKER>', 'ATOMIC');
 						processSrc = processSrc.replaceAll('<DENOMINATION>', '1');
 						processSrc = processSrc.replaceAll('<BALANCE>', balance.toString());
@@ -415,43 +418,47 @@ export default function Upload() {
 						}
 					}
 
-					const evalMessage = await aos.message({
-						process: processId,
-						signer: createDataItemSigner(globalThis.arweaveWallet),
-						tags: [{ name: 'Action', value: 'Eval' }],
-						data: processSrc,
-					});
-
-					const evalResult = await aos.result({
-						message: evalMessage,
-						process: processId,
-					});
-
-					if (evalResult) {
-						// const updateProfileResponse = await aos.message({
-						// 	process: arProvider.profile.id,
-						// 	signer: createDataItemSigner(globalThis.arweaveWallet),
-						// 	tags: [{ name: 'Action', value: 'Add-Uploaded-Asset' }],
-						// 	data: JSON.stringify({ Id: processId, Quantity: balance }),
-						// });
-
-						const updateProfileResponse = await aos.message({
+					if (fetchedAssetId) {
+						const evalMessage = await aos.message({
 							process: processId,
 							signer: createDataItemSigner(globalThis.arweaveWallet),
-							tags: [
-								{ name: 'Action', value: 'Add-Asset-To-Profile' },
-								{ name: 'ProfileProcess', value: arProvider.profile.id },
-								{ name: 'Quantity', value: balance.toString() },
-							],
-							data: JSON.stringify({ Id: processId, Quantity: balance }),
+							tags: [{ name: 'Action', value: 'Eval' }],
+							data: processSrc,
 						});
 
-						console.log(updateProfileResponse);
+						const evalResult = await aos.result({
+							message: evalMessage,
+							process: processId,
+						});
 
-						uploadedAssetsList.push(processId);
+						if (evalResult) {
+							// const updateProfileResponse = await aos.message({
+							// 	process: arProvider.profile.id,
+							// 	signer: createDataItemSigner(globalThis.arweaveWallet),
+							// 	tags: [{ name: 'Action', value: 'Add-Uploaded-Asset' }],
+							// 	data: JSON.stringify({ Id: processId, Quantity: balance }),
+							// });
+
+							const updateProfileResponse = await aos.message({
+								process: processId,
+								signer: createDataItemSigner(globalThis.arweaveWallet),
+								tags: [
+									{ name: 'Action', value: 'Add-Asset-To-Profile' },
+									{ name: 'ProfileProcess', value: arProvider.profile.id },
+									{ name: 'Quantity', value: balance.toString() },
+								],
+								data: JSON.stringify({ Id: processId, Quantity: balance }),
+							});
+
+							console.log(updateProfileResponse);
+
+							uploadedAssetsList.push(processId);
+						}
+
+						if (index < uploadReducer.data.contentList.length) setUploadPercentage(0);
+					} else {
+						setAssetsResponseError('Error fetching from gateway');
 					}
-
-					if (index < uploadReducer.data.contentList.length) setUploadPercentage(0);
 				} catch (e: any) {
 					console.error(e.message);
 					assetError = e.message;
