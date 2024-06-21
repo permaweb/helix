@@ -11,6 +11,7 @@ import { Loader } from 'components/atoms/Loader';
 import { Modal } from 'components/molecules/Modal';
 import { AssetsTable } from 'components/organisms/AssetsTable';
 import {
+	AO_VERSIONS,
 	AOS,
 	CONTENT_TYPES,
 	DEFAULT_UCM_BANNER,
@@ -174,8 +175,7 @@ export default function Upload() {
 
 			const collectionTags: TagType[] = [
 				{ name: TAGS.keys.contentType, value: CONTENT_TYPES.json },
-				{ name: TAGS.keys.creator, value: arProvider.walletAddress },
-				{ name: TAGS.keys.profileCreator, value: arProvider.profile.id },
+				{ name: TAGS.keys.creator, value: arProvider.profile.id },
 				{
 					name: TAGS.keys.ans110.title,
 					value: uploadReducer.data.title,
@@ -191,6 +191,7 @@ export default function Upload() {
 					value: uploadReducer.data.title,
 				},
 				{ name: 'Action', value: 'Add-Collection' },
+				{ name: 'ProfileVersion', value: AO_VERSIONS.profileVersion },
 			];
 
 			if (bannerTx) collectionTags.push({ name: TAGS.keys.banner, value: bannerTx });
@@ -293,6 +294,7 @@ export default function Upload() {
 					tags: [
 						{ name: 'Action', value: 'Add-Collection-To-Profile' },
 						{ name: 'ProfileProcess', value: arProvider.profile.id },
+						{ name: 'ProfileVersion', value: AO_VERSIONS.profileVersion },
 					],
 				});
 
@@ -338,7 +340,9 @@ export default function Upload() {
 						{ name: TAGS.keys.ans110.type, value: type },
 						{ name: TAGS.keys.ans110.implements, value: TAGS.values.ansVersion },
 						{ name: TAGS.keys.dateCreated, value: dateTime },
+						{ name: 'Quantity', value: balance.toString() },
 						{ name: 'Action', value: 'Add-Uploaded-Asset' },
+						{ name: 'ProfileVersion', value: AO_VERSIONS.profileVersion },
 					];
 
 					uploadReducer.data.topics.forEach((topic: string) =>
@@ -438,6 +442,7 @@ export default function Upload() {
 								{ name: 'Action', value: 'Add-Asset-To-Profile' },
 								{ name: 'ProfileProcess', value: arProvider.profile.id },
 								{ name: 'Quantity', value: balance.toString() },
+								{ name: 'ProfileVersion', value: AO_VERSIONS.profileVersion },
 							],
 							data: JSON.stringify({ Id: processId, Quantity: balance }),
 						});
