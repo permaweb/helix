@@ -50,6 +50,7 @@ export const language = {
 		comment: `Comment`,
 		comments: `Comments`,
 		community: `Community`,
+		complete: `Complete`,
 		contentTokens: `Fractional tokens`,
 		contentTokensInfo: `Atomic assets can be fractionalized by inputting a number greater than one. This enables multiple users to own fractions of the same atomic asset.`,
 		contentTokensCheckInfo: `These assets will use fractionalized tokens`,

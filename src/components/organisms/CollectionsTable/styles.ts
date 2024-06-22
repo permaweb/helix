@@ -100,10 +100,14 @@ export const MHeader = styled.div`
 export const MMessage = styled.div`
 	margin: 0 0 30px 0;
 	padding: 10px 12.5px;
-	span {
-		color: ${(props) => props.theme.colors.font.primary};
+	display: flex;
+	flex-direction: column;
+	pre {
+		color: ${(props) => props.theme.colors.font.alt1};
 		font-size: ${(props) => props.theme.typography.size.xSmall};
 		font-weight: ${(props) => props.theme.typography.weight.bold};
+		font-family: ${(props) => props.theme.typography.family.alt1};
+		line-height: 1.65;
 	}
 `;
 
@@ -132,5 +136,6 @@ export const MFetchWrapper = styled.div`
 		color: ${(props) => props.theme.colors.font.alt1};
 		font-size: ${(props) => props.theme.typography.size.xSmall};
 		font-weight: ${(props) => props.theme.typography.weight.bold};
+		font-family: ${(props) => props.theme.typography.family.alt1};
 	}
 `;

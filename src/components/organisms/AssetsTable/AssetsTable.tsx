@@ -77,12 +77,17 @@ export default function AssetsTable(props: { useIdAction: boolean }) {
 						if (groups && groups.length) {
 							setCurrentTableCursor(groups[0].index);
 							setGroupIndex(groups);
+						} else {
+							setLoading(false);
+							setAssets([]);
 						}
+					} else {
+						setLoading(false);
+						setAssets([]);
 					}
 				} catch (e: any) {
 					console.error(e);
 				}
-				setLoading(false);
 			}
 		})();
 	}, [arProvider.walletAddress, uploadReducer.uploadActive]);
@@ -111,11 +116,10 @@ export default function AssetsTable(props: { useIdAction: boolean }) {
 				} else {
 					setAssets([]);
 				}
-			} else {
-				setAssets([]);
+				setLoading(false);
 			}
 		})();
-	}, [currentTableCursor]);
+	}, [currentTableCursor, groupIndex]);
 
 	React.useEffect(() => {
 		(async function () {
@@ -228,6 +232,8 @@ export default function AssetsTable(props: { useIdAction: boolean }) {
 			});
 		} else return null;
 	}
+
+	console.log(loading);
 
 	function getAssets() {
 		if (!arProvider.walletAddress) {

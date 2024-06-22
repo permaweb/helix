@@ -7,7 +7,6 @@ import { Button } from 'components/atoms/Button';
 import { FormField } from 'components/atoms/FormField';
 import { IconButton } from 'components/atoms/IconButton';
 import { Loader } from 'components/atoms/Loader';
-import { Notification } from 'components/atoms/Notification';
 import { Modal } from 'components/molecules/Modal';
 import { Table } from 'components/molecules/Table';
 import { AOS, ASSETS, PAGINATORS, REDIRECTS } from 'helpers/config';
@@ -19,6 +18,8 @@ import { RootState } from 'store';
 import { CloseHandler } from 'wrappers/CloseHandler';
 
 import * as S from './styles';
+
+const DENOMINATION = Math.pow(10, 12);
 
 function CollectionDropdown(props: { id: string; title: string }) {
 	const arProvider = useArweaveProvider();
@@ -66,17 +67,25 @@ function CollectionDropdown(props: { id: string; title: string }) {
 			collection.Assets &&
 			collection.Assets.length
 		) {
+			let responseMessage = '';
 			setLoading(true);
 			try {
+				setResponse({
+					status: true,
+					message: responseMessage,
+				});
 				for (let i = 0; i < collection.Assets.length; i++) {
 					try {
-						const balance = await readHandler({
+						const infoResponse = await readHandler({
 							processId: collection.Assets[i],
-							action: 'Balance',
-							data: {
-								Target: arProvider.profile.id,
-							},
+							action: 'Info',
 						});
+
+						const title = `(${i + 1}) ${infoResponse.Name || '-'}`;
+						let balance = 0;
+						if (infoResponse && infoResponse.Balances && infoResponse.Balances[arProvider.profile.id]) {
+							balance = Number(infoResponse.Balances[arProvider.profile.id]);
+						}
 
 						if (balance > 0) {
 							const pair = [collection.Assets[i], AOS.defaultToken];
@@ -85,7 +94,7 @@ function CollectionDropdown(props: { id: string; title: string }) {
 							const recipient = AOS.ucm;
 
 							const quantity = Math.floor((percentage / 100) * balance).toString();
-							const unitPrice = (price * Math.pow(10, 12)).toString();
+							const unitPrice = (price * DENOMINATION).toString();
 
 							const transferTags = [
 								{ name: 'Target', value: dominantToken },
@@ -106,18 +115,20 @@ function CollectionDropdown(props: { id: string; title: string }) {
 								handler: 'Create-Order',
 							});
 							if (orderResponse) {
-								const message = 'Listing created!';
+								responseMessage += `${title}: Listing created!\n`;
 								setResponse({
 									status: true,
-									message: message,
+									message: responseMessage,
 								});
 							} else {
-								setResponse({ status: false, message: language.errorOccurred });
+								responseMessage += `${title}: ` + language.errorOccurred + '\n';
+								setResponse({ status: false, message: responseMessage });
 							}
 						} else {
+							responseMessage += `${title}: Not enough tokens to create listing!\n`;
 							setResponse({
 								status: false,
-								message: 'Not enough tokens to create listings!',
+								message: responseMessage,
 							});
 						}
 					} catch (e: any) {
@@ -198,10 +209,8 @@ function CollectionDropdown(props: { id: string; title: string }) {
 								invalid={getInvalidPercentage()}
 								tooltip={language.listingPercentageInfo}
 							/>
-							{(loading || response !== null) && (
-								<S.MMessage className={'border-wrapper-alt1'}>
-									<span>{loading ? `${language.listingsCreating}...` : response.message}</span>
-								</S.MMessage>
+							{response && response.message && response.message.length && (
+								<S.MMessage className={'border-wrapper-alt1'}>{response && <pre>{response.message}</pre>}</S.MMessage>
 							)}
 						</S.MBody>
 						<S.MFooter>
@@ -233,7 +242,6 @@ function CollectionDropdown(props: { id: string; title: string }) {
 						</S.MFooter>
 					</S.MCWrapper>
 				</Modal>
-				{response && <Notification message={response.message} callback={() => setResponse(null)} />}
 			</>
 		);
 	}
