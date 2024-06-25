@@ -141,16 +141,31 @@ export default function Profile(props: { address: string }) {
 								/>
 							</S.HeaderActions>
 						</S.HeaderInfo>
-						{fullProfile.id && (
-							<S.Body>
-								<S.TWrapper>
-									<AssetsTable useIdAction={false} />
-								</S.TWrapper>
-								<S.TWrapper>
-									<CollectionsTable />
-								</S.TWrapper>
-							</S.Body>
-						)}
+						<S.Body>
+							{fullProfile && fullProfile.id ? (
+								<>
+									<S.TWrapper>
+										<AssetsTable useIdAction={false} />
+									</S.TWrapper>
+									<S.TWrapper>
+										<CollectionsTable />
+									</S.TWrapper>
+								</>
+							) : (
+								<S.CreateWrapper>
+									<Button
+										type={'alt1'}
+										label={arProvider.profile && arProvider.profile.id ? language.editProfile : language.createProfile}
+										handlePress={() => setShowManage(true)}
+										disabled={!arProvider.walletAddress}
+										icon={ASSETS.user}
+										height={55}
+										width={450}
+										iconLeftAlign
+									/>
+								</S.CreateWrapper>
+							)}
+						</S.Body>
 					</S.Wrapper>
 					{showManage && (
 						<Modal

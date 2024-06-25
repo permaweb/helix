@@ -188,6 +188,26 @@ export const Body = styled.div`
 	margin: 60px 0 0 0;
 `;
 
+export const CreateWrapper = styled.div`
+	width: fit-content;
+	margin: 0 auto;
+	button {
+		width: 300px !important;
+		max-width: 100% !important;
+		span {
+			color: ${(props) => props.theme.colors.font.primary} !important;
+			font-size: ${(props) => props.theme.typography.size.lg} !important;
+			font-weight: ${(props) => props.theme.typography.weight.bold} !important;
+			font-family: ${(props) => props.theme.typography.family.alt1} !important;
+		}
+		svg {
+			height: 22.5px !important;
+			width: 22.5px !important;
+			padding: 4.5px 0 0 0;
+		}
+	}
+`;
+
 export const TWrapper = styled.div`
 	flex-grow: 1;
 	width: 550px;
