@@ -29,7 +29,8 @@ export const Wrapper = styled.div<{
 		width: ${(props) => `${props.dimensions.icon.toString()}px`};
 		padding: 3.5px 0 0 0px;
 		margin: 0 0 2.5px 0;
-		stroke: ${(props) => (props.hasOwner ? props.theme.colors.icon.alt2.fill : props.theme.colors.icon.alt3.fill)};
+		color: ${(props) => (props.hasOwner ? props.theme.colors.icon.alt2.fill : props.theme.colors.icon.alt3.fill)};
+		fill: ${(props) => (props.hasOwner ? props.theme.colors.icon.alt2.fill : props.theme.colors.icon.alt3.fill)};
 	}
 
 	pointer-events: none;

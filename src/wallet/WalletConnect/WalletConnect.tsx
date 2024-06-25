@@ -47,12 +47,6 @@ export default function WalletConnect(_props: { callback?: () => void }) {
 		}
 	}, [showWallet, arProvider.walletAddress, arProvider.profile]);
 
-	// React.useEffect(() => {
-	// 	if (arProvider.profile && !arProvider.profile.id) {
-	// 		setShowManage(true);
-	// 	}
-	// }, [arProvider.profile]);
-
 	function handlePress() {
 		if (arProvider.walletAddress) {
 			setShowWalletDropdown(!showWalletDropdown);
@@ -87,15 +81,6 @@ export default function WalletConnect(_props: { callback?: () => void }) {
 			>
 				<S.Wrapper>
 					<S.PWrapper>
-						{/* <S.ProfileWrapper>
-							{arProvider.walletAddress && (
-								<Button
-									type={'alt1'}
-									label={arProvider.profile && arProvider.profile.id ? language.editProfile : language.createProfile}
-									handlePress={() => setShowManage(true)}
-								/>
-							)}
-						</S.ProfileWrapper> */}
 						<Avatar owner={arProvider.profile} dimensions={{ wrapper: 32.5, icon: 21.5 }} callback={handlePress} />
 					</S.PWrapper>
 					{showWalletDropdown && (
