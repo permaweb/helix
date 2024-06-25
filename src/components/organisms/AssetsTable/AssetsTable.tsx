@@ -233,8 +233,6 @@ export default function AssetsTable(props: { useIdAction: boolean }) {
 		} else return null;
 	}
 
-	console.log(loading);
-
 	function getAssets() {
 		if (!arProvider.walletAddress) {
 			return (

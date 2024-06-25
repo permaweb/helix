@@ -195,6 +195,7 @@ export const language = {
 		profileExistsInfo: `It looks like you already have an account ! You can visit your profile directly by clicking View profile below.`,
 		profileUpdated: `Profile updated`,
 		profileUpdatedInfo: `Your profile has been updated.`,
+		readDocs: `Read docs`,
 		recipient: `Recipient`,
 		removeAvatar: `Remove avatar`,
 		removeBanner: `Remove banner`,

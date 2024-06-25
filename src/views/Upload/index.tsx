@@ -499,7 +499,7 @@ export default function Upload() {
 	return (
 		<>
 			<S.Wrapper>
-				<S.HWrapper className={'max-view-wrapper'}>
+				<S.HWrapper>
 					<h4>{getHeader()}</h4>
 					<S.TRWrapper>
 						<Button
@@ -516,7 +516,7 @@ export default function Upload() {
 						/>
 					</S.TRWrapper>
 				</S.HWrapper>
-				<S.UploadWrapper className={'max-view-wrapper'}>
+				<S.UploadWrapper>
 					<S.UWrapper>
 						<UploadAssets />
 						{uploadReducer.uploadType === 'collection' && (

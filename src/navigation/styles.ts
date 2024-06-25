@@ -13,7 +13,7 @@ export const Wrapper = styled.div`
 	justify-content: space-between;
 	align-items: center;
 	padding: 0 20px;
-	background: ${(props) => props.theme.colors.view.background};
+	background: ${(props) => props.theme.colors.container.alt2.background};
 `;
 
 export const MFlex = styled.div`
@@ -24,39 +24,39 @@ export const MFlex = styled.div`
 `;
 
 export const MWrapper = styled.div`
-	display: flex;
+	display: none;
 	justify-content: center;
 	align-items: center;
-	margin: 0 0 0 6.5px;
+	margin: 0 5px 0 0;
 	@media (max-width: ${STYLING.cutoffs.initial}) {
-		margin: 0;
+		display: flex;
 	}
 `;
 
 export const LWrapper = styled.div`
-	margin: 0 0 0 45px;
+	margin: 0 0 0 7.5px;
 	a {
 		display: flex;
 		align-items: center;
 		text-decoration: none !important;
-		padding: 7.5px 15px 5px 10px;
 		&:hover {
 			opacity: 0.65;
 		}
 	}
 	svg {
 		height: fit-content;
-		height: 17.5px;
-		width: 17.5px;
-		fill ${(props) => props.theme.colors.icon.primary.fill};
+		height: 25px;
+		width: 25px;
+		fill: ${(props) => props.theme.colors.icon.primary.fill};
+		color: ${(props) => props.theme.colors.icon.primary.fill};
 	}
 	span {
 		color: ${(props) => props.theme.colors.font.primary};
 		font-family: ${(props) => props.theme.typography.family.alt1};
-		font-size: ${(props) => props.theme.typography.size.small};
+		font-size: ${(props) => props.theme.typography.size.lg};
 		font-weight: ${(props) => props.theme.typography.weight.xxBold};
 		display: block;
-		margin: -2.5px 0 0 5px;
+		margin: -2.15px 0 0 12.5px;
 	}
 	@media (max-width: ${STYLING.cutoffs.initial}) {
 		margin: 0 0 0 15px;
@@ -98,11 +98,6 @@ export const AWrapper = styled.div`
 
 export const TWrapper = styled.div`
 	margin: 0 15px 0 0;
-	@media (max-width: ${STYLING.cutoffs.initial}) {
-		button {
-			padding: 2.5px 0 0 0;
-		}
-	}
 `;
 
 export const BWrapper = styled.div`
@@ -112,7 +107,6 @@ export const BWrapper = styled.div`
 	top: ${STYLING.dimensions.nav.headerHeight};
 	left: 0;
 	padding: 20px 0;
-	background: ${(props) => props.theme.colors.view.background};
 	> * {
 		&:not(:last-child) {
 			margin: 0 0 6.5px 0;
@@ -145,11 +139,11 @@ export const BNavItem = styled.div<{ active: boolean }>`
 	align-items: center;
 	border-top-right-radius: ${STYLING.dimensions.radius.primary};
 	border-bottom-right-radius: ${STYLING.dimensions.radius.primary};
-	background: ${(props) =>
-		props.active ? props.theme.colors.container.primary.active : props.theme.colors.container.primary.background};
+	border-left: 5px solid transparent;
 	position: relative;
+	transition: all 100ms;
 	svg {
-		height: 17.5px;
+		height: 19.5px;
 		width: 19.5px;
 		display: flex;
 		justify-content: center;
@@ -172,12 +166,12 @@ export const BNavItem = styled.div<{ active: boolean }>`
 	}
 	&:hover {
 		cursor: pointer;
-		background: ${(props) => props.theme.colors.container.primary.active};
+		border-left: 5px solid ${(props) => props.theme.colors.border.alt2};
 	}
 	&:before {
 		content: '';
 		position: absolute;
-		left: 0;
+		left: -5px;
 		top: 0;
 		bottom: 0;
 		width: 5px;

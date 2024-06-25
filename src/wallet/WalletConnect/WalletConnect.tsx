@@ -87,7 +87,7 @@ export default function WalletConnect(_props: { callback?: () => void }) {
 			>
 				<S.Wrapper>
 					<S.PWrapper>
-						<S.ProfileWrapper>
+						{/* <S.ProfileWrapper>
 							{arProvider.walletAddress && (
 								<Button
 									type={'alt1'}
@@ -95,12 +95,7 @@ export default function WalletConnect(_props: { callback?: () => void }) {
 									handlePress={() => setShowManage(true)}
 								/>
 							)}
-						</S.ProfileWrapper>
-						{label && (
-							<S.LAction onClick={handlePress}>
-								<span>{label}</span>
-							</S.LAction>
-						)}
+						</S.ProfileWrapper> */}
 						<Avatar owner={arProvider.profile} dimensions={{ wrapper: 32.5, icon: 21.5 }} callback={handlePress} />
 					</S.PWrapper>
 					{showWalletDropdown && (

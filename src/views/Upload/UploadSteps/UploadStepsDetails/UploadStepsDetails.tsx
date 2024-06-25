@@ -28,7 +28,9 @@ export default function UploadStepsDetails() {
 	const languageProvider = useLanguageProvider();
 	const language = languageProvider.object[languageProvider.current];
 
-	const [topicOptions, setTopicOptions] = React.useState<string[]>(DEFAULT_ASSET_TOPICS);
+	const [topicOptions, setTopicOptions] = React.useState<string[]>([
+		...new Set([...DEFAULT_ASSET_TOPICS, ...uploadReducer.data.topics]),
+	]);
 
 	const [showTopicAdd, setShowTopicAdd] = React.useState<boolean>(false);
 	const [additionalTopic, setAdditionalTopic] = React.useState<string>('');
@@ -80,6 +82,10 @@ export default function UploadStepsDetails() {
 
 		return () => clearTimeout(timeoutId);
 	}, [uploadReducer.data.title]);
+
+	// React.useEffect(() => {
+	// 	setTopicOptions([...DEFAULT_ASSET_TOPICS, ...uploadReducer.data.topics]);
+	// }, [uploadReducer.data.topics]);
 
 	async function handleTitleCheck() {
 		if (uploadReducer.data.title) {

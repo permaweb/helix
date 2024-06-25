@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { ReactSVG } from 'react-svg';
 
 import { getProfile } from 'api';
@@ -8,7 +9,8 @@ import { Loader } from 'components/atoms/Loader';
 import { Modal } from 'components/molecules/Modal';
 import { AssetsTable } from 'components/organisms/AssetsTable';
 import { CollectionsTable } from 'components/organisms/CollectionsTable';
-import { ASSETS, REDIRECTS } from 'helpers/config';
+import { ProfileManage } from 'components/organisms/ProfileManage';
+import { ASSETS, REDIRECTS, URLS } from 'helpers/config';
 import { getTxEndpoint } from 'helpers/endpoints';
 import { ProfileHeaderType } from 'helpers/types';
 import { checkAddress, formatAddress } from 'helpers/utils';
@@ -17,9 +19,11 @@ import { useLanguageProvider } from 'providers/LanguageProvider';
 
 import * as S from './styles';
 
-const MAX_BIO_LENGTH = 80;
+const MAX_BIO_LENGTH = 250;
 
 export default function Profile(props: { address: string }) {
+	const navigate = useNavigate();
+
 	const arProvider = useArweaveProvider();
 
 	const languageProvider = useLanguageProvider();
@@ -30,6 +34,7 @@ export default function Profile(props: { address: string }) {
 
 	const [fullProfile, setFullProfile] = React.useState<ProfileHeaderType | null>(null);
 	const [showBio, setShowBio] = React.useState<boolean>(false);
+	const [showManage, setShowManage] = React.useState<boolean>(false);
 
 	// const copyAddress = React.useCallback(async () => {
 	// 	if (fullProfile && fullProfile.walletAddress) {
@@ -93,31 +98,72 @@ export default function Profile(props: { address: string }) {
 		if (fullProfile) {
 			return (
 				<>
-					<S.Wrapper className={'max-view-wrapper'}>
-						<S.HeaderInfo className={'border-wrapper-alt2'}>
+					<S.Wrapper>
+						<S.HeaderInfo>
 							<S.HeaderAvatar>{getAvatar()}</S.HeaderAvatar>
 							{getHeaderDetails()}
 							<S.HeaderActions>
-								{fullProfile && fullProfile.id && (
-									<Button
-										type={'alt1'}
-										label={language.viewOnBazar}
-										handlePress={() => window.open(REDIRECTS.bazar.profile(fullProfile.id), '_blank')}
-										icon={ASSETS.bazar}
-										noMinWidth
-									/>
-								)}
+								<Button
+									type={'primary'}
+									label={arProvider.profile && arProvider.profile.id ? language.editProfile : language.createProfile}
+									handlePress={() => setShowManage(true)}
+									disabled={!arProvider.walletAddress}
+									icon={ASSETS.user}
+									iconLeftAlign
+									noMinWidth
+								/>
+								<Button
+									type={'primary'}
+									label={language.upload}
+									handlePress={() => navigate(URLS.upload)}
+									disabled={!arProvider.walletAddress}
+									icon={ASSETS.upload}
+									iconLeftAlign
+									noMinWidth
+								/>
+								<Button
+									type={'primary'}
+									label={language.viewOnBazar}
+									handlePress={() => window.open(REDIRECTS.bazar.profile(fullProfile.id), '_blank')}
+									disabled={!fullProfile || !fullProfile.id}
+									icon={ASSETS.bazar}
+									iconLeftAlign
+									noMinWidth
+								/>
+								<Button
+									type={'primary'}
+									label={language.readDocs}
+									handlePress={() => navigate(URLS.docs)}
+									disabled={false}
+									icon={ASSETS.docs}
+									iconLeftAlign
+									noMinWidth
+								/>
 							</S.HeaderActions>
 						</S.HeaderInfo>
-						<S.Body>
-							<S.TWrapper>
-								<AssetsTable useIdAction={false} />
-							</S.TWrapper>
-							<S.TWrapper>
-								<CollectionsTable />
-							</S.TWrapper>
-						</S.Body>
+						{fullProfile.id && (
+							<S.Body>
+								<S.TWrapper>
+									<AssetsTable useIdAction={false} />
+								</S.TWrapper>
+								<S.TWrapper>
+									<CollectionsTable />
+								</S.TWrapper>
+							</S.Body>
+						)}
 					</S.Wrapper>
+					{showManage && (
+						<Modal
+							header={arProvider.profile && arProvider.profile.id ? language.editProfile : `${language.createProfile}!`}
+							handleClose={() => setShowManage(false)}
+						>
+							<ProfileManage
+								profile={arProvider.profile && arProvider.profile.id ? arProvider.profile : null}
+								handleClose={() => setShowManage(false)}
+								handleUpdate={null}
+							/>
+						</Modal>
+					)}
 					{showBio && fullProfile && fullProfile.bio && (
 						<Modal header={language.bio} handleClose={() => setShowBio(false)}>
 							<div className={'modal-wrapper'}>

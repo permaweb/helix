@@ -49,6 +49,7 @@ export const EIcon = styled.div`
 	svg {
 		height: 75px;
 		width: 75px;
+		padding: 5px 0 0 0;
 		fill: ${(props) => props.theme.colors.icon.primary.fill};
 	}
 `;

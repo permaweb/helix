@@ -12,7 +12,7 @@ export const Wrapper = styled.div<{ isView: boolean }>`
 	@media (max-width: ${STYLING.cutoffs.initial}) {
 		width: 100%;
 		padding: 0;
-		margin: 0;
+		margin: 70px 0 0 0;
 	}
 
 	h1,
@@ -40,6 +40,7 @@ export const Wrapper = styled.div<{ isView: boolean }>`
 	h2 {
 		font-size: clamp(22px, 3.05vw, 34px) !important;
 		scroll-margin-top: 100px;
+		margin: 0 0 10px 0;
 		a {
 			font-size: clamp(22px, 3.05vw, 34px) !important;
 		}
@@ -71,7 +72,7 @@ export const Wrapper = styled.div<{ isView: boolean }>`
 		font-family: ${(props) => props.theme.typography.family.primary} !important;
 		color: ${(props) => props.theme.colors.font.primary.alt1} !important;
 		line-height: 1.65 !important;
-		margin: 20px 0;
+		margin: 10px 0 20px 0;
 	}
 
 	a {
@@ -149,6 +150,7 @@ export const Wrapper = styled.div<{ isView: boolean }>`
 		background: ${(props) => props.theme.colors.container.primary.background};
 		border: 1px solid ${(props) => props.theme.colors.border.primary};
 		border-radius: ${STYLING.dimensions.radius.primary};
+		margin: 30px 0 0 0;
 	}
 `;
 

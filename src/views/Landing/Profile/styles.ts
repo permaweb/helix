@@ -6,9 +6,12 @@ export const Wrapper = styled.div``;
 
 export const HeaderInfo = styled.div`
 	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
 	flex-wrap: wrap;
 	gap: 25px;
-	padding: 20px;
+	padding: 40px 20px 20px 20px;
 	border-radius: ${STYLING.dimensions.radius.primary};
 `;
 
@@ -24,7 +27,7 @@ export const HeaderAvatar = styled.div`
 	svg {
 		height: 80px;
 		width: 80px;
-		stroke: ${(props) => props.theme.colors.icon.primary.fill};
+		padding: 5px 0 0 0;
 	}
 	img {
 		height: 100%;
@@ -35,30 +38,38 @@ export const HeaderAvatar = styled.div`
 `;
 
 export const HeaderHA = styled.div`
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	gap: 7.5px;
 	h4 {
 		color: ${(props) => props.theme.colors.font.primary};
 		font-size: clamp(24px, 3.25vw, 32px);
 		font-weight: ${(props) => props.theme.typography.weight.xxBold};
+		text-align: center;
 		line-height: 1.5;
 		overflow-wrap: anywhere;
 	}
 `;
 
 export const HeaderInfoDetail = styled.div`
-	margin: 2.5px 0 0 0;
 	span {
 		color: ${(props) => props.theme.colors.font.primary};
 		font-size: ${(props) => props.theme.typography.size.small};
 		font-weight: ${(props) => props.theme.typography.weight.medium};
+		text-align: center;
 	}
 `;
 
 export const HeaderInfoBio = styled(HeaderInfoDetail)`
-	margin: 10px 0 0 0;
+	margin: 2.5px 0 0 0;
 	display: flex;
+	flex-direction: column;
 	align-items: center;
 	flex-wrap: wrap;
 	gap: 10px;
+	max-width: 800px;
 	p {
 		color: ${(props) => props.theme.colors.font.alt1};
 		font-size: ${(props) => props.theme.typography.size.small};
@@ -66,7 +77,7 @@ export const HeaderInfoBio = styled(HeaderInfoDetail)`
 		line-height: 1.65;
 	}
 	span {
-		color: ${(props) => props.theme.colors.font.primary};
+		color: ${(props) => props.theme.colors.font.alt1};
 		font-size: ${(props) => props.theme.typography.size.small};
 	}
 	button {
@@ -162,9 +173,10 @@ export const HeaderAddress = styled.button`
 export const HeaderActions = styled.div`
 	height: fit-content;
 	display: flex;
+	justify-content: center;
 	flex-wrap: wrap;
 	gap: 15px;
-	margin: 0 0 0 auto;
+	margin: 0 auto;
 `;
 
 export const Body = styled.div`
@@ -173,7 +185,7 @@ export const Body = styled.div`
 	justify-content: space-between;
 	flex-wrap: wrap;
 	gap: 40px;
-	margin: 40px 0 0 0;
+	margin: 60px 0 0 0;
 `;
 
 export const TWrapper = styled.div`

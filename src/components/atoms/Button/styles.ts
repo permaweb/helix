@@ -68,6 +68,7 @@ export const Primary = styled.button<{
 		}
 		svg {
 			fill: ${(props) => props.theme.colors.font.light1} !important;
+			color: ${(props) => props.theme.colors.font.light1} !important;
 		}
 	}
 	&:focus {
@@ -78,12 +79,17 @@ export const Primary = styled.button<{
 		}
 		svg {
 			fill: ${(props) => props.theme.colors.font.light1} !important;
+			color: ${(props) => props.theme.colors.font.light1} !important;
 		}
 	}
 	&:disabled {
 		background: ${(props) => props.theme.colors.button.primary.disabled.background};
 		border: 1px solid ${(props) => props.theme.colors.button.primary.disabled.border};
 		span {
+			color: ${(props) => props.theme.colors.button.primary.disabled.color} !important;
+		}
+		svg {
+			fill: ${(props) => props.theme.colors.button.primary.disabled.color} !important;
 			color: ${(props) => props.theme.colors.button.primary.disabled.color} !important;
 		}
 	}
@@ -110,6 +116,12 @@ export const IconPrimary = styled.div<{
 		padding: 1.5px 0 0 0;
 		margin: ${(props) => (props.leftAlign ? '0 7.5px 0 0' : '0 0 0 7.5px')};
 		fill: ${(props) =>
+			props.disabled
+				? props.theme.colors.button.primary.disabled.color
+				: props.active
+				? props.theme.colors.button.primary.active.color
+				: props.theme.colors.button.primary.color};
+		color: ${(props) =>
 			props.disabled
 				? props.theme.colors.button.primary.disabled.color
 				: props.active
@@ -160,6 +172,12 @@ export const IconAlt1 = styled(IconPrimary)`
 				: props.active
 				? props.theme.colors.button.alt1.active.color
 				: props.theme.colors.button.alt1.color};
+		color: ${(props) =>
+			props.disabled
+				? props.theme.colors.button.alt1.disabled.color
+				: props.active
+				? props.theme.colors.button.alt1.active.color
+				: props.theme.colors.button.alt1.color};
 	}
 `;
 
@@ -205,6 +223,12 @@ export const Alt2 = styled(Alt1)`
 export const IconAlt2 = styled(IconAlt1)`
 	svg {
 		fill: ${(props) =>
+			props.disabled
+				? props.theme.colors.button.alt2.disabled.color
+				: props.active
+				? props.theme.colors.button.alt2.active.color
+				: props.theme.colors.button.alt2.color};
+		color: ${(props) =>
 			props.disabled
 				? props.theme.colors.button.alt2.disabled.color
 				: props.active

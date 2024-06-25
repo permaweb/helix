@@ -11,6 +11,7 @@ import checkmark from 'assets/checkmark.svg';
 import close from 'assets/close.svg';
 import comments from 'assets/comments.svg';
 import copy from 'assets/copy.svg';
+import dark from 'assets/dark.svg';
 import details from 'assets/details.svg';
 import docs from 'assets/docs.svg';
 import download from 'assets/download.svg';
@@ -19,6 +20,7 @@ import fullScreen from 'assets/fullscreen.svg';
 import image from 'assets/image.svg';
 import info from 'assets/info.svg';
 import landing from 'assets/landing.svg';
+import light from 'assets/light.svg';
 import link from 'assets/link.svg';
 import logo from 'assets/logo.svg';
 import media from 'assets/media.svg';
@@ -32,7 +34,6 @@ import search from 'assets/search.svg';
 import share from 'assets/share.svg';
 import stamp from 'assets/stamp.svg';
 import theme from 'assets/theme.svg';
-import u from 'assets/u.svg';
 import upload from 'assets/upload.svg';
 import uploadGraphic from 'assets/upload-graphic.riv';
 import user from 'assets/user.svg';
@@ -76,6 +77,8 @@ export const ASSETS = {
 	details: details,
 	docs: docs,
 	download: download,
+	dark: dark,
+	light: light,
 	following: following,
 	fullScreen: fullScreen,
 	image: image,
@@ -93,7 +96,6 @@ export const ASSETS = {
 	share: share,
 	stamp: stamp,
 	theme: theme,
-	u: u,
 	upload: upload,
 	uploadGraphic: uploadGraphic,
 	user: user,
@@ -231,8 +233,8 @@ export const STYLING = {
 			max: '47.5px',
 		},
 		nav: {
-			headerHeight: '65px',
-			panelWidthClosed: '85px',
+			headerHeight: '70px',
+			panelWidthClosed: '70px',
 			panelWidthOpen: '250px',
 		},
 		radius: {

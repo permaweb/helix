@@ -1,4 +1,4 @@
-### Attach a license to your atomic assets
+## Attach a license to your atomic assets
 
 After uploading your atomic assets and configuring metadata you will proceed to the next screen to attach licensing rights to your work with the Universal Data License.
 

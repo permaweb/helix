@@ -1,48 +1,11 @@
 import React from 'react';
 import ReactMarkdown from 'react-markdown';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { ReactSVG } from 'react-svg';
 
 import { Loader } from 'components/atoms/Loader';
-import { ASSETS, URLS } from 'helpers/config';
+import { URLS } from 'helpers/config';
 
 import * as S from './styles';
-
-function CodeBlock({ children }: { children: React.ReactNode }): React.ReactElement {
-	const codeRef = React.useRef<HTMLPreElement>(null);
-
-	const [copied, setCopied] = React.useState<boolean>(false);
-
-	const handleCopyClick = (e: any) => {
-		e.preventDefault();
-		e.stopPropagation();
-		if (codeRef.current) {
-			const range = document.createRange();
-			range.selectNode(codeRef.current);
-			window.getSelection()?.removeAllRanges();
-			window.getSelection()?.addRange(range);
-			document.execCommand('copy');
-			window.getSelection()?.removeAllRanges();
-			setCopied(true);
-			setTimeout(() => setCopied(false), 2000);
-		}
-	};
-
-	return (
-		<S.CodeBlock>
-			<pre ref={codeRef}>{children}</pre>
-			<S.CopyIcon
-				onClick={(e: any) => handleCopyClick(e)}
-				dimensions={{
-					wrapper: 22.5,
-					icon: 12.5,
-				}}
-			>
-				<ReactSVG src={copied ? ASSETS.checkmark : ASSETS.copy} />
-			</S.CopyIcon>
-		</S.CodeBlock>
-	);
-}
 
 export default function DocTemplate(props: { doc?: string; id?: string }) {
 	const [markdown, setMarkdown] = React.useState<string>('');
@@ -163,7 +126,6 @@ export default function DocTemplate(props: { doc?: string; id?: string }) {
 			<ReactMarkdown
 				children={markdown}
 				components={{
-					code: CodeBlock,
 					link: renderers.link,
 					h2: renderers.h2,
 				}}

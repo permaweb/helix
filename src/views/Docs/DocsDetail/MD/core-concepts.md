@@ -1,4 +1,4 @@
-### Core concepts
+## Core concepts
 
 **Fundamental concepts of Helix and the permaweb.**
 
