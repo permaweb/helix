@@ -195,7 +195,6 @@ export const CreateWrapper = styled.div`
 		width: 300px !important;
 		max-width: 100% !important;
 		span {
-			color: ${(props) => props.theme.colors.font.primary} !important;
 			font-size: ${(props) => props.theme.typography.size.lg} !important;
 			font-weight: ${(props) => props.theme.typography.weight.bold} !important;
 			font-family: ${(props) => props.theme.typography.family.alt1} !important;
