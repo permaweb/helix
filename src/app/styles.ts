@@ -258,6 +258,7 @@ export const View = styled.div`
 	border-radius: ${STYLING.dimensions.radius.alt1};
 	animation: ${open} ${fadeIn1};
 	@media (max-width: ${STYLING.cutoffs.initial}) {
+		min-height: calc(100vh - ${STYLING.dimensions.nav.headerHeight});
 		height: fit-content;
 		width: 100%;
 		position: relative;
