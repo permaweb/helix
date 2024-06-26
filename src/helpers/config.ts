@@ -50,7 +50,7 @@ export const APP = {
 };
 
 export const AOS = {
-	module: 'sBmq5pehE1_Ed5YBs4DGV4FMftoKwo_cVVsCpPND36Q',
+	module: 'Pq2Zftrqut0hdisH_MC2pDOT6S4eQFoxGsFUzR6r350',
 	scheduler: '_GQ33BkPtZrqxA84vM8Zk-N2aO0toNNu_C-l-rawrBA',
 	assetSrc: '00c9tFArqJiCl7wTGkEQcSO7lCDQQ1wh8OmS-y6G-AY',
 	defaultToken: 'xU9zFkq3X2ZQ6olwNVvr1vUWIjc3kXTWr7xKQD6dh10',
