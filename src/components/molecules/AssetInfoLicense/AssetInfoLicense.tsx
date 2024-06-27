@@ -26,14 +26,17 @@ export default function AssetDetailLicenses(props: IProps) {
 	function getValue(element: string) {
 		if (!props.asset || !props.asset.license || !props.asset.license[element]) return null;
 		if (typeof props.asset.license[element] === 'object') {
+			console.log(props.asset.license[element].value);
 			return (
 				<S.LFlex>
 					<p>{getLicenseText(props.asset.license[element].value)}</p>
-					{props.asset.license[element].icon && !props.asset.license[element].value.includes('None') && (
-						<S.LFlexValue>
-							<ReactSVG src={props.asset.license[element].icon} />
-						</S.LFlexValue>
-					)}
+					{props.asset.license[element].icon &&
+						!props.asset.license[element].value.includes('None') &&
+						!props.asset.license[element].value.includes('Disallowed') && (
+							<S.LFlexValue>
+								<ReactSVG src={props.asset.license[element].icon} />
+							</S.LFlexValue>
+						)}
 					{props.asset.license[element].endText && (
 						<S.LFlexValue>
 							<p>{props.asset.license[element].endText}</p>
@@ -84,9 +87,6 @@ export default function AssetDetailLicenses(props: IProps) {
 					) : null;
 				})}
 			</S.Body>
-			{/* <S.Action>
-				<Button type={'primary'} label={language.payLicense} handlePress={() => {}} disabled={true} noMinWidth />
-			</S.Action> */}
 		</S.Wrapper>
 	) : null;
 }

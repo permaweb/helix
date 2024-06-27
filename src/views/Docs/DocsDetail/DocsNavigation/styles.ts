@@ -24,7 +24,6 @@ export const NContent = styled.div`
 	z-index: 1;
 	overflow: auto;
 	margin: 10.5px 0 0 0;
-	padding: 15px 20px 0 20px;
 	@media (max-width: ${STYLING.cutoffs.initial}) {
 		position: relative;
 		top: auto;

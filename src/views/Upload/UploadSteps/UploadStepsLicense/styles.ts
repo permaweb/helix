@@ -1,16 +1,8 @@
 import styled from 'styled-components';
 
-export const Wrapper = styled.div`
-	padding: 20px;
-	> * {
-		&:not(:last-child) {
-			margin: 0 0 15px 0;
-		}
-		&:last-child {
-			margin: 0;
-		}
-	}
-`;
+import { STYLING } from 'helpers/config';
+
+export const Wrapper = styled.div``;
 
 export const Header = styled.div`
 	display: flex;
@@ -20,94 +12,85 @@ export const Header = styled.div`
 	gap: 15px;
 	margin: 0 0 20px 0 !important;
 	span {
-		font-size: ${(props) => props.theme.typography.size.small} !important;
+		font-size: ${(props) => props.theme.typography.size.lg} !important;
 		font-weight: ${(props) => props.theme.typography.weight.bold} !important;
+		font-family: ${(props) => props.theme.typography.family.alt1} !important;
 		color: ${(props) => props.theme.colors.font.primary} !important;
 		display: block;
+	}
+`;
+
+export const OptionsWrapper = styled.div`
+	display: flex;
+	flex-direction: column;
+	gap: 30px;
+`;
+
+export const Option = styled.button<{ active: boolean; disabled: boolean }>`
+	background: ${(props) =>
+		props.active ? props.theme.colors.button.primary.active.background : props.theme.colors.button.primary.background};
+	border: 1px solid
+		${(props) =>
+			props.active ? props.theme.colors.button.primary.active.border : props.theme.colors.button.primary.border};
+	border-radius: ${STYLING.dimensions.radius.primary};
+	padding: 15px;
+	&:hover {
+		background: ${(props) => props.theme.colors.button.primary.active.background};
+		border: 1px solid ${(props) => props.theme.colors.button.primary.active.border};
+		p,
+		span {
+			color: ${(props) => props.theme.colors.font.light1} !important;
+		}
+	}
+	span {
+		font-size: ${(props) => props.theme.typography.size.base} !important;
+		font-weight: ${(props) => props.theme.typography.weight.bold} !important;
+		font-family: ${(props) => props.theme.typography.family.alt1} !important;
+		color: ${(props) => (props.active ? props.theme.colors.font.light1 : props.theme.colors.font.primary)} !important;
+		display: block;
+		text-align: left;
+	}
+	p {
+		font-size: ${(props) => props.theme.typography.size.xSmall} !important;
+		font-weight: ${(props) => props.theme.typography.weight.medium} !important;
+		font-family: ${(props) => props.theme.typography.family.primary} !important;
+		color: ${(props) => (props.active ? props.theme.colors.font.light1 : props.theme.colors.font.alt1)} !important;
+		display: block;
+		text-align: left;
+		margin: 7.5px 0 0 0;
+	}
+	&:disabled {
+		background: ${(props) => props.theme.colors.button.primary.disabled.background};
+		border: 1px solid ${(props) => props.theme.colors.button.primary.disabled.border};
+		p,
+		span {
+			color: ${(props) => props.theme.colors.button.primary.disabled.color} !important;
+		}
+		svg {
+			fill: ${(props) => props.theme.colors.button.primary.disabled.color} !important;
+			color: ${(props) => props.theme.colors.button.primary.disabled.color} !important;
+		}
 	}
 `;
 
 export const CWrapper = styled.div`
 	display: flex;
 	align-items: center;
+	input {
+		margin: 2.5px 0 0 0;
+	}
 	span {
-		margin: 0 6.5px 0 0;
+		margin: 0 8.5px 0 0;
 		font-size: ${(props) => props.theme.typography.size.xSmall} !important;
 		font-weight: ${(props) => props.theme.typography.weight.medium} !important;
+		font-family: ${(props) => props.theme.typography.family.primary} !important;
 	}
 `;
 
-export const FlexWrapper = styled.div`
-	width: 100%;
-	display: flex;
-	align-items: baseline;
-	flex-wrap: wrap;
-	gap: 10px;
+export const AWrapper = styled.div`
+	margin: 20px 0 0 0;
 `;
 
-export const FlexFitWrapper = styled(FlexWrapper)``;
-
-export const SWrapper = styled.div`
-	width: calc(100% - 130px);
-`;
-
-export const SSWrapper = styled.div`
-	flex-grow: 1;
-`;
-
-export const SLWrapper = styled.div`
-	width: calc(100% - 130px);
-	flex-grow: 1;
-`;
-
-export const IWrapper = styled.div<{ disabled: boolean }>`
-	width: 120px;
-	position: relative;
-
-	input {
-		height: 40px !important;
-		appearance: textfield;
-		&::-webkit-inner-spin-button,
-		&::-webkit-outer-spin-button {
-			opacity: ${(props) => (props.disabled ? '0.5' : '1')};
-		}
-		&::-moz-focus-inner {
-			border: 0;
-		}
-	}
-	span,
-	svg {
-		display: block;
-		position: absolute;
-		right: 37.5px;
-		top: 31.5px;
-		opacity: ${(props) => (props.disabled ? '0.5' : '1')};
-	}
-	span {
-		top: 30px;
-		font-size: ${(props) => props.theme.typography.size.xSmall};
-		font-weight: ${(props) => props.theme.typography.weight.medium};
-		color: ${(props) => props.theme.colors.font.primary};
-	}
-	svg {
-		height: 17.5px;
-		width: 17.5px;
-	}
-`;
-
-export const ASWrapper = styled(SSWrapper)`
-	width: 0;
-	min-width: 120px;
-`;
-
-export const AWrapper = styled(IWrapper)`
-	width: fit-content;
-	flex-grow: 1;
-	input {
-		margin: 7.5px 0 0 0 !important;
-		font-size: ${(props) => props.theme.typography.size.small} !important;
-		font-weight: ${(props) => props.theme.typography.weight.medium} !important;
-		color: ${(props) =>
-			props.disabled ? props.theme.colors.button.primary.disabled.color : props.theme.colors.font.primary};
-	}
+export const ALicenseWrapper = styled.div`
+	margin: 20px 0 0 0;
 `;

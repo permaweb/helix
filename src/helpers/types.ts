@@ -196,7 +196,8 @@ export type UploadPayloadType =
 	| 'idList'
 	| 'banner'
 	| 'thumbnail'
-	| 'hasLicense';
+	| 'hasLicense'
+	| 'activeLicense';
 
 export type UploadPayloadDataType = { field: UploadPayloadType; data: any };
 
@@ -218,6 +219,7 @@ export type UploadReduxType = {
 		topics: string[];
 		type: string;
 		hasLicense: boolean;
+		activeLicense: string;
 	};
 	currentStep: UploadStepType;
 	nextStepDisabled: boolean;

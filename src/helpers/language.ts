@@ -114,21 +114,6 @@ export const language = {
 					oneTime: `One Time`,
 				},
 			},
-			derivations: {
-				label: `Derivations`,
-				options: {
-					disallowed: `Disallowed`,
-					allowed: `Allowed`,
-					suboptions: {
-						credit: `With Credit`,
-						indication: `With Indication`,
-						licensePassthrough: `With License Passthrough`,
-						revenueShare: `With Revenue Share`,
-						monthlyFee: `With Monthly Fee`,
-						oneTimeFee: `With One-Time Fee`,
-					},
-				},
-			},
 			commercialUse: {
 				label: `Commercial Use`,
 				options: {
@@ -147,6 +132,21 @@ export const language = {
 					disallowed: `Disallowed`,
 					allowed: `Allowed`,
 					suboptions: {
+						monthlyFee: `With Monthly Fee`,
+						oneTimeFee: `With One-Time Fee`,
+					},
+				},
+			},
+			derivations: {
+				label: `Derivations`,
+				options: {
+					disallowed: `Disallowed`,
+					allowed: `Allowed`,
+					suboptions: {
+						credit: `With Credit`,
+						indication: `With Indication`,
+						licensePassthrough: `With License Passthrough`,
+						revenueShare: `With Revenue Share`,
 						monthlyFee: `With Monthly Fee`,
 						oneTimeFee: `With One-Time Fee`,
 					},
@@ -259,6 +259,7 @@ export const language = {
 		valuePercentage: `Value must be between 1 and 100`,
 		video: `Video`,
 		videos: `Videos`,
+		viewAdvancedOptions: `View advanced options`,
 		viewAsset: `View Asset`,
 		viewCollection: `View collection`,
 		viewFullBio: `View full bio`,

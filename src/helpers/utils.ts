@@ -15,7 +15,7 @@ export function getUniqueAddresses(addresses: string[]) {
 export function formatAddress(address: string | null, wrap: boolean) {
 	if (!address) return '';
 	if (!checkAddress(address)) return address;
-	const formattedAddress = address.substring(0, 5) + '...' + address.substring(36, address.length - 1);
+	const formattedAddress = address.substring(0, 5) + '...' + address.substring(36, address.length);
 	return wrap ? `(${formattedAddress})` : formattedAddress;
 }
 

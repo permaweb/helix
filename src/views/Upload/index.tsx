@@ -57,19 +57,18 @@ export default function Upload() {
 	const [collectionResponse, setCollectionResponse] = React.useState<string | null>(null);
 	const [collectionResponseError, setCollectionResponseError] = React.useState<string | null>(null);
 
-	// TODO
-	// React.useEffect(() => {
-	// 	const handleBeforeUnload = (e: any) => {
-	// 		e.preventDefault();
-	// 		e.returnValue = '';
-	// 	};
+	React.useEffect(() => {
+		const handleBeforeUnload = (e: any) => {
+			e.preventDefault();
+			e.returnValue = '';
+		};
 
-	// 	window.addEventListener('beforeunload', handleBeforeUnload);
+		window.addEventListener('beforeunload', handleBeforeUnload);
 
-	// 	return () => {
-	// 		window.removeEventListener('beforeunload', handleBeforeUnload);
-	// 	};
-	// }, [uploadReducer]);
+		return () => {
+			window.removeEventListener('beforeunload', handleBeforeUnload);
+		};
+	}, [uploadReducer]);
 
 	React.useEffect(() => {
 		if (!arProvider.wallet) dispatch(uploadActions.setUploadDisabled(true));
@@ -433,13 +432,6 @@ export default function Upload() {
 						});
 
 						if (evalResult) {
-							// const updateProfileResponse = await aos.message({
-							// 	process: arProvider.profile.id,
-							// 	signer: createDataItemSigner(globalThis.arweaveWallet),
-							// 	tags: [{ name: 'Action', value: 'Add-Uploaded-Asset' }],
-							// 	data: JSON.stringify({ Id: processId, Quantity: balance }),
-							// });
-
 							const updateProfileResponse = await aos.message({
 								process: processId,
 								signer: createDataItemSigner(globalThis.arweaveWallet),

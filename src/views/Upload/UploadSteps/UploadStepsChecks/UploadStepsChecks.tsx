@@ -56,9 +56,9 @@ export default function UploadStepsChecks() {
 							</S.InfoLine>
 						</>
 					)}
-					{uploadReducer.data.topics && uploadReducer.data.topics.length && (
-						<S.InfoLine>
-							<span>{language.topics}</span>
+					<S.InfoLine>
+						<span>{language.topics}</span>
+						{uploadReducer.data.topics && uploadReducer.data.topics.length > 0 ? (
 							<S.TWrapper>
 								{uploadReducer.data.topics.map((topic: string, index: number) => {
 									return (
@@ -69,8 +69,10 @@ export default function UploadStepsChecks() {
 									);
 								})}
 							</S.TWrapper>
-						</S.InfoLine>
-					)}
+						) : (
+							<p>-</p>
+						)}
+					</S.InfoLine>
 				</S.InfoWrapper>
 				<S.InfoHeader>
 					<span>{language.assets}</span>
