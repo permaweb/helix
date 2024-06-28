@@ -161,7 +161,18 @@ export const TData = styled(RowData)<{
 export const NoAssetsContainer = styled.div`
 	height: 100%;
 	width: 100%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
 	p {
 		color: ${(props) => props.theme.colors.warning};
+		font-weight: ${(props) => props.theme.typography.weight.bold};
+		text-align: center;
+	}
+	@media (max-width: ${STYLING.cutoffs.initial}) {
+		justify-content: flex-start;
+		p {
+			text-align: left;
+		}
 	}
 `;

@@ -185,7 +185,7 @@ export const Body = styled.div`
 	justify-content: space-between;
 	flex-wrap: wrap;
 	gap: 40px;
-	margin: 60px 0 0 0;
+	margin: 40px 0 0 0;
 `;
 
 export const CreateWrapper = styled.div`

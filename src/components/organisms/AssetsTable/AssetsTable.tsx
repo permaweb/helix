@@ -1,12 +1,15 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import { ReactSVG } from 'react-svg';
 
 import { getAssetIdsByUser, getGQLData } from 'gql';
 
+import { Button } from 'components/atoms/Button';
 import { Checkbox } from 'components/atoms/Checkbox';
 import { Loader } from 'components/atoms/Loader';
 import { Table } from 'components/molecules/Table';
-import { GATEWAYS, PAGINATORS, REDIRECTS, STORAGE, TAGS } from 'helpers/config';
+import { ASSETS, GATEWAYS, PAGINATORS, REDIRECTS, STORAGE, TAGS, URLS } from 'helpers/config';
 import { AlignType, CursorEnum, GQLNodeResponseType, GroupIndexType } from 'helpers/types';
 import { formatAddress, getTagValue } from 'helpers/utils';
 import { useArweaveProvider } from 'providers/ArweaveProvider';
@@ -17,6 +20,7 @@ import * as uploadActions from 'store/upload/actions';
 import * as S from './styles';
 
 export default function AssetsTable(props: { useIdAction: boolean }) {
+	const navigate = useNavigate();
 	const dispatch = useDispatch();
 
 	const uploadReducer = useSelector((state: RootState) => state.uploadReducer);
@@ -272,9 +276,13 @@ export default function AssetsTable(props: { useIdAction: boolean }) {
 				);
 			} else {
 				return (
-					<S.MWrapper>
-						<span>{language.noAssets}</span>
-					</S.MWrapper>
+					<S.EmptyContainer className={'border-wrapper-alt1'}>
+						<S.EmptyLogo>
+							<ReactSVG src={ASSETS.asset} />
+						</S.EmptyLogo>
+						<p>{language.noAssetsInfo}</p>
+						<Button type={'alt1'} label={language.upload} handlePress={() => navigate(URLS.upload)} />
+					</S.EmptyContainer>
 				);
 			}
 		}

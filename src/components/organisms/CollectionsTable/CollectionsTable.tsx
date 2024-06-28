@@ -1,5 +1,7 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import { ReactSVG } from 'react-svg';
 
 import { messageResults, readHandler } from 'api';
 
@@ -9,7 +11,7 @@ import { IconButton } from 'components/atoms/IconButton';
 import { Loader } from 'components/atoms/Loader';
 import { Modal } from 'components/molecules/Modal';
 import { Table } from 'components/molecules/Table';
-import { AOS, ASSETS, PAGINATORS, REDIRECTS } from 'helpers/config';
+import { AOS, ASSETS, PAGINATORS, REDIRECTS, URLS } from 'helpers/config';
 import { AlignType, CollectionType } from 'helpers/types';
 import { checkAddress, formatAddress } from 'helpers/utils';
 import { useArweaveProvider } from 'providers/ArweaveProvider';
@@ -271,6 +273,8 @@ function CollectionDropdown(props: { id: string; title: string }) {
 }
 
 export default function CollectionsTable() {
+	const navigate = useNavigate();
+
 	const arProvider = useArweaveProvider();
 
 	const uploadReducer = useSelector((state: RootState) => state.uploadReducer);
@@ -392,9 +396,13 @@ export default function CollectionsTable() {
 				);
 			} else {
 				return (
-					<S.MWrapper>
-						<span>{language.noCollections}</span>
-					</S.MWrapper>
+					<S.EmptyContainer className={'border-wrapper-alt1'}>
+						<S.EmptyLogo>
+							<ReactSVG src={ASSETS.collections} />
+						</S.EmptyLogo>
+						<p>{language.noCollectionsInfo}</p>
+						<Button type={'alt1'} label={language.upload} handlePress={() => navigate(URLS.upload)} />
+					</S.EmptyContainer>
 				);
 			}
 		}

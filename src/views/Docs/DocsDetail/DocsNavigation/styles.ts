@@ -28,7 +28,11 @@ export const NContent = styled.div`
 		position: relative;
 		top: auto;
 		padding: 0 15px;
+		min-height: 0;
 		max-height: none;
+		background: ${(props) => props.theme.colors.container.alt3.background};
+		border: 1px solid ${(props) => props.theme.colors.border.primary};
+		border-radius: ${STYLING.dimensions.radius.primary};
 	}
 `;
 
@@ -64,7 +68,7 @@ export const NTitleMobile = styled.button<{ open: boolean }>`
 	}
 	p {
 		font-family: ${(props) => props.theme.typography.family.alt1};
-		font-size: ${(props) => props.theme.typography.size.small} !important;
+		font-size: ${(props) => props.theme.typography.size.base} !important;
 		font-weight: ${(props) => props.theme.typography.weight.bold} !important;
 		color: ${(props) => props.theme.colors.font.primary} !important;
 	}
@@ -72,7 +76,7 @@ export const NTitleMobile = styled.button<{ open: boolean }>`
 		height: 12.5px;
 		width: 12.5px;
 		margin: 3.5px 0 0 0;
-		transform: rotate(${(props) => (props.open ? '270deg' : '90deg')});
+		transform: rotate(${(props) => (props.open ? '90deg' : '270deg')});
 		fill: ${(props) => props.theme.colors.font.primary};
 	}
 `;

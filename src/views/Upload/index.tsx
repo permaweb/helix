@@ -223,17 +223,32 @@ export default function Upload() {
 				processSrc = processSrc.replaceAll('<LASTUPDATE>', dateTime);
 			}
 
-			const processId = await aos.spawn({
-				module: AOS.module,
-				scheduler: AOS.scheduler,
-				signer: createDataItemSigner(globalThis.arweaveWallet),
-				tags: collectionTags,
-			});
+			let processId: string;
+			let retryCount = 0;
+			const maxRetries = 25;
 
-			console.log(`Collection process: ${processId}`);
+			while (!processId && retryCount < maxRetries) {
+				try {
+					processId = await aos.spawn({
+						module: AOS.module,
+						scheduler: AOS.scheduler,
+						signer: createDataItemSigner(globalThis.arweaveWallet),
+						tags: collectionTags,
+					});
+					console.log(`Collection process: ${processId}`);
+				} catch (e: any) {
+					console.error(`Spawn attempt ${retryCount + 1} failed:`, e);
+					retryCount++;
+					if (retryCount < maxRetries) {
+						await new Promise((r) => setTimeout(r, 1000));
+					} else {
+						throw new Error(`Failed to spawn process after ${maxRetries} attempts`);
+					}
+				}
+			}
 
 			let fetchedCollectionId: string;
-			let retryCount: number = 0;
+			retryCount = 0;
 			while (!fetchedCollectionId) {
 				await new Promise((r) => setTimeout(r, 2000));
 				const gqlResponse = await getGQLData({
@@ -253,7 +268,7 @@ export default function Upload() {
 					console.log(`Transaction not found`, processId, 0);
 					retryCount++;
 					if (retryCount >= 10) {
-						throw new Error(`Transaction not found after 10 attempts, contract deployment retries failed`);
+						throw new Error(`Transaction not found after 10 attempts, process deployment retries failed`);
 					}
 				}
 			}
@@ -384,16 +399,33 @@ export default function Upload() {
 						processSrc = processSrc.replaceAll('<BALANCE>', balance.toString());
 					}
 
-					const processId = await aos.spawn({
-						module: AOS.module,
-						scheduler: AOS.scheduler,
-						signer: createDataItemSigner(globalThis.arweaveWallet),
-						tags: assetTags,
-						data: buffer,
-					});
+					let processId: string;
+					let retryCount = 0;
+					const maxRetries = 25;
+
+					while (!processId && retryCount < maxRetries) {
+						try {
+							processId = await aos.spawn({
+								module: AOS.module,
+								scheduler: AOS.scheduler,
+								signer: createDataItemSigner(globalThis.arweaveWallet),
+								tags: assetTags,
+								data: buffer,
+							});
+							console.log(`Asset process: ${processId}`);
+						} catch (e: any) {
+							console.error(`Spawn attempt ${retryCount + 1} failed:`, e);
+							retryCount++;
+							if (retryCount < maxRetries) {
+								await new Promise((r) => setTimeout(r, 1000));
+							} else {
+								throw new Error(`Failed to spawn process after ${maxRetries} attempts`);
+							}
+						}
+					}
 
 					let fetchedAssetId: string;
-					let retryCount: number = 0;
+					retryCount = 0;
 					while (!fetchedAssetId) {
 						await new Promise((r) => setTimeout(r, 2000));
 						const gqlResponse = await getGQLData({
@@ -413,7 +445,7 @@ export default function Upload() {
 							console.log(`Transaction not found`, processId, 0);
 							retryCount++;
 							if (retryCount >= 10) {
-								throw new Error(`Transaction not found after 10 attempts, contract deployment retries failed`);
+								throw new Error(`Transaction not found after 10 attempts, process deployment retries failed`);
 							}
 						}
 					}

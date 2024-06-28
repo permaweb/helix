@@ -9,6 +9,7 @@ import asset from 'assets/asset.svg';
 import bazar from 'assets/bazar.svg';
 import checkmark from 'assets/checkmark.svg';
 import close from 'assets/close.svg';
+import collections from 'assets/collections.svg';
 import comments from 'assets/comments.svg';
 import copy from 'assets/copy.svg';
 import dark from 'assets/dark.svg';
@@ -72,6 +73,7 @@ export const ASSETS = {
 	bazar: bazar,
 	checkmark: checkmark,
 	close: close,
+	collections: collections,
 	comments: comments,
 	copy: copy,
 	details: details,
