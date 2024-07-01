@@ -188,6 +188,7 @@ export type UploadPayloadType =
 	| 'collectionCode'
 	| 'contentTokens'
 	| 'useFractionalTokens'
+	| 'transferableTokens'
 	| 'topics'
 	| 'content'
 	| 'contentList'

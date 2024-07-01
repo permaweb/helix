@@ -30,7 +30,9 @@ export const CWrapper = styled.div`
 	}
 `;
 
-export const TWrapper = styled.div``;
+export const TWrapper = styled.div`
+	margin: 20px 0 0 0;
+`;
 
 export const THeader = styled.div`
 	display: flex;

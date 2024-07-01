@@ -83,10 +83,6 @@ export default function UploadStepsDetails() {
 		return () => clearTimeout(timeoutId);
 	}, [uploadReducer.data.title]);
 
-	// React.useEffect(() => {
-	// 	setTopicOptions([...DEFAULT_ASSET_TOPICS, ...uploadReducer.data.topics]);
-	// }, [uploadReducer.data.topics]);
-
 	async function handleTitleCheck() {
 		if (uploadReducer.data.title) {
 			setValidatingTitle(true);
@@ -116,6 +112,17 @@ export default function UploadStepsDetails() {
 				{
 					field: 'useFractionalTokens',
 					data: !uploadReducer.data.useFractionalTokens,
+				},
+			])
+		);
+	}
+
+	function handleTransferableChange() {
+		dispatch(
+			uploadActions.setUpload([
+				{
+					field: 'transferableTokens',
+					data: !uploadReducer.data.transferableTokens,
 				},
 			])
 		);
@@ -228,16 +235,14 @@ export default function UploadStepsDetails() {
 						/>
 					)}
 				</S.COWrapper>
-				{/* {uploadReducer.uploadType === 'collection' && (
-					<FormField
-						label={language.collectionCode}
-						value={uploadReducer.data.collectionCode}
-						onChange={(e: any) => handleInputChange(e, 'collectionCode')}
+				<S.CWrapper>
+					<span>{language.transferableTokensCheckInfo}</span>
+					<Checkbox
+						checked={uploadReducer.data.transferableTokens}
+						handleSelect={handleTransferableChange}
 						disabled={false}
-						invalid={{ status: false, message: null }}
-						tooltip={language.collectionCodeInfo}
 					/>
-				)} */}
+				</S.CWrapper>
 				<S.TWrapper>
 					<S.THeader>
 						<span>{formatRequiredField(language.assetTopics)}</span>

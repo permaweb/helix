@@ -236,6 +236,7 @@ export const language = {
 		topics: `Topics`,
 		topicInfo: `Topics will be attached to newly created assets`,
 		toUpload: `To upload`,
+		transferableTokensCheckInfo: `These assets will be transferable`,
 		turboBalance: `Turbo Balance`,
 		turboUploadCost: `Turbo upload cost`,
 		udl: `Universal Data License`,

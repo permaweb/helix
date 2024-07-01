@@ -108,10 +108,11 @@ export default function Upload() {
 								handler: 'Update-Assets',
 							});
 
-							console.log(updateAssetsResponse);
-
-							setCollectionResponse(`${language.collectionCreated}!`);
-							setCollectionProcessId(collectionId);
+							if (updateAssetsResponse) {
+								setCollectionResponse(`${language.collectionCreated}!`);
+								setCollectionProcessId(collectionId);
+							}
+							setCollectionResponse('Error occurred');
 						} else {
 							console.error('Error creating collection');
 						}
@@ -123,8 +124,11 @@ export default function Upload() {
 				case 'assets':
 					try {
 						const assetIds = await handleUploadAssets(null);
-						console.log(assetIds);
-						setAssetsResponse(`${language.assetsCreated}!`);
+						if (assetIds.length > 0) {
+							setAssetsResponse(`${language.assetsCreated}!`);
+						} else {
+							setAssetsResponse(`${language.errorOccurred}`);
+						}
 					} catch (e: any) {
 						console.error(e);
 						setAssetsResponse(e.message ?? 'Error occurred');
@@ -298,15 +302,13 @@ export default function Upload() {
 					if (bannerTx) registryTags.push({ name: 'Banner', value: bannerTx });
 					if (thumbnailTx) registryTags.push({ name: 'Thumbnail', value: thumbnailTx });
 
-					const updateRegistryResponse = await aos.message({
+					await aos.message({
 						process: AOS.collectionsRegistry,
 						signer: createDataItemSigner(globalThis.arweaveWallet),
 						tags: registryTags,
 					});
 
-					console.log(updateRegistryResponse);
-
-					const profileCollectionsUpdate = await aos.message({
+					await aos.message({
 						process: processId,
 						signer: createDataItemSigner(globalThis.arweaveWallet),
 						tags: [
@@ -314,8 +316,6 @@ export default function Upload() {
 							{ name: 'ProfileProcess', value: arProvider.profile.id },
 						],
 					});
-
-					console.log(profileCollectionsUpdate);
 
 					return processId;
 				} else {
@@ -397,6 +397,10 @@ export default function Upload() {
 						processSrc = processSrc.replaceAll('<TICKER>', 'ATOMIC');
 						processSrc = processSrc.replaceAll('<DENOMINATION>', '1');
 						processSrc = processSrc.replaceAll('<BALANCE>', balance.toString());
+
+						if (!uploadReducer.data.transferableTokens) {
+							processSrc = processSrc.replace('Transferable = true', 'Transferable = false');
+						}
 					}
 
 					let processId: string;
@@ -439,10 +443,10 @@ export default function Upload() {
 						});
 
 						if (gqlResponse && gqlResponse.data.length) {
-							console.log(`Fetched transaction`, gqlResponse.data[0].node.id, 0);
+							console.log(`Fetched transaction:`, gqlResponse.data[0].node.id);
 							fetchedAssetId = gqlResponse.data[0].node.id;
 						} else {
-							console.log(`Transaction not found`, processId, 0);
+							console.log(`Transaction not found:`, processId);
 							retryCount++;
 							if (retryCount >= 10) {
 								throw new Error(`Transaction not found after 10 attempts, process deployment retries failed`);
@@ -464,7 +468,7 @@ export default function Upload() {
 						});
 
 						if (evalResult) {
-							const updateProfileResponse = await aos.message({
+							await aos.message({
 								process: processId,
 								signer: createDataItemSigner(globalThis.arweaveWallet),
 								tags: [
@@ -474,8 +478,6 @@ export default function Upload() {
 								],
 								data: JSON.stringify({ Id: processId, Quantity: balance }),
 							});
-
-							console.log(updateProfileResponse);
 
 							uploadedAssetsList.push(processId);
 						}
