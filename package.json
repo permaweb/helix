@@ -13,7 +13,7 @@
 		"test:coverage": "CI=true npm test -- --env=jsdom --coverage",
 		"prepare": "husky install",
 		"build": "NODE_ENV=production webpack",
-		"deploy-main": "npm run build && permaweb-deploy --ant-contract QLmTyC3QJKb6EbBikqtH3ImlUh96O0HIUuk_qXBeHh8"
+		"deploy-main": "npm run build && permaweb-deploy --ant-process Y_0sEnzlPZGmbhknubMBhFmkK9AAylOnx4Tl3Mz_uQM"
 	},
 	"dependencies": {
 		"@irys/sdk": "^0.1.0-a1",
@@ -70,7 +70,7 @@
 		"npm-force-resolutions": "^0.0.10",
 		"os-browserify": "^0.3.0",
 		"path-browserify": "^1.0.1",
-		"permaweb-deploy": "1.0.1",
+		"permaweb-deploy": "1.1.0",
 		"prettier": "^2.8.3",
 		"process": "^0.11.10",
 		"raw-loader": "^4.0.2",
