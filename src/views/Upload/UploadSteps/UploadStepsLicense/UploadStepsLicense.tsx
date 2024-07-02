@@ -111,10 +111,10 @@ export default function UploadStepsLicense() {
 						};
 
 						license.derivations = {
-							value: licenseParams.derivations.options.disallowed,
+							value: concatLicenseTag(licenseParams.derivations.options.allowed),
 							terms: {
-								value: licenseParams.derivations.options.suboptions.oneTimeFee,
-								amount: '0',
+								value: concatLicenseTag(licenseParams.derivations.options.suboptions.oneTimeFee),
+								amount: licenseAmount.toString(),
 							},
 						};
 						break;
