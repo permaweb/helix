@@ -1,6 +1,6 @@
 import { readHandler } from 'api';
 
-import { AOS } from 'helpers/config';
+import { AO } from 'helpers/config';
 import { ProfileHeaderType } from 'helpers/types';
 
 export async function getProfile(args: { address: string }): Promise<ProfileHeaderType | null> {
@@ -15,7 +15,7 @@ export async function getProfile(args: { address: string }): Promise<ProfileHead
 	};
 
 	const profileLookup = await readHandler({
-		processId: AOS.profileRegistry,
+		processId: AO.profileRegistry,
 		action: 'Get-Profiles-By-Delegate',
 		data: { Address: args.address },
 	});

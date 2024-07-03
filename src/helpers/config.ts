@@ -50,7 +50,7 @@ export const APP = {
 	name: 'Helix',
 };
 
-export const AOS = {
+export const AO = {
 	module: 'Pq2Zftrqut0hdisH_MC2pDOT6S4eQFoxGsFUzR6r350',
 	scheduler: '_GQ33BkPtZrqxA84vM8Zk-N2aO0toNNu_C-l-rawrBA',
 	assetSrc: 'Fmtgzy1Chs-5ZuUwHpQjQrQ7H7v1fjsP0Bi8jVaDIKA',

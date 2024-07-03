@@ -8,7 +8,7 @@ import { ArconnectSigner } from 'arbundles';
 import { getProfileByWalletAddress, readHandler } from 'api';
 
 import { Modal } from 'components/molecules/Modal';
-import { AOS, API_CONFIG, AR_WALLETS, GATEWAYS, WALLET_PERMISSIONS } from 'helpers/config';
+import { AO, API_CONFIG, AR_WALLETS, GATEWAYS, WALLET_PERMISSIONS } from 'helpers/config';
 import { getARBalanceEndpoint, getTurboBalanceEndpoint } from 'helpers/endpoints';
 import { ProfileHeaderType, WalletEnum } from 'helpers/types';
 import { getARAmountFromWinc } from 'helpers/utils';
@@ -94,8 +94,8 @@ export function ArweaveProvider(props: ArweaveProviderProps) {
 	const [arBalance, setArBalance] = React.useState<number | null>(null);
 	const [turboBalance, setTurboBalance] = React.useState<number | string | null>(null);
 	const [tokenBalances, setTokenBalances] = React.useState<{ [address: string]: number } | null>({
-		[AOS.defaultToken]: null,
-		[AOS.pixl]: null,
+		[AO.defaultToken]: null,
+		[AO.pixl]: null,
 	});
 	const [toggleTokenBalanceUpdate, setToggleTokenBalanceUpdate] = React.useState<boolean>(false);
 
@@ -185,13 +185,13 @@ export function ArweaveProvider(props: ArweaveProviderProps) {
 			const fetchDefaultTokenBalance = async () => {
 				try {
 					const defaultTokenBalance = await readHandler({
-						processId: AOS.defaultToken,
+						processId: AO.defaultToken,
 						action: 'Balance',
 						tags: [{ name: 'Recipient', value: profile.id }],
 					});
 					setTokenBalances((prevBalances) => ({
 						...prevBalances,
-						[AOS.defaultToken]: defaultTokenBalance || 0,
+						[AO.defaultToken]: defaultTokenBalance || 0,
 					}));
 				} catch (e) {
 					console.error(e);
@@ -201,8 +201,8 @@ export function ArweaveProvider(props: ArweaveProviderProps) {
 			fetchDefaultTokenBalance();
 		} else {
 			setTokenBalances({
-				[AOS.defaultToken]: 0,
-				[AOS.pixl]: 0,
+				[AO.defaultToken]: 0,
+				[AO.pixl]: 0,
 			});
 		}
 	}, [profile, toggleTokenBalanceUpdate]);
@@ -212,13 +212,13 @@ export function ArweaveProvider(props: ArweaveProviderProps) {
 			const fetchPixlTokenBalance = async () => {
 				try {
 					const pixlTokenBalance = await readHandler({
-						processId: AOS.pixl,
+						processId: AO.pixl,
 						action: 'Balance',
 						tags: [{ name: 'Recipient', value: profile.id }],
 					});
 					setTokenBalances((prevBalances) => ({
 						...prevBalances,
-						[AOS.pixl]: pixlTokenBalance || 0,
+						[AO.pixl]: pixlTokenBalance || 0,
 					}));
 				} catch (e) {
 					console.error(e);

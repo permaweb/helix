@@ -1,7 +1,7 @@
 import Arweave from 'arweave';
 import { createDataItemSigner, dryrun, message, result, results } from '@permaweb/aoconnect';
 
-import { AOS, API_CONFIG, CONTENT_TYPES, GATEWAYS } from 'helpers/config';
+import { AO, API_CONFIG, CONTENT_TYPES, GATEWAYS } from 'helpers/config';
 import { TagType } from 'helpers/types';
 import { getTagValue } from 'helpers/utils';
 
@@ -46,7 +46,7 @@ export async function getProfileByWalletAddress(args: { address: string }): Prom
 
 	try {
 		const profileLookup = await readHandler({
-			processId: AOS.profileRegistry,
+			processId: AO.profileRegistry,
 			action: 'Get-Profiles-By-Delegate',
 			data: { Address: args.address },
 		});

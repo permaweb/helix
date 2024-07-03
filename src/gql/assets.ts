@@ -1,7 +1,7 @@
 import { readHandler } from 'api';
 import { getGQLData, getProfiles } from 'gql';
 
-import { AOS, ASSETS, DEFAULT_THUMBNAIL, STORAGE, TAGS } from 'helpers/config';
+import { AO, ASSETS, DEFAULT_THUMBNAIL, STORAGE, TAGS } from 'helpers/config';
 import {
 	AGQLResponseType,
 	AssetType,
@@ -43,7 +43,7 @@ export async function getAssetById(args: { id: string; gateway: string }): Promi
 
 export async function getAssetIdsByUser(args: { address: string }): Promise<string[]> {
 	const profileLookup = await readHandler({
-		processId: AOS.profileRegistry,
+		processId: AO.profileRegistry,
 		action: 'Get-Profiles-By-Delegate',
 		data: { Address: args.address },
 	});
@@ -61,7 +61,7 @@ export async function getAssetIdsByUser(args: { address: string }): Promise<stri
 		});
 
 		if (fetchedProfile) {
-			const swapIds = [AOS.defaultToken, AOS.pixl];
+			const swapIds = [AO.defaultToken, AO.pixl];
 			return fetchedProfile.Assets.map((asset: { Id: string; Quantity: string }) => asset.Id).filter(
 				(id: string) => !swapIds.includes(id)
 			);

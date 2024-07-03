@@ -208,7 +208,7 @@ export default function Upload() {
 			let processSrc = null;
 
 			try {
-				const processSrcFetch = await fetch(getTxEndpoint(AOS.collectionSrc));
+				const processSrcFetch = await fetch(getTxEndpoint(AO.collectionSrc));
 				if (processSrcFetch.ok) {
 					processSrc = await processSrcFetch.text();
 				}
@@ -234,8 +234,8 @@ export default function Upload() {
 			while (!processId && retryCount < maxRetries) {
 				try {
 					processId = await aos.spawn({
-						module: AOS.module,
-						scheduler: AOS.scheduler,
+						module: AO.module,
+						scheduler: AO.scheduler,
 						signer: createDataItemSigner(globalThis.arweaveWallet),
 						tags: collectionTags,
 					});
@@ -303,7 +303,7 @@ export default function Upload() {
 					if (thumbnailTx) registryTags.push({ name: 'Thumbnail', value: thumbnailTx });
 
 					await aos.message({
-						process: AOS.collectionsRegistry,
+						process: AO.collectionsRegistry,
 						signer: createDataItemSigner(globalThis.arweaveWallet),
 						tags: registryTags,
 					});
@@ -383,7 +383,7 @@ export default function Upload() {
 					const buffer: any = await fileToBuffer(data.file);
 
 					try {
-						const processSrcFetch = await fetch(getTxEndpoint(AOS.assetSrc));
+						const processSrcFetch = await fetch(getTxEndpoint(AO.assetSrc));
 						if (processSrcFetch.ok) {
 							processSrc = await processSrcFetch.text();
 						}
@@ -410,8 +410,8 @@ export default function Upload() {
 					while (!processId && retryCount < maxRetries) {
 						try {
 							processId = await aos.spawn({
-								module: AOS.module,
-								scheduler: AOS.scheduler,
+								module: AO.module,
+								scheduler: AO.scheduler,
 								signer: createDataItemSigner(globalThis.arweaveWallet),
 								tags: assetTags,
 								data: buffer,

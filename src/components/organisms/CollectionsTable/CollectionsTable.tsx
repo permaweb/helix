@@ -11,7 +11,7 @@ import { IconButton } from 'components/atoms/IconButton';
 import { Loader } from 'components/atoms/Loader';
 import { Modal } from 'components/molecules/Modal';
 import { Table } from 'components/molecules/Table';
-import { AOS, ASSETS, PAGINATORS, REDIRECTS, URLS } from 'helpers/config';
+import { AO, ASSETS, PAGINATORS, REDIRECTS, URLS } from 'helpers/config';
 import { AlignType, CollectionType } from 'helpers/types';
 import { checkAddress, formatAddress } from 'helpers/utils';
 import { useArweaveProvider } from 'providers/ArweaveProvider';
@@ -90,10 +90,10 @@ function CollectionDropdown(props: { id: string; title: string }) {
 						}
 
 						if (balance > 0) {
-							const pair = [collection.Assets[i], AOS.defaultToken];
+							const pair = [collection.Assets[i], AO.defaultToken];
 							const dominantToken = pair[0];
 							const swapToken = pair[1];
-							const recipient = AOS.ucm;
+							const recipient = AO.ucm;
 
 							const quantity = Math.floor((percentage / 100) * balance).toString();
 							const unitPrice = (price * DENOMINATION).toString();
@@ -293,7 +293,7 @@ export default function CollectionsTable() {
 				setLoading(true);
 				try {
 					const response = await readHandler({
-						processId: AOS.collectionsRegistry,
+						processId: AO.collectionsRegistry,
 						action: 'Get-Collections-By-User',
 						tags: [{ name: 'Creator', value: arProvider.profile.id }],
 					});
