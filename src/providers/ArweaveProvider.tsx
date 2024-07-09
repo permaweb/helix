@@ -8,7 +8,7 @@ import { ArconnectSigner } from 'arbundles';
 import { getProfileByWalletAddress, readHandler } from 'api';
 
 import { Modal } from 'components/molecules/Modal';
-import { AO, API_CONFIG, AR_WALLETS, GATEWAYS, WALLET_PERMISSIONS } from 'helpers/config';
+import { AO, API_CONFIG, AR_WALLETS, GATEWAYS, REDIRECTS, WALLET_PERMISSIONS } from 'helpers/config';
 import { getARBalanceEndpoint, getTurboBalanceEndpoint } from 'helpers/endpoints';
 import { ProfileHeaderType, WalletEnum } from 'helpers/types';
 import { getARAmountFromWinc } from 'helpers/utils';
@@ -76,6 +76,14 @@ function WalletList(props: { handleConnect: any }) {
 					<span>{wallet.type.charAt(0).toUpperCase() + wallet.type.slice(1)}</span>
 				</S.WalletListItem>
 			))}
+			<S.WalletLink>
+				<span>
+					Don't have an Arweave Wallet? You can create one{' '}
+					<a href={REDIRECTS.arconnect} target={'_blank'}>
+						here.
+					</a>
+				</span>
+			</S.WalletLink>
 		</S.WalletListContainer>
 	);
 }

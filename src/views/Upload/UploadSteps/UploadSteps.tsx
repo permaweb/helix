@@ -2,7 +2,7 @@ import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { Button } from 'components/atoms/Button';
-import { UPLOAD_STEPS } from 'helpers/config';
+import { MAX_UPLOAD_SIZE, UPLOAD_STEPS } from 'helpers/config';
 import { UploadStepType } from 'helpers/types';
 import { useArweaveProvider } from 'providers/ArweaveProvider';
 import { useLanguageProvider } from 'providers/LanguageProvider';
@@ -113,6 +113,13 @@ export default function UploadSteps(props: IProps) {
 		}
 	}
 
+	function getDataSizeMessage() {
+		for (const element of uploadReducer.data.contentList) {
+			if (element.file.size > MAX_UPLOAD_SIZE) return <span>{language.fileExceedsLimit}</span>;
+		}
+		return null;
+	}
+
 	return (
 		<S.Wrapper ref={scrollRef}>
 			<S.PWrapper>
@@ -140,7 +147,9 @@ export default function UploadSteps(props: IProps) {
 					<span>{language.arweaveAppUploadBlocked}</span>
 				)}
 				{!arProvider.wallet && <span>{language.uploadConnectionRequired}</span>}
+				{arProvider.profile && !arProvider.profile.id && <span>{language.profileRequired}</span>}
 				{getBalanceMessage()}
+				{getDataSizeMessage()}
 				{uploadReducer.data.contentList &&
 					uploadReducer.data.idList &&
 					uploadReducer.data.contentList.length + uploadReducer.data.idList.length <= 0 &&

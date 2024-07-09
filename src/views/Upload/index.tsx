@@ -11,7 +11,7 @@ import { Loader } from 'components/atoms/Loader';
 import { Modal } from 'components/molecules/Modal';
 import { AssetsTable } from 'components/organisms/AssetsTable';
 import {
-	AOS,
+	AO,
 	CONTENT_TYPES,
 	DEFAULT_UCM_BANNER,
 	DEFAULT_UCM_THUMBNAIL,
@@ -127,14 +127,15 @@ export default function Upload() {
 						if (assetIds.length > 0) {
 							setAssetsResponse(`${language.assetsCreated}!`);
 						} else {
-							setAssetsResponse(`${language.errorOccurred}`);
+							setAssetsResponseError(`${language.errorOccurred}`);
 						}
 					} catch (e: any) {
 						console.error(e);
-						setAssetsResponse(e.message ?? 'Error occurred');
+						setAssetsResponseError(e.message ?? 'Error occurred');
 					}
 					break;
 			}
+
 			dispatch(uploadActions.setUploadActive(false));
 			dispatch(uploadActions.clearUpload());
 			setUploadPercentage(0);

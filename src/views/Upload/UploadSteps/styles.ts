@@ -37,11 +37,14 @@ export const MWrapper = styled.div`
 	width: fit-content;
 	margin: 20px 0 0 auto;
 	span {
-		color: ${(props) => props.theme.colors.warning};
-		font-size: ${(props) => props.theme.typography.size.xSmall};
-		font-weight: ${(props) => props.theme.typography.weight.medium};
+		background: ${(props) => props.theme.colors.warning};
+		color: ${(props) => props.theme.colors.font.light1};
+		font-size: ${(props) => props.theme.typography.size.xxSmall};
+		font-weight: ${(props) => props.theme.typography.weight.bold};
+		border-radius: ${STYLING.dimensions.radius.alt2};
 		text-align: right;
 		display: block;
-		margin: 0 0 5px 0;
+		padding: 2.5px 12.5px;
+		margin: 0 0 7.5px 0;
 	}
 `;

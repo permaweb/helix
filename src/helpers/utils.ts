@@ -99,11 +99,24 @@ export function getCreatorLabel(creator: ProfileType) {
 	else return formatAddress(creator.walletAddress, false);
 }
 
-export function getByteSize(bytes: number) {
+export function getByteSize(input: string | Buffer): number {
+	let sizeInBytes: number;
+	if (Buffer.isBuffer(input)) {
+		sizeInBytes = input.length;
+	} else if (typeof input === 'string') {
+		sizeInBytes = Buffer.byteLength(input, 'utf-8');
+	} else {
+		throw new Error('Input must be a string or a Buffer');
+	}
+
+	return sizeInBytes;
+}
+
+export function getByteSizeDisplay(bytes: number) {
 	const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
 	if (bytes === 0) return '0 Bytes';
-	const i = Math.floor(Math.log(bytes) / Math.log(1024));
-	return (bytes / Math.pow(1024, i)).toFixed(2) + ' ' + sizes[i];
+	const i = Math.floor(Math.log(bytes) / Math.log(1000));
+	return bytes / Math.pow(1000, i) + ' ' + sizes[i];
 }
 
 export function formatTime(time: number) {

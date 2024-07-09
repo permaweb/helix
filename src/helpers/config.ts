@@ -292,6 +292,8 @@ export const UPLOAD_CONFIG = {
 	chunkSize: 7500000,
 };
 
+export const MAX_UPLOAD_SIZE = 10000000;
+
 export const UPLOAD_STEPS: UploadStepType[] = ['details', 'license', 'checks'];
 
 export const DEFAULT_ASSET_TOPICS = [
@@ -328,6 +330,7 @@ export const REDIRECTS = {
 		profile: (id: string) => `https://ao-bazar.arweave.dev/#/profile/${id}`,
 	},
 	udl: 'https://udlicense.arweave.dev/',
+	arconnect: `https://arconnect.io`,
 };
 
 export const DRE_NODE = 'https://dre-u.warp.cc/contract';

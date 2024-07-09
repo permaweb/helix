@@ -9,10 +9,10 @@ import { TextArea } from 'components/atoms/TextArea';
 import { Modal } from 'components/molecules/Modal';
 import { Table } from 'components/molecules/Table';
 import { TurboBalanceFund } from 'components/molecules/TurboBalanceFund';
-import { ALLOWED_ASSET_TYPES, ASSETS } from 'helpers/config';
+import { ALLOWED_ASSET_TYPES, ASSETS, MAX_UPLOAD_SIZE } from 'helpers/config';
 import { getTurboCostWincEndpoint } from 'helpers/endpoints';
 import { ActiveFieldAddType, AlignType, FileMetadataType, SequenceType } from 'helpers/types';
-import { formatTurboAmount, getARAmountFromWinc, stripFileExtension } from 'helpers/utils';
+import { formatTurboAmount, getARAmountFromWinc, getByteSizeDisplay, stripFileExtension } from 'helpers/utils';
 import { useArweaveProvider } from 'providers/ArweaveProvider';
 import { useLanguageProvider } from 'providers/LanguageProvider';
 import { RootState } from 'store';
@@ -314,9 +314,14 @@ export default function UploadAssets() {
 				const index = uploadReducer.data.contentList.findIndex(
 					(currentData: FileMetadataType) => currentData.file.name === data.file.name
 				);
+
+				const invalid = data.file.size > MAX_UPLOAD_SIZE;
+				let name = data.title ? data.title : stripFileExtension(data.file.name);
+				if (invalid) name += ` (File exceeds max ${getByteSizeDisplay(MAX_UPLOAD_SIZE)})`;
+
 				return {
 					data: {
-						fileName: data.title ? data.title : stripFileExtension(data.file.name),
+						fileName: name,
 						description: (
 							<S.DDataWrapper>
 								<p>{`[ ${data.description ? '✓' : 'x'} ]`}</p>

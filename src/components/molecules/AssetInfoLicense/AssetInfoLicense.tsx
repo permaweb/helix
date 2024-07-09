@@ -26,7 +26,6 @@ export default function AssetDetailLicenses(props: IProps) {
 	function getValue(element: string) {
 		if (!props.asset || !props.asset.license || !props.asset.license[element]) return null;
 		if (typeof props.asset.license[element] === 'object') {
-			console.log(props.asset.license[element].value);
 			return (
 				<S.LFlex>
 					<p>{getLicenseText(props.asset.license[element].value)}</p>

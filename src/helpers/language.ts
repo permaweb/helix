@@ -1,3 +1,6 @@
+import { MAX_UPLOAD_SIZE } from './config';
+import { getByteSizeDisplay } from './utils';
+
 export const language = {
 	en: {
 		about: `About`,
@@ -82,6 +85,7 @@ export const language = {
 		existingAssets: `Existing`,
 		fetch: `Fetch`,
 		fetching: `Fetching`,
+		fileExceedsLimit: `One or more files exceeds max ${getByteSizeDisplay(MAX_UPLOAD_SIZE)}`,
 		fileName: `Filename`,
 		filesSelected: `Files selected`,
 		follow: `Follow`,
@@ -195,6 +199,7 @@ export const language = {
 		profileCreatingInfo: `Creating profile`,
 		profileExists: `Profile Exists`,
 		profileExistsInfo: `It looks like you already have an account ! You can visit your profile directly by clicking View profile below.`,
+		profileRequired: `A profile is required for upload`,
 		profileUpdated: `Profile updated`,
 		profileUpdatedInfo: `Your profile has been updated.`,
 		readDocs: `Read docs`,
@@ -223,7 +228,9 @@ export const language = {
 		stamped: `Stamped`,
 		submit: `Submit`,
 		successfullyFunded: `Successfully funded`,
-		supportedFileTypes: `Any file type is supported for upload. The current upload size limit per file is 1 GB.`,
+		supportedFileTypes: `Any file type is supported for upload. The current upload size limit per file is ${getByteSizeDisplay(
+			MAX_UPLOAD_SIZE
+		)}.`,
 		terms: `Terms`,
 		title: `Title`,
 		titleNotFound: `Title not found`,
@@ -246,7 +253,7 @@ export const language = {
 		uploadAvatar: `Upload avatar`,
 		uploadCost: `Upload cost`,
 		uploadBanner: `Upload banner`,
-		uploadConnectionRequired: `Wallet connection required to upload`,
+		uploadConnectionRequired: `Wallet connection required for upload`,
 		uploadChecksCostInfo: `Select files to upload to determine total upload cost`,
 		uploadChecksCostTurboInfo: `Select Fetch to view your turbo balance`,
 		uploadFiles: `Upload files`,

@@ -88,8 +88,8 @@ export default function UploadStepsLicense() {
 				};
 
 				license.accessFee = {
-					value: concatLicenseTag(licenseParams.access.options.oneTime),
-					amount: licenseAmount.toString(),
+					value: licenseParams.access.options.none,
+					amount: '0',
 				};
 
 				license.dataModelTraining = {
