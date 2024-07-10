@@ -42,7 +42,7 @@ export const MWrapper = styled.div`
 		font-size: ${(props) => props.theme.typography.size.xxSmall};
 		font-weight: ${(props) => props.theme.typography.weight.bold};
 		border-radius: ${STYLING.dimensions.radius.alt2};
-		text-align: right;
+		text-align: center;
 		display: block;
 		padding: 2.5px 12.5px;
 		margin: 0 0 7.5px 0;

@@ -16,6 +16,7 @@ import {
 	DEFAULT_UCM_BANNER,
 	DEFAULT_UCM_THUMBNAIL,
 	GATEWAYS,
+	MAX_UPLOAD_SIZE,
 	REDIRECTS,
 	TAGS,
 } from 'helpers/config';
@@ -74,6 +75,16 @@ export default function Upload() {
 		if (!arProvider.wallet) dispatch(uploadActions.setUploadDisabled(true));
 		if (arProvider.walletType) dispatch(uploadActions.setUploadDisabled(arProvider.walletType === 'arweave.app'));
 	}, [arProvider]);
+
+	React.useEffect(() => {
+		if (uploadReducer.data.contentList.length > 0) {
+			let disableSubmit = false;
+			for (const element of uploadReducer.data.contentList) {
+				if (element.file.size > MAX_UPLOAD_SIZE) disableSubmit = true;
+			}
+			dispatch(uploadActions.setUploadDisabled(disableSubmit));
+		}
+	}, [uploadReducer.data.contentList]);
 
 	React.useEffect(() => {
 		if (uploadReducer.uploadActive) hideDocumentBody();
