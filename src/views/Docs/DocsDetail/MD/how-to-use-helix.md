@@ -4,7 +4,7 @@ Helix is an easy to use tool that allows creators to upload atomic assets and cr
 
 #### Connect your permaweb profile
 
-When entering Helix you will be asked to connect with your Arweave wallet. You will need a permaweb profile to be able to upload through Helix. To make a permaweb profile, you must connect your Arweave wallet on [BazAR](https://bazar.arweave.dev/#/) and follow the profile creation steps.
+When entering Helix you will be asked to connect with your Arweave wallet. You will need a permaweb profile to be able to upload through Helix. To make a permaweb profile, you must connect your Arweave wallet on [BazAR](https://bazar.arweave.net/#/) and follow the profile creation steps.
 
 You can create an Arweave wallet with [Arconnect](https://www.arconnect.io/) or [Othent](https://othent.io/).
 
@@ -12,7 +12,7 @@ You can create an Arweave wallet with [Arconnect](https://www.arconnect.io/) or 
 
 Once your profile is connected, you will see your account at the top, existing assets under the heading **Assets**, and your atomic asset collections under the heading **Collections**.
 
-There is also a button to see your profile in [BazAR](https://bazar.arweave.dev/#/).
+There is also a button to see your profile in [BazAR](https://bazar.arweave.net/#/).
 
 #### Upload tab
 

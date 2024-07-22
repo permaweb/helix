@@ -24,6 +24,8 @@ import { getTxEndpoint } from 'helpers/endpoints';
 import { TagType, UploadType } from 'helpers/types';
 import {
 	base64ToUint8Array,
+	cleanProcessField,
+	cleanTagValue,
 	fileToBuffer,
 	getBase64Data,
 	getDataURLContentType,
@@ -197,17 +199,17 @@ export default function Upload() {
 				{ name: TAGS.keys.profileCreator, value: arProvider.profile.id },
 				{
 					name: TAGS.keys.ans110.title,
-					value: uploadReducer.data.title,
+					value: cleanTagValue(uploadReducer.data.title),
 				},
 				{
 					name: TAGS.keys.ans110.description,
-					value: uploadReducer.data.description,
+					value: cleanTagValue(uploadReducer.data.description),
 				},
 				{ name: TAGS.keys.ans110.type, value: TAGS.values.document },
 				{ name: TAGS.keys.dateCreated, value: dateTime },
 				{
 					name: TAGS.keys.name,
-					value: uploadReducer.data.title,
+					value: cleanTagValue(uploadReducer.data.title),
 				},
 				{ name: 'Action', value: 'Add-Collection' },
 			];
@@ -229,8 +231,8 @@ export default function Upload() {
 			}
 
 			if (processSrc) {
-				processSrc = processSrc.replaceAll(`'<NAME>'`, `[[${uploadReducer.data.title}]]`);
-				processSrc = processSrc.replaceAll(`'<DESCRIPTION>'`, `[[${uploadReducer.data.description}]]`);
+				processSrc = processSrc.replaceAll(`'<NAME>'`, cleanProcessField(uploadReducer.data.title));
+				processSrc = processSrc.replaceAll(`'<DESCRIPTION>'`, cleanProcessField(uploadReducer.data.description));
 				processSrc = processSrc.replaceAll('<CREATOR>', arProvider.profile.id);
 				processSrc = processSrc.replaceAll('<BANNER>', bannerTx ? bannerTx : DEFAULT_UCM_BANNER);
 				processSrc = processSrc.replaceAll('<THUMBNAIL>', thumbnailTx ? thumbnailTx : DEFAULT_UCM_THUMBNAIL);
@@ -306,7 +308,7 @@ export default function Upload() {
 					const registryTags = [
 						{ name: 'Action', value: 'Add-Collection' },
 						{ name: 'CollectionId', value: processId },
-						{ name: 'Name', value: uploadReducer.data.title },
+						{ name: 'Name', value: cleanProcessField(uploadReducer.data.title) },
 						{ name: 'Creator', value: arProvider.profile.id },
 						{ name: 'DateCreated', value: dateTime },
 					];
@@ -354,7 +356,7 @@ export default function Upload() {
 
 				const dateTime = new Date().getTime().toString();
 
-				const title = data.title ? data.title : stripFileExtension(data.file.name);
+				const title = data.title ? cleanTagValue(data.title) : stripFileExtension(data.file.name);
 				const description = data.description
 					? data.description
 					: uploadReducer.data.description
@@ -385,7 +387,7 @@ export default function Upload() {
 					if (collectionId) {
 						assetTags.push({ name: TAGS.keys.collectionId, value: collectionId });
 						if (uploadReducer.data.title) {
-							assetTags.push({ name: TAGS.keys.collectionName, value: uploadReducer.data.title });
+							assetTags.push({ name: TAGS.keys.collectionName, value: cleanProcessField(uploadReducer.data.title) });
 						}
 					}
 
@@ -405,7 +407,7 @@ export default function Upload() {
 
 					if (processSrc) {
 						processSrc = processSrc.replace('[Owner]', `['${arProvider.profile.id}']`);
-						processSrc = processSrc.replaceAll(`'<NAME>'`, `[[${title}]]`);
+						processSrc = processSrc.replaceAll(`'<NAME>'`, cleanProcessField(title));
 						processSrc = processSrc.replaceAll('<TICKER>', 'ATOMIC');
 						processSrc = processSrc.replaceAll('<DENOMINATION>', '1');
 						processSrc = processSrc.replaceAll('<BALANCE>', balance.toString());

@@ -223,3 +223,15 @@ export function stripFileExtension(fileName) {
 	// Remove the last part (extension) and join the remaining parts back together
 	return parts.slice(0, -1).join('.');
 }
+
+export function cleanProcessField(value: string) {
+	let updatedValue: string;
+	updatedValue = value.replace(/\[|\]/g, '');
+	return `[[${updatedValue}]]`;
+}
+
+export function cleanTagValue(value: string) {
+	let updatedValue: string;
+	updatedValue = value.replace(/\[|\]/g, '');
+	return updatedValue;
+}
