@@ -1,11 +1,11 @@
 import React from 'react';
 
 import { Avatar } from 'components/atoms/Avatar';
-import { Button } from 'components/atoms/Button';
+// import { Button } from 'components/atoms/Button';
 import { Modal } from 'components/molecules/Modal';
 import { TurboBalanceFund } from 'components/molecules/TurboBalanceFund';
 import { ProfileManage } from 'components/organisms/ProfileManage';
-import { formatAddress, formatARAmount, getTurboBalance } from 'helpers/utils';
+import { formatAddress, formatARAmount } from 'helpers/utils';
 import { useArweaveProvider } from 'providers/ArweaveProvider';
 import { useLanguageProvider } from 'providers/LanguageProvider';
 import { CloseHandler } from 'wrappers/CloseHandler';
@@ -98,7 +98,7 @@ export default function WalletConnect(_props: { callback?: () => void }) {
 										<p>{language.arBalance}</p>
 										<span>{formatARAmount(arProvider.arBalance ? arProvider.arBalance : 0)}</span>
 									</div>
-									<div>
+									{/* <div>
 										<S.BHeader>
 											<p>{language.turboBalance}</p>
 											<S.BHeaderActions>
@@ -122,7 +122,7 @@ export default function WalletConnect(_props: { callback?: () => void }) {
 											</S.BHeaderActions>
 										</S.BHeader>
 										<span>{getTurboBalance(arProvider.turboBalance)}</span>
-									</div>
+									</div> */}
 								</S.BWrapper>
 							</S.DHeaderWrapper>
 							<S.DBodyWrapper>
