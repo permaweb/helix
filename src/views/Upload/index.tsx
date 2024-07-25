@@ -207,8 +207,7 @@ export default function Upload() {
 
 			const collectionTags: TagType[] = [
 				{ name: TAGS.keys.contentType, value: CONTENT_TYPES.json },
-				{ name: TAGS.keys.creator, value: arProvider.walletAddress },
-				{ name: TAGS.keys.profileCreator, value: arProvider.profile.id },
+				{ name: TAGS.keys.creator, value: arProvider.profile.id },
 				{
 					name: TAGS.keys.ans110.title,
 					value: cleanTagValue(uploadReducer.data.title),
@@ -224,6 +223,7 @@ export default function Upload() {
 					value: cleanTagValue(uploadReducer.data.title),
 				},
 				{ name: 'Action', value: 'Add-Collection' },
+				{ name: 'Authority', value: 'fcoN_xJeisVsPXA-trzVAuIiqO3ydLQxM-L4XbrQKzY' },
 			];
 
 			if (bannerTx) collectionTags.push({ name: TAGS.keys.banner, value: bannerTx });
@@ -386,7 +386,9 @@ export default function Upload() {
 						{ name: TAGS.keys.ans110.type, value: type },
 						{ name: TAGS.keys.ans110.implements, value: TAGS.values.ansVersion },
 						{ name: TAGS.keys.dateCreated, value: dateTime },
+						{ name: 'Quantity', value: balance.toString() },
 						{ name: 'Action', value: 'Add-Uploaded-Asset' },
+						{ name: 'Authority', value: 'fcoN_xJeisVsPXA-trzVAuIiqO3ydLQxM-L4XbrQKzY' },
 					];
 
 					uploadReducer.data.topics.forEach((topic: string) =>
@@ -474,7 +476,7 @@ export default function Upload() {
 						} else {
 							console.log(`Transaction not found:`, processId);
 							retryCount++;
-							if (retryCount >= 10) {
+							if (retryCount >= 300) {
 								throw new Error(`Transaction not found after 10 attempts, process deployment retries failed`);
 							}
 						}
