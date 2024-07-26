@@ -308,7 +308,7 @@ export default function Upload() {
 					const registryTags = [
 						{ name: 'Action', value: 'Add-Collection' },
 						{ name: 'CollectionId', value: processId },
-						{ name: 'Name', value: cleanProcessField(uploadReducer.data.title) },
+						{ name: 'Name', value: cleanTagValue(uploadReducer.data.title) },
 						{ name: 'Creator', value: arProvider.profile.id },
 						{ name: 'DateCreated', value: dateTime },
 					];

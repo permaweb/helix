@@ -167,7 +167,8 @@ export default function UploadStepsDetails() {
 	}
 
 	function getInvalidContentTokens() {
-		if (Number(uploadReducer.data.contentTokens) <= 0 || Number(uploadReducer.data.contentTokens) > 1000000) {
+		const contentTokens = Number(uploadReducer.data.contentTokens);
+		if (!Number.isInteger(contentTokens) || contentTokens <= 0 || contentTokens > 1000000) {
 			return {
 				status: true,
 				message: language.invalidContentTokens,
