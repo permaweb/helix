@@ -3,7 +3,7 @@ import { ReactSVG } from 'react-svg';
 import { Button } from 'components/atoms/Button';
 import { TxAddress } from 'components/atoms/TxAddress';
 import { ASSETS, REDIRECTS } from 'helpers/config';
-import { checkAddress, getDisplayValue, splitLicenseTag } from 'helpers/utils';
+import { checkValidAddress, getDisplayValue, splitLicenseTag } from 'helpers/utils';
 import { useLanguageProvider } from 'providers/LanguageProvider';
 
 import * as S from './styles';
@@ -44,7 +44,7 @@ export default function AssetDetailLicenses(props: IProps) {
 				</S.LFlex>
 			);
 		} else {
-			if (checkAddress(props.asset.license[element])) {
+			if (checkValidAddress(props.asset.license[element])) {
 				return (
 					<TxAddress
 						address={props.asset.license[element]}

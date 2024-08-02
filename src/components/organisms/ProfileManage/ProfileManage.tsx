@@ -13,7 +13,7 @@ import { TextArea } from 'components/atoms/TextArea';
 import { AO, ASSETS, GATEWAYS, TAGS } from 'helpers/config';
 import { getTxEndpoint } from 'helpers/endpoints';
 import { NotificationType } from 'helpers/types';
-import { checkAddress, getBase64Data, getDataURLContentType } from 'helpers/utils';
+import { checkValidAddress, getBase64Data, getDataURLContentType } from 'helpers/utils';
 import { useArweaveProvider } from 'providers/ArweaveProvider';
 import { useLanguageProvider } from 'providers/LanguageProvider';
 import { WalletBlock } from 'wallet/WalletBlock';
@@ -22,6 +22,7 @@ import * as S from './styles';
 import { IProps } from './types';
 
 const MAX_BIO_LENGTH = 500;
+const MAX_IMAGE_SIZE = 100000;
 const ALLOWED_BANNER_TYPES = 'image/png, image/jpeg, image/gif';
 const ALLOWED_AVATAR_TYPES = 'image/png, image/jpeg, image/gif';
 
@@ -48,8 +49,8 @@ export default function ProfileManage(props: IProps) {
 			setUsername(props.profile.username ?? '');
 			setName(props.profile.displayName ?? '');
 			setBio(props.profile.bio ?? '');
-			setBanner(props.profile.banner && checkAddress(props.profile.banner) ? props.profile.banner : null);
-			setAvatar(props.profile.avatar && checkAddress(props.profile.avatar) ? props.profile.avatar : null);
+			setBanner(props.profile.banner && checkValidAddress(props.profile.banner) ? props.profile.banner : null);
+			setAvatar(props.profile.avatar && checkValidAddress(props.profile.avatar) ? props.profile.avatar : null);
 		}
 	}, [props.profile]);
 
@@ -70,7 +71,7 @@ export default function ProfileManage(props: IProps) {
 
 			let bannerTx: any = null;
 			if (banner) {
-				if (checkAddress(banner)) {
+				if (checkValidAddress(banner)) {
 					bannerTx = banner;
 				} else {
 					try {
@@ -91,7 +92,7 @@ export default function ProfileManage(props: IProps) {
 
 			let avatarTx: any = null;
 			if (avatar) {
-				if (checkAddress(avatar)) {
+				if (checkValidAddress(avatar)) {
 					avatarTx = avatar;
 				} else {
 					try {
@@ -251,6 +252,20 @@ export default function ProfileManage(props: IProps) {
 		}
 	}
 
+	function getImageSizeMessage() {
+		if (!avatar && !banner) return null;
+		if (checkValidAddress(avatar) && checkValidAddress(banner)) return null;
+
+		const avatarSize = avatar ? (avatar.length * 3) / 4 : 0;
+		const bannerSize = banner ? (banner.length * 3) / 4 : 0;
+
+		console.log(avatarSize);
+
+		if (avatarSize > MAX_IMAGE_SIZE || bannerSize > MAX_IMAGE_SIZE)
+			return <span>One or more images exceeds max size of 100KB</span>;
+		return null;
+	}
+
 	function getInvalidBio() {
 		if (bio && bio.length > MAX_BIO_LENGTH) {
 			return {
@@ -289,7 +304,7 @@ export default function ProfileManage(props: IProps) {
 	}
 
 	function getBannerWrapper() {
-		if (banner) return <img src={checkAddress(banner) ? getTxEndpoint(banner) : banner} />;
+		if (banner) return <img src={checkValidAddress(banner) ? getTxEndpoint(banner) : banner} />;
 		return (
 			<>
 				<ReactSVG src={ASSETS.media} />
@@ -299,7 +314,7 @@ export default function ProfileManage(props: IProps) {
 	}
 
 	function getAvatarWrapper() {
-		if (avatar) return <img src={checkAddress(avatar) ? getTxEndpoint(avatar) : avatar} />;
+		if (avatar) return <img src={checkValidAddress(avatar) ? getTxEndpoint(avatar) : avatar} />;
 		return (
 			<>
 				<ReactSVG src={ASSETS.user} />
@@ -360,9 +375,12 @@ export default function ProfileManage(props: IProps) {
 										disabled={loading || !banner}
 									/>
 								</S.PActions>
+								<S.PInfoMessage>
+									<span>Images have a max size of 100KB</span>
+								</S.PInfoMessage>
 							</S.PWrapper>
 							<S.Form>
-								<S.TForm className={'border-wrapper-alt2'}>
+								<S.TForm>
 									<FormField
 										label={language.name}
 										value={name}
@@ -409,10 +427,11 @@ export default function ProfileManage(props: IProps) {
 									type={'alt1'}
 									label={language.save}
 									handlePress={handleSubmit}
-									disabled={!username || !name || loading}
+									disabled={!username || !name || loading || getImageSizeMessage() !== null}
 									loading={loading}
 								/>
 							</S.SAction>
+							{getImageSizeMessage() && <S.MInfoWrapper>{getImageSizeMessage()}</S.MInfoWrapper>}
 						</S.Body>
 					</S.Wrapper>
 					{profileResponse && (
