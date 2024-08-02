@@ -16,6 +16,8 @@ import {
 	DEFAULT_UCM_BANNER,
 	DEFAULT_UCM_THUMBNAIL,
 	GATEWAYS,
+	MAX_COVER_IMAGE_SIZE,
+	MAX_THUMBNAIL_IMAGE_SIZE,
 	MAX_UPLOAD_SIZE,
 	REDIRECTS,
 	TAGS,
@@ -79,14 +81,24 @@ export default function Upload() {
 	}, [arProvider]);
 
 	React.useEffect(() => {
+		let disableSubmit = false;
+
 		if (uploadReducer.data.contentList.length > 0) {
-			let disableSubmit = false;
 			for (const element of uploadReducer.data.contentList) {
 				if (element.file.size > MAX_UPLOAD_SIZE) disableSubmit = true;
 			}
-			dispatch(uploadActions.setUploadDisabled(disableSubmit));
 		}
-	}, [uploadReducer.data.contentList]);
+
+		if (uploadReducer.data.banner && (uploadReducer.data.banner.length * 3) / 4 > MAX_COVER_IMAGE_SIZE) {
+			disableSubmit = true;
+		}
+
+		if (uploadReducer.data.thumbnail && (uploadReducer.data.thumbnail.length * 3) / 4 > MAX_THUMBNAIL_IMAGE_SIZE) {
+			disableSubmit = true;
+		}
+
+		dispatch(uploadActions.setUploadDisabled(disableSubmit));
+	}, [uploadReducer.data.contentList, uploadReducer.data.banner, uploadReducer.data.thumbnail]);
 
 	React.useEffect(() => {
 		if (uploadReducer.uploadActive) hideDocumentBody();
