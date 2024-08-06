@@ -51,16 +51,16 @@ export const APP = {
 };
 
 export const AO = {
-	module: 'Pq2Zftrqut0hdisH_MC2pDOT6S4eQFoxGsFUzR6r350',
+	module: 'yTyqRSfbD6BuiDra9jDNjq8TLe7rhneDcmQ64CkmkdU',
 	scheduler: '_GQ33BkPtZrqxA84vM8Zk-N2aO0toNNu_C-l-rawrBA',
-	assetSrc: 'Fmtgzy1Chs-5ZuUwHpQjQrQ7H7v1fjsP0Bi8jVaDIKA',
+	assetSrc: 't3sK9ioX_d1s2AbZpfMhQGzVGEJ2xoMhofW82rdJUsw',
 	defaultToken: 'xU9zFkq3X2ZQ6olwNVvr1vUWIjc3kXTWr7xKQD6dh10',
 	ucm: 'U3TjJAZWJjlWBB4KAXSHKzuky81jtyh0zqH8rUL4Wd0',
 	pixl: 'DM3FoZUq_yebASPhgd8pEIRIzDW6muXEhxz5-JwbZwo',
-	collectionsRegistry: 'TFWDmf8a3_nw43GCm_CuYlYoylHAjCcFGbgHfDaGcsg',
-	collectionSrc: '2ZDuM2VUCN8WHoAKOOjiH4_7Apq0ZHKnTWdLppxCdGY',
-	profileRegistry: 'SNy4m-DrqxWl01YqGM4sxI8qCni-58re8uuJLvZPypY',
-	profileSrc: '_R2XYWDPUXVvQrQKFaQRvDTDcDwnQNbqlTd_qvCRSpQ',
+	collectionsRegistry: 'jii0UeIWYIr4etclyywNGhZVAOwwzmrK56elffh6dzA',
+	collectionSrc: 'MmEAPDG-rsSQ1yNvJN2d_a1HXxnDxS60AXntR9UMvyo',
+	profileRegistry: 'iySPL7MpiZCvei0DIFzjNOudjbCnHHXf9rPgbXH-T90',
+	profileSrc: 'vLNO727uAa3yFu-LlWySyy96oWnJubGzoK6yM5u5smk',
 };
 
 export const ASSETS = {
@@ -143,7 +143,6 @@ export const TAGS = {
 		initialOwner: 'Initial-Owner',
 		license: 'License',
 		name: 'Name',
-		profileCreator: 'Profile-Creator',
 		profileIndex: 'Profile-Index',
 		protocolName: 'Protocol-Name',
 		renderWith: 'Render-With',
