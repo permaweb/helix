@@ -6,7 +6,7 @@ import { FormField } from 'components/atoms/FormField';
 import { Select } from 'components/atoms/Select';
 import { ASSETS } from 'helpers/config';
 import { SelectOptionType } from 'helpers/types';
-import { checkAddress, concatLicenseTag } from 'helpers/utils';
+import { checkValidAddress, concatLicenseTag } from 'helpers/utils';
 import { useArweaveProvider } from 'providers/ArweaveProvider';
 import { useLanguageProvider } from 'providers/LanguageProvider';
 import { RootState } from 'store';
@@ -247,7 +247,7 @@ export default function UploadStepsLicenseFull(props: IProps) {
 					dataModelTrainingTermAmount <= 0) ||
 				(paymentMode &&
 					paymentMode.id === concatLicenseTag(licenseParams.paymentMode.single) &&
-					!checkAddress(paymentRecipient))
+					!checkValidAddress(paymentRecipient))
 			) {
 				dispatch(uploadActions.setStepDisabled(true));
 			} else {
@@ -393,7 +393,7 @@ export default function UploadStepsLicenseFull(props: IProps) {
 					label={language.recipient}
 					value={paymentRecipient}
 					onChange={(e: any) => setPaymentRecipient(e.target.value)}
-					invalid={{ status: paymentRecipient ? !checkAddress(paymentRecipient) : true, message: null }}
+					invalid={{ status: paymentRecipient ? !checkValidAddress(paymentRecipient) : true, message: null }}
 					disabled={disabled}
 					hideErrorMessage
 					required

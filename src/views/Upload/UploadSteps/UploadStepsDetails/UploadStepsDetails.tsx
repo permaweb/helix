@@ -9,8 +9,8 @@ import { Checkbox } from 'components/atoms/Checkbox';
 import { FormField } from 'components/atoms/FormField';
 import { TextArea } from 'components/atoms/TextArea';
 import { Modal } from 'components/molecules/Modal';
-import { ASSETS, DEFAULT_ASSET_TOPICS, GATEWAYS } from 'helpers/config';
-import { ValidationType } from 'helpers/types';
+import { ASSETS, DEFAULT_ASSET_TOPICS, GATEWAYS, RENDERERS } from 'helpers/config';
+import { RendererType, ValidationType } from 'helpers/types';
 import { formatRequiredField } from 'helpers/utils';
 import { useLanguageProvider } from 'providers/LanguageProvider';
 import { RootState } from 'store';
@@ -31,6 +31,9 @@ export default function UploadStepsDetails() {
 	const [topicOptions, setTopicOptions] = React.useState<string[]>([
 		...new Set([...DEFAULT_ASSET_TOPICS, ...uploadReducer.data.topics]),
 	]);
+
+	const [rendererOptions, _setRendererOptions] = React.useState<Object>(RENDERERS);
+	const [renderer, setRenderer] = React.useState<RendererType | null>(null);
 
 	const [showTopicAdd, setShowTopicAdd] = React.useState<boolean>(false);
 	const [additionalTopic, setAdditionalTopic] = React.useState<string>('');
@@ -145,6 +148,26 @@ export default function UploadStepsDetails() {
 		);
 	}
 
+	function handleRendererChange(value: RendererType) {
+		let rendererUpdate = null;
+
+		if (renderer?.label === value.label) {
+			rendererUpdate = null;
+		} else {
+			rendererUpdate = value;
+		}
+
+		setRenderer(rendererUpdate);
+		dispatch(
+			uploadActions.setUpload([
+				{
+					field: 'renderer',
+					data: rendererUpdate ? rendererUpdate.domain : null,
+				},
+			])
+		);
+	}
+
 	function handleAdditionalTopicAdd(e: any) {
 		e.preventDefault();
 		e.stopPropagation();
@@ -177,21 +200,12 @@ export default function UploadStepsDetails() {
 		return { status: false, message: null };
 	}
 
-	function getHeader() {
-		switch (uploadReducer.uploadType) {
-			case 'collection':
-				return language.collectionDetails;
-			case 'assets':
-				return language.assetDetails;
-		}
-	}
-
 	return (
 		<>
 			<S.Wrapper className={'border-wrapper-alt2'}>
-				<h4>{getHeader()}</h4>
 				{uploadReducer.uploadType === 'collection' && (
 					<>
+						<h4>{language.collectionDetails}</h4>
 						<FormField
 							label={language.title}
 							value={uploadReducer.data.title}
@@ -213,6 +227,7 @@ export default function UploadStepsDetails() {
 						</S.IWrapper>
 					</>
 				)}
+				<h4>{language.assetDetails}</h4>
 				<S.COWrapper className={'border-wrapper-alt1'}>
 					<S.CWrapper>
 						<span>{language.contentTokensCheckInfo}</span>
@@ -236,14 +251,6 @@ export default function UploadStepsDetails() {
 						/>
 					)}
 				</S.COWrapper>
-				<S.CWrapper>
-					<span>{language.transferableTokensCheckInfo}</span>
-					<Checkbox
-						checked={uploadReducer.data.transferableTokens}
-						handleSelect={handleTransferableChange}
-						disabled={false}
-					/>
-				</S.CWrapper>
 				<S.TWrapper>
 					<S.THeader>
 						<span>{formatRequiredField(language.assetTopics)}</span>
@@ -267,6 +274,37 @@ export default function UploadStepsDetails() {
 						})}
 					</S.TBody>
 				</S.TWrapper>
+				<S.RWrapper>
+					<S.RHeader>
+						<span>{language.assetRenderer}</span>
+					</S.RHeader>
+					<S.RInfo>
+						<span>{language.rendererInfo}</span>
+					</S.RInfo>
+					<S.ROptionsWrapper>
+						{Object.keys(rendererOptions).map((id: string, index: number) => {
+							return (
+								<S.ROption
+									key={index}
+									active={renderer?.label === rendererOptions[id].label}
+									disabled={false}
+									onClick={() => handleRendererChange(rendererOptions[id])}
+								>
+									<span>{rendererOptions[id].label}</span>
+									<p>{rendererOptions[id].domain}</p>
+								</S.ROption>
+							);
+						})}
+					</S.ROptionsWrapper>
+				</S.RWrapper>
+				<S.TRWrapper>
+					<span>{language.transferableTokensCheckInfo}</span>
+					<Checkbox
+						checked={uploadReducer.data.transferableTokens}
+						handleSelect={handleTransferableChange}
+						disabled={false}
+					/>
+				</S.TRWrapper>
 			</S.Wrapper>
 			{showTopicAdd && (
 				<Modal header={language.addTopic} handleClose={() => setShowTopicAdd(false)}>

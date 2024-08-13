@@ -16,6 +16,8 @@ import {
 	DEFAULT_UCM_BANNER,
 	DEFAULT_UCM_THUMBNAIL,
 	GATEWAYS,
+	MAX_COVER_IMAGE_SIZE,
+	MAX_THUMBNAIL_IMAGE_SIZE,
 	MAX_UPLOAD_SIZE,
 	REDIRECTS,
 	TAGS,
@@ -79,14 +81,24 @@ export default function Upload() {
 	}, [arProvider]);
 
 	React.useEffect(() => {
+		let disableSubmit = false;
+
 		if (uploadReducer.data.contentList.length > 0) {
-			let disableSubmit = false;
 			for (const element of uploadReducer.data.contentList) {
 				if (element.file.size > MAX_UPLOAD_SIZE) disableSubmit = true;
 			}
-			dispatch(uploadActions.setUploadDisabled(disableSubmit));
 		}
-	}, [uploadReducer.data.contentList]);
+
+		if (uploadReducer.data.banner && (uploadReducer.data.banner.length * 3) / 4 > MAX_COVER_IMAGE_SIZE) {
+			disableSubmit = true;
+		}
+
+		if (uploadReducer.data.thumbnail && (uploadReducer.data.thumbnail.length * 3) / 4 > MAX_THUMBNAIL_IMAGE_SIZE) {
+			disableSubmit = true;
+		}
+
+		dispatch(uploadActions.setUploadDisabled(disableSubmit));
+	}, [uploadReducer.data.contentList, uploadReducer.data.banner, uploadReducer.data.thumbnail]);
 
 	React.useEffect(() => {
 		if (uploadReducer.uploadActive) hideDocumentBody();
@@ -362,16 +374,24 @@ export default function Upload() {
 					: uploadReducer.data.description
 					? uploadReducer.data.description
 					: stripFileExtension(data.file.name);
-				const type = data.file.type;
 				const balance = uploadReducer.data.useFractionalTokens ? Number(uploadReducer.data.contentTokens) : 1;
+
+				let contentType = data.file.type;
+				if (
+					(!contentType || !contentType.length) &&
+					uploadReducer.data.renderer &&
+					uploadReducer.data.renderer.includes('3d')
+				) {
+					contentType = CONTENT_TYPES.model;
+				}
 
 				try {
 					const assetTags: TagType[] = [
-						{ name: TAGS.keys.contentType, value: type },
+						{ name: TAGS.keys.contentType, value: contentType },
 						{ name: TAGS.keys.creator, value: arProvider.profile.id },
 						{ name: TAGS.keys.ans110.title, value: title },
 						{ name: TAGS.keys.ans110.description, value: description },
-						{ name: TAGS.keys.ans110.type, value: type },
+						{ name: TAGS.keys.ans110.type, value: contentType },
 						{ name: TAGS.keys.ans110.implements, value: TAGS.values.ansVersion },
 						{ name: TAGS.keys.dateCreated, value: dateTime },
 						{ name: 'Action', value: 'Add-Uploaded-Asset' },
@@ -383,6 +403,9 @@ export default function Upload() {
 
 					if (uploadReducer.data.hasLicense && uploadReducer.data.license)
 						assetTags.push(...buildLicenseTags(uploadReducer.data.license));
+
+					if (uploadReducer.data.renderer)
+						assetTags.push({ name: TAGS.keys.renderWith, value: uploadReducer.data.renderer });
 
 					if (collectionId) {
 						assetTags.push({ name: TAGS.keys.collectionId, value: collectionId });

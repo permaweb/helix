@@ -13,7 +13,7 @@ import { ProfileManage } from 'components/organisms/ProfileManage';
 import { ASSETS, REDIRECTS, URLS } from 'helpers/config';
 import { getTxEndpoint } from 'helpers/endpoints';
 import { ProfileHeaderType } from 'helpers/types';
-import { checkAddress, formatAddress } from 'helpers/utils';
+import { checkValidAddress, formatAddress } from 'helpers/utils';
 import { useArweaveProvider } from 'providers/ArweaveProvider';
 import { useLanguageProvider } from 'providers/LanguageProvider';
 
@@ -48,7 +48,7 @@ export default function Profile(props: { address: string }) {
 
 	React.useEffect(() => {
 		(async function () {
-			if (props.address && checkAddress(props.address)) {
+			if (props.address && checkValidAddress(props.address)) {
 				setLoading(true);
 				try {
 					const currentProfile = await getProfile({ address: props.address });
@@ -62,7 +62,7 @@ export default function Profile(props: { address: string }) {
 	}, [props.address, arProvider.profile]);
 
 	function getAvatar() {
-		if (fullProfile && fullProfile.avatar && checkAddress(fullProfile.avatar))
+		if (fullProfile && fullProfile.avatar && checkValidAddress(fullProfile.avatar))
 			return <img src={getTxEndpoint(fullProfile.avatar)} />;
 		return <ReactSVG src={ASSETS.user} />;
 	}

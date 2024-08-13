@@ -3,7 +3,7 @@ import Arweave from 'arweave';
 import { API_CONFIG, GATEWAYS, STORAGE } from './config';
 import { DateType, ProfileType } from './types';
 
-export function checkAddress(address: string | null) {
+export function checkValidAddress(address: string | null) {
 	if (!address) return false;
 	return /^[a-z0-9_-]{43}$/i.test(address);
 }
@@ -14,7 +14,7 @@ export function getUniqueAddresses(addresses: string[]) {
 
 export function formatAddress(address: string | null, wrap: boolean) {
 	if (!address) return '';
-	if (!checkAddress(address)) return address;
+	if (!checkValidAddress(address)) return address;
 	const formattedAddress = address.substring(0, 5) + '...' + address.substring(36, address.length);
 	return wrap ? `(${formattedAddress})` : formattedAddress;
 }

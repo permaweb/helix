@@ -13,7 +13,7 @@ import { Modal } from 'components/molecules/Modal';
 import { Table } from 'components/molecules/Table';
 import { AO, ASSETS, PAGINATORS, REDIRECTS, URLS } from 'helpers/config';
 import { AlignType, CollectionType } from 'helpers/types';
-import { checkAddress, formatAddress } from 'helpers/utils';
+import { checkValidAddress, formatAddress } from 'helpers/utils';
 import { useArweaveProvider } from 'providers/ArweaveProvider';
 import { useLanguageProvider } from 'providers/LanguageProvider';
 import { RootState } from 'store';
@@ -43,7 +43,7 @@ function CollectionDropdown(props: { id: string; title: string }) {
 
 	React.useEffect(() => {
 		(async function () {
-			if (props.id && checkAddress(props.id) && listingModalOpen && !collection) {
+			if (props.id && checkValidAddress(props.id) && listingModalOpen && !collection) {
 				setFetchingCollection(true);
 				try {
 					const fetchResponse = await readHandler({

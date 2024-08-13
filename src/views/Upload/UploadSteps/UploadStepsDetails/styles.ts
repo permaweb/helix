@@ -30,6 +30,10 @@ export const CWrapper = styled.div`
 	}
 `;
 
+export const TRWrapper = styled(CWrapper)`
+	margin: 20px 0 0 0;
+`;
+
 export const TWrapper = styled.div`
 	margin: 20px 0 0 0;
 `;
@@ -54,7 +58,7 @@ export const THeader = styled.div`
 export const TInfo = styled.div`
 	margin: 2.5px 0 20px 0;
 	span {
-		color: ${(props) => props.theme.colors.font.primary};
+		color: ${(props) => props.theme.colors.font.alt1};
 		font-size: ${(props) => props.theme.typography.size.xxSmall};
 		font-weight: ${(props) => props.theme.typography.weight.bold};
 	}
@@ -133,5 +137,89 @@ export const IWrapper = styled.div`
 		color: ${(props) => props.theme.colors.font.alt1};
 		font-size: ${(props) => props.theme.typography.size.xSmall};
 		font-weight: ${(props) => props.theme.typography.weight.bold};
+	}
+`;
+
+export const RWrapper = styled.div`
+	margin: 20px 0 0 0;
+`;
+
+export const RHeader = styled.div`
+	display: flex;
+	justify-content: space-between;
+	flex-wrap: wrap;
+	gap: 15px;
+	span {
+		color: ${(props) => props.theme.colors.font.primary};
+		font-size: ${(props) => props.theme.typography.size.xSmall};
+		font-weight: ${(props) => props.theme.typography.weight.bold};
+	}
+	button {
+		span {
+			font-size: ${(props) => props.theme.typography.size.xSmall};
+		}
+	}
+`;
+
+export const RInfo = styled.div`
+	margin: 2.5px 0 20px 0;
+	span {
+		color: ${(props) => props.theme.colors.font.alt1};
+		font-size: ${(props) => props.theme.typography.size.xxSmall};
+		font-weight: ${(props) => props.theme.typography.weight.bold};
+	}
+`;
+
+export const ROptionsWrapper = styled.div`
+	display: flex;
+	flex-direction: column;
+	gap: 15px;
+	margin: 12.5px 0 0 0;
+`;
+
+export const ROption = styled.button<{ active: boolean; disabled: boolean }>`
+	background: ${(props) =>
+		props.active ? props.theme.colors.button.primary.active.background : props.theme.colors.button.primary.background};
+	border: 1px solid
+		${(props) =>
+			props.active ? props.theme.colors.button.primary.active.border : props.theme.colors.button.primary.border};
+	border-radius: ${STYLING.dimensions.radius.primary};
+	padding: 15px;
+	&:hover {
+		background: ${(props) => props.theme.colors.button.primary.active.background};
+		border: 1px solid ${(props) => props.theme.colors.button.primary.active.border};
+		p,
+		span {
+			color: ${(props) => props.theme.colors.font.light1} !important;
+		}
+	}
+	span {
+		font-size: ${(props) => props.theme.typography.size.base} !important;
+		font-weight: ${(props) => props.theme.typography.weight.bold} !important;
+		font-family: ${(props) => props.theme.typography.family.alt1} !important;
+		color: ${(props) => (props.active ? props.theme.colors.font.light1 : props.theme.colors.font.primary)} !important;
+		display: block;
+		text-align: left;
+	}
+	p {
+		font-size: ${(props) => props.theme.typography.size.xSmall} !important;
+		font-weight: ${(props) => props.theme.typography.weight.medium} !important;
+		font-family: ${(props) => props.theme.typography.family.primary} !important;
+		color: ${(props) => (props.active ? props.theme.colors.font.light1 : props.theme.colors.font.alt1)} !important;
+		display: block;
+		text-align: left;
+		margin: 7.5px 0 0 0;
+	}
+	&:disabled {
+		background: ${(props) => props.theme.colors.button.primary.disabled.background};
+		border: 1px solid ${(props) => props.theme.colors.button.primary.disabled.border};
+		p,
+		span {
+			color: ${(props) => props.theme.colors.button.primary.disabled.color} !important;
+		}
+		svg {
+			fill: ${(props) => props.theme.colors.button.primary.disabled.color} !important;
+			color: ${(props) => props.theme.colors.button.primary.disabled.color} !important;
+		}
 	}
 `;

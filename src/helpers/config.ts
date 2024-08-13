@@ -58,9 +58,8 @@ export const AO = {
 	ucm: 'U3TjJAZWJjlWBB4KAXSHKzuky81jtyh0zqH8rUL4Wd0',
 	pixl: 'DM3FoZUq_yebASPhgd8pEIRIzDW6muXEhxz5-JwbZwo',
 	collectionSrc: '2ZDuM2VUCN8WHoAKOOjiH4_7Apq0ZHKnTWdLppxCdGY',
-	collectionsRegistry: 'q0QVp2rPXOuqIj6mbRObaC-HMweexSv1Y_Nm9_t1brc', // TODO: replace for testing and then put back for production
-	profileRegistry: 'jndJ0phxOaJJU6CHZVX7zo2Wl5vI2KQ1z4i3VnV4DrM', // TODO: replace for testing and then put back for production
-	profileSrc: '4T1gCHF7bn9_OP0L4OvoKlWdA1l0N5XvgbczWD9Wofc',
+	profileRegistry: 'SNy4m-DrqxWl01YqGM4sxI8qCni-58re8uuJLvZPypY',
+	profileSrc: '_R2XYWDPUXVvQrQKFaQRvDTDcDwnQNbqlTd_qvCRSpQ',
 };
 
 export const ASSETS = {
@@ -252,6 +251,8 @@ export const CONTENT_TYPES = {
 	json: 'application/json',
 	mp4: 'video/mp4',
 	textPlain: 'text/plain',
+	model: 'model/gltf-binary',
+	audio: 'audio/mpeg',
 };
 
 export const AR_WALLETS = [{ type: WalletEnum.arConnect, logo: ASSETS.wallets.arconnect }];
@@ -337,3 +338,19 @@ export const DRE_NODE = 'https://dre-u.warp.cc/contract';
 
 export const STRIPE_PUBLISHABLE_KEY =
 	'pk_live_51JUAtwC8apPOWkDLMQqNF9sPpfneNSPnwX8YZ8y1FNDl6v94hZIwzgFSYl27bWE4Oos8CLquunUswKrKcaDhDO6m002Yj9AeKj';
+
+export const MAX_COVER_IMAGE_SIZE = 100000;
+export const MAX_THUMBNAIL_IMAGE_SIZE = 100000;
+
+export const RENDERERS = {
+	'3d': {
+		label: '3D',
+		domain: 'view_3d-pst',
+		contentType: CONTENT_TYPES.model,
+	},
+	audio: {
+		label: 'Audio',
+		domain: 'audio-renderer',
+		contentType: CONTENT_TYPES.audio,
+	},
+};
