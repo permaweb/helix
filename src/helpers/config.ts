@@ -252,6 +252,8 @@ export const CONTENT_TYPES = {
 	json: 'application/json',
 	mp4: 'video/mp4',
 	textPlain: 'text/plain',
+	model: 'model/gltf-binary',
+	audio: 'audio/mpeg',
 };
 
 export const AR_WALLETS = [{ type: WalletEnum.arConnect, logo: ASSETS.wallets.arconnect }];
@@ -345,9 +347,11 @@ export const RENDERERS = {
 	'3d': {
 		label: '3D',
 		domain: 'view_3d-pst',
+		contentType: CONTENT_TYPES.model,
 	},
 	audio: {
 		label: 'Audio',
 		domain: 'audio-renderer',
+		contentType: CONTENT_TYPES.audio,
 	},
 };

@@ -374,16 +374,24 @@ export default function Upload() {
 					: uploadReducer.data.description
 					? uploadReducer.data.description
 					: stripFileExtension(data.file.name);
-				const type = data.file.type;
 				const balance = uploadReducer.data.useFractionalTokens ? Number(uploadReducer.data.contentTokens) : 1;
+
+				let contentType = data.file.type;
+				if (
+					(!contentType || !contentType.length) &&
+					uploadReducer.data.renderer &&
+					uploadReducer.data.renderer.includes('3d')
+				) {
+					contentType = CONTENT_TYPES.model;
+				}
 
 				try {
 					const assetTags: TagType[] = [
-						{ name: TAGS.keys.contentType, value: type },
+						{ name: TAGS.keys.contentType, value: contentType },
 						{ name: TAGS.keys.creator, value: arProvider.profile.id },
 						{ name: TAGS.keys.ans110.title, value: title },
 						{ name: TAGS.keys.ans110.description, value: description },
-						{ name: TAGS.keys.ans110.type, value: type },
+						{ name: TAGS.keys.ans110.type, value: contentType },
 						{ name: TAGS.keys.ans110.implements, value: TAGS.values.ansVersion },
 						{ name: TAGS.keys.dateCreated, value: dateTime },
 						{ name: 'Action', value: 'Add-Uploaded-Asset' },
