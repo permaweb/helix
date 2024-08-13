@@ -190,6 +190,7 @@ export type UploadPayloadType =
 	| 'useFractionalTokens'
 	| 'transferableTokens'
 	| 'topics'
+	| 'renderer'
 	| 'content'
 	| 'contentList'
 	| 'contentType'
@@ -289,4 +290,9 @@ export type RegistryProfileType = {
 export type NotificationType = {
 	message: string;
 	status: 'success' | 'warning';
+};
+
+export type RendererType = {
+	label: string;
+	domain: string;
 };

@@ -340,3 +340,14 @@ export const STRIPE_PUBLISHABLE_KEY =
 
 export const MAX_COVER_IMAGE_SIZE = 100000;
 export const MAX_THUMBNAIL_IMAGE_SIZE = 100000;
+
+export const RENDERERS = {
+	'3d': {
+		label: '3D',
+		domain: 'view_3d-pst',
+	},
+	audio: {
+		label: 'Audio',
+		domain: 'audio-renderer',
+	},
+};

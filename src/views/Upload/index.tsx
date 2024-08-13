@@ -396,6 +396,9 @@ export default function Upload() {
 					if (uploadReducer.data.hasLicense && uploadReducer.data.license)
 						assetTags.push(...buildLicenseTags(uploadReducer.data.license));
 
+					if (uploadReducer.data.renderer)
+						assetTags.push({ name: TAGS.keys.renderWith, value: uploadReducer.data.renderer });
+
 					if (collectionId) {
 						assetTags.push({ name: TAGS.keys.collectionId, value: collectionId });
 						if (uploadReducer.data.title) {
