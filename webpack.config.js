@@ -137,6 +137,58 @@ module.exports = {
 			'global.setImmediate': [require.resolve('timers'), 'setImmediate'],
 		}),
 		new webpack.NoEmitOnErrorsPlugin(),
+		new webpack.DefinePlugin({
+			'process.env.MODULE': JSON.stringify(
+				process.env.NODE_ENV === 'production'
+					? 'yTyqRSfbD6BuiDra9jDNjq8TLe7rhneDcmQ64CkmkdU'
+					: 'yTyqRSfbD6BuiDra9jDNjq8TLe7rhneDcmQ64CkmkdU'
+			),
+			'process.env.SCHEDULER': JSON.stringify(
+				process.env.NODE_ENV === 'production'
+					? '_GQ33BkPtZrqxA84vM8Zk-N2aO0toNNu_C-l-rawrBA'
+					: '_GQ33BkPtZrqxA84vM8Zk-N2aO0toNNu_C-l-rawrBA'
+			),
+			'process.env.ASSET_SRC': JSON.stringify(
+				process.env.NODE_ENV === 'production'
+					? 'Fmtgzy1Chs-5ZuUwHpQjQrQ7H7v1fjsP0Bi8jVaDIKA'
+					: 'Fmtgzy1Chs-5ZuUwHpQjQrQ7H7v1fjsP0Bi8jVaDIKA'
+			),
+			'process.env.DEFAULT_TOKEN': JSON.stringify(
+				process.env.NODE_ENV === 'production'
+					? 'xU9zFkq3X2ZQ6olwNVvr1vUWIjc3kXTWr7xKQD6dh10'
+					: 'xU9zFkq3X2ZQ6olwNVvr1vUWIjc3kXTWr7xKQD6dh10'
+			),
+			'process.env.UCM': JSON.stringify(
+				process.env.NODE_ENV === 'production'
+					? 'U3TjJAZWJjlWBB4KAXSHKzuky81jtyh0zqH8rUL4Wd0'
+					: 'qtDwylCwyhhsGPKIYAi2Ao342mdhvFUPqdbDOudzaiM'
+			),
+			'process.env.PIXL': JSON.stringify(
+				process.env.NODE_ENV === 'production'
+					? 'DM3FoZUq_yebASPhgd8pEIRIzDW6muXEhxz5-JwbZwo'
+					: 'DM3FoZUq_yebASPhgd8pEIRIzDW6muXEhxz5-JwbZwo'
+			),
+			'process.env.PROFILE_REGISTRY': JSON.stringify(
+				process.env.NODE_ENV === 'production'
+					? 'SNy4m-DrqxWl01YqGM4sxI8qCni-58re8uuJLvZPypY'
+					: 'jndJ0phxOaJJU6CHZVX7zo2Wl5vI2KQ1z4i3VnV4DrM'
+			),
+			'process.env.PROFILE_SRC': JSON.stringify(
+				process.env.NODE_ENV === 'production'
+					? '_R2XYWDPUXVvQrQKFaQRvDTDcDwnQNbqlTd_qvCRSpQ'
+					: '9Tpz5_ZT4RRkF-6JUTdaaTMg0ARfkNuuM5zahXyCqZ4'
+			),
+			'process.env.COLLECTIONS_REGISTRY': JSON.stringify(
+				process.env.NODE_ENV === 'production'
+					? 'TFWDmf8a3_nw43GCm_CuYlYoylHAjCcFGbgHfDaGcsg'
+					: 'q0QVp2rPXOuqIj6mbRObaC-HMweexSv1Y_Nm9_t1brc'
+			),
+			'process.env.COLLECTION_SRC': JSON.stringify(
+				process.env.NODE_ENV === 'production'
+					? '2ZDuM2VUCN8WHoAKOOjiH4_7Apq0ZHKnTWdLppxCdGY'
+					: '2ZDuM2VUCN8WHoAKOOjiH4_7Apq0ZHKnTWdLppxCdGY'
+			),
+		}),
 	],
 	resolve: {
 		extensions: ['.tsx', '.ts', '.jsx', '.js'],

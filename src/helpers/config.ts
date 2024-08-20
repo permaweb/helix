@@ -51,16 +51,16 @@ export const APP = {
 };
 
 export const AO = {
-	module: 'Pq2Zftrqut0hdisH_MC2pDOT6S4eQFoxGsFUzR6r350',
-	scheduler: '_GQ33BkPtZrqxA84vM8Zk-N2aO0toNNu_C-l-rawrBA',
-	assetSrc: 'Fmtgzy1Chs-5ZuUwHpQjQrQ7H7v1fjsP0Bi8jVaDIKA',
-	defaultToken: 'xU9zFkq3X2ZQ6olwNVvr1vUWIjc3kXTWr7xKQD6dh10',
-	ucm: 'U3TjJAZWJjlWBB4KAXSHKzuky81jtyh0zqH8rUL4Wd0',
-	pixl: 'DM3FoZUq_yebASPhgd8pEIRIzDW6muXEhxz5-JwbZwo',
-	collectionsRegistry: 'TFWDmf8a3_nw43GCm_CuYlYoylHAjCcFGbgHfDaGcsg',
-	collectionSrc: '2ZDuM2VUCN8WHoAKOOjiH4_7Apq0ZHKnTWdLppxCdGY',
-	profileRegistry: 'SNy4m-DrqxWl01YqGM4sxI8qCni-58re8uuJLvZPypY',
-	profileSrc: '_R2XYWDPUXVvQrQKFaQRvDTDcDwnQNbqlTd_qvCRSpQ',
+	module: process.env.MODULE,
+	scheduler: process.env.SCHEDULER,
+	assetSrc: process.env.ASSET_SRC,
+	defaultToken: process.env.DEFAULT_TOKEN,
+	ucm: process.env.UCM,
+	pixl: process.env.PIXL,
+	collectionsRegistry: process.env.COLLECTIONS_REGISTRY,
+	collectionSrc: process.env.COLLECTION_SRC,
+	profileRegistry: process.env.PROFILE_REGISTRY,
+	profileSrc: process.env.PROFILE_SRC,
 };
 
 export const ASSETS = {
