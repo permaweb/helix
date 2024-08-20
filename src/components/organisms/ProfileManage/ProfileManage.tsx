@@ -259,8 +259,6 @@ export default function ProfileManage(props: IProps) {
 		const avatarSize = avatar ? (avatar.length * 3) / 4 : 0;
 		const bannerSize = banner ? (banner.length * 3) / 4 : 0;
 
-		console.log(avatarSize);
-
 		if (avatarSize > MAX_IMAGE_SIZE || bannerSize > MAX_IMAGE_SIZE)
 			return <span>One or more images exceeds max size of 100KB</span>;
 		return null;

@@ -6,14 +6,17 @@
 	"author": "",
 	"license": "ISC",
 	"scripts": {
-		"start": "NODE_ENV=development webpack serve --port 3001",
+		"start:development": "NODE_ENV=development webpack serve --port 3001",
+		"start:production": "NODE_ENV=production webpack serve --port 3001",
 		"format": "eslint --fix . && npx prettier --write .",
 		"test": "npm test",
 		"test:verbose": "npm test -- --verbose",
 		"test:coverage": "CI=true npm test -- --env=jsdom --coverage",
-		"prepare": "husky install",
-		"build": "NODE_ENV=production webpack",
-		"deploy-main": "npm run build && permaweb-deploy --ant-process Y_0sEnzlPZGmbhknubMBhFmkK9AAylOnx4Tl3Mz_uQM"
+		"build:staging": "NODE_ENV=development webpack",
+		"build:production": "NODE_ENV=production webpack",
+		"deploy:main": "npm run build:production && permaweb-deploy --ant-process Y_0sEnzlPZGmbhknubMBhFmkK9AAylOnx4Tl3Mz_uQM",
+		"deploy:staging": "npm run build:staging && permaweb-deploy --ant-process Y_0sEnzlPZGmbhknubMBhFmkK9AAylOnx4Tl3Mz_uQM --undername staging",
+		"prepare": "husky install"
 	},
 	"dependencies": {
 		"@irys/sdk": "^0.1.0-a1",
@@ -69,7 +72,7 @@
 		"npm-force-resolutions": "^0.0.10",
 		"os-browserify": "^0.3.0",
 		"path-browserify": "^1.0.1",
-		"permaweb-deploy": "1.1.5",
+		"permaweb-deploy": "1.1.7",
 		"prettier": "^2.8.3",
 		"process": "^0.11.10",
 		"raw-loader": "^4.0.2",
