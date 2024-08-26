@@ -140,8 +140,8 @@ module.exports = {
 		new webpack.DefinePlugin({
 			'process.env.MODULE': JSON.stringify(
 				process.env.NODE_ENV === 'production'
-					? 'yTyqRSfbD6BuiDra9jDNjq8TLe7rhneDcmQ64CkmkdU'
-					: 'yTyqRSfbD6BuiDra9jDNjq8TLe7rhneDcmQ64CkmkdU'
+					? 'Pq2Zftrqut0hdisH_MC2pDOT6S4eQFoxGsFUzR6r350'
+					: 'Pq2Zftrqut0hdisH_MC2pDOT6S4eQFoxGsFUzR6r350'
 			),
 			'process.env.SCHEDULER': JSON.stringify(
 				process.env.NODE_ENV === 'production'
