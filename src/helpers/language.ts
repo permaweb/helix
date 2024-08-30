@@ -205,6 +205,7 @@ export const language = {
 		profileUpdatedInfo: `Your profile has been updated.`,
 		readDocs: `Read docs`,
 		recipient: `Recipient`,
+		remove: `Remove`,
 		removeAvatar: `Remove avatar`,
 		removeBanner: `Remove banner`,
 		removeFile: `Remove file`,

@@ -202,109 +202,113 @@ export default function UploadStepsDetails() {
 
 	return (
 		<>
-			<S.Wrapper className={'border-wrapper-alt2'}>
+			<S.Wrapper>
 				{uploadReducer.uploadType === 'collection' && (
 					<>
-						<h4>{language.collectionDetails}</h4>
-						<FormField
-							label={language.title}
-							value={uploadReducer.data.title}
-							onChange={(e: any) => handleInputChange(e, 'title')}
-							disabled={false}
-							invalid={invalidTitle}
-							required
-						/>
-						<TextArea
-							label={language.description}
-							value={uploadReducer.data.description}
-							onChange={(e: any) => handleInputChange(e, 'description')}
-							disabled={false}
-							invalid={getInvalidDescription()}
-							required
-						/>
+						<S.CollectionWrapper>
+							<h4>{language.collectionDetails}</h4>
+							<FormField
+								label={language.title}
+								value={uploadReducer.data.title}
+								onChange={(e: any) => handleInputChange(e, 'title')}
+								disabled={false}
+								invalid={invalidTitle}
+								required
+							/>
+							<TextArea
+								label={language.description}
+								value={uploadReducer.data.description}
+								onChange={(e: any) => handleInputChange(e, 'description')}
+								disabled={false}
+								invalid={getInvalidDescription()}
+								required
+							/>
+						</S.CollectionWrapper>
 						<S.IWrapper>
 							<span>{language.assetInfoNote}</span>
 						</S.IWrapper>
 					</>
 				)}
-				<h4>{language.assetDetails}</h4>
-				<S.COWrapper className={'border-wrapper-alt1'}>
-					<S.CWrapper>
-						<span>{language.contentTokensCheckInfo}</span>
+				<S.SectionWrapper className={'border-wrapper-alt2'}>
+					<h4>{language.assetDetails}</h4>
+					<S.COWrapper className={'border-wrapper-alt1'}>
+						<S.CWrapper>
+							<span>{language.contentTokensCheckInfo}</span>
+							<Checkbox
+								checked={uploadReducer.data.useFractionalTokens}
+								handleSelect={handleUseFractionalChange}
+								disabled={false}
+							/>
+						</S.CWrapper>
+						{uploadReducer.data.useFractionalTokens && (
+							<FormField
+								type={'number'}
+								label={language.contentTokens}
+								value={uploadReducer.data.useFractionalTokens ? uploadReducer.data.contentTokens : 1}
+								onChange={(e: any) => handleInputChange(e, 'contentTokens')}
+								disabled={!uploadReducer.data.useFractionalTokens}
+								invalid={getInvalidContentTokens()}
+								tooltip={language.contentTokensInfo}
+								required
+								hideErrorMessage
+							/>
+						)}
+					</S.COWrapper>
+					<S.TWrapper>
+						<S.THeader>
+							<span>{formatRequiredField(language.assetTopics)}</span>
+							<Button type={'alt2'} label={language.addTopic} handlePress={() => setShowTopicAdd(true)} />
+						</S.THeader>
+						<S.TInfo>
+							<span>{language.topicInfo}</span>
+						</S.TInfo>
+						<S.TBody>
+							{topicOptions.map((topic: string, index: number) => {
+								return (
+									<S.TAction
+										key={index}
+										active={uploadReducer.data.topics.includes(topic)}
+										onClick={() => handleTopicChange(topic)}
+									>
+										<span>{topic.toUpperCase()}</span>
+										<ReactSVG src={ASSETS.add} />
+									</S.TAction>
+								);
+							})}
+						</S.TBody>
+					</S.TWrapper>
+					<S.RWrapper>
+						<S.RHeader>
+							<span>{language.assetRenderer}</span>
+						</S.RHeader>
+						<S.RInfo>
+							<span>{language.rendererInfo}</span>
+						</S.RInfo>
+						<S.ROptionsWrapper>
+							{Object.keys(rendererOptions).map((id: string, index: number) => {
+								return (
+									<S.ROption
+										key={index}
+										active={renderer?.label === rendererOptions[id].label}
+										disabled={false}
+										onClick={() => handleRendererChange(rendererOptions[id])}
+									>
+										<span>{rendererOptions[id].label}</span>
+										<p>{rendererOptions[id].description}</p>
+									</S.ROption>
+								);
+							})}
+						</S.ROptionsWrapper>
+					</S.RWrapper>
+					<S.TRWrapper>
+						<span>{language.transferableTokensCheckInfo}</span>
 						<Checkbox
-							checked={uploadReducer.data.useFractionalTokens}
-							handleSelect={handleUseFractionalChange}
+							checked={uploadReducer.data.transferableTokens}
+							handleSelect={handleTransferableChange}
 							disabled={false}
 						/>
-					</S.CWrapper>
-					{uploadReducer.data.useFractionalTokens && (
-						<FormField
-							type={'number'}
-							label={language.contentTokens}
-							value={uploadReducer.data.useFractionalTokens ? uploadReducer.data.contentTokens : 1}
-							onChange={(e: any) => handleInputChange(e, 'contentTokens')}
-							disabled={!uploadReducer.data.useFractionalTokens}
-							invalid={getInvalidContentTokens()}
-							tooltip={language.contentTokensInfo}
-							required
-							hideErrorMessage
-						/>
-					)}
-				</S.COWrapper>
-				<S.TWrapper>
-					<S.THeader>
-						<span>{formatRequiredField(language.assetTopics)}</span>
-						<Button type={'alt2'} label={language.addTopic} handlePress={() => setShowTopicAdd(true)} />
-					</S.THeader>
-					<S.TInfo>
-						<span>{language.topicInfo}</span>
-					</S.TInfo>
-					<S.TBody>
-						{topicOptions.map((topic: string, index: number) => {
-							return (
-								<S.TAction
-									key={index}
-									active={uploadReducer.data.topics.includes(topic)}
-									onClick={() => handleTopicChange(topic)}
-								>
-									<span>{topic.toUpperCase()}</span>
-									<ReactSVG src={ASSETS.add} />
-								</S.TAction>
-							);
-						})}
-					</S.TBody>
-				</S.TWrapper>
-				<S.RWrapper>
-					<S.RHeader>
-						<span>{language.assetRenderer}</span>
-					</S.RHeader>
-					<S.RInfo>
-						<span>{language.rendererInfo}</span>
-					</S.RInfo>
-					<S.ROptionsWrapper>
-						{Object.keys(rendererOptions).map((id: string, index: number) => {
-							return (
-								<S.ROption
-									key={index}
-									active={renderer?.label === rendererOptions[id].label}
-									disabled={false}
-									onClick={() => handleRendererChange(rendererOptions[id])}
-								>
-									<span>{rendererOptions[id].label}</span>
-									<p>{rendererOptions[id].domain}</p>
-								</S.ROption>
-							);
-						})}
-					</S.ROptionsWrapper>
-				</S.RWrapper>
-				<S.TRWrapper>
-					<span>{language.transferableTokensCheckInfo}</span>
-					<Checkbox
-						checked={uploadReducer.data.transferableTokens}
-						handleSelect={handleTransferableChange}
-						disabled={false}
-					/>
-				</S.TRWrapper>
+					</S.TRWrapper>
+				</S.SectionWrapper>
 			</S.Wrapper>
 			{showTopicAdd && (
 				<Modal header={language.addTopic} handleClose={() => setShowTopicAdd(false)}>

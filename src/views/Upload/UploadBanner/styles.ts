@@ -18,7 +18,7 @@ export const Header = styled.div`
 	}
 	p {
 		color: ${(props) => props.theme.colors.font.primary};
-		font-size: ${(props) => props.theme.typography.size.base};
+		font-size: ${(props) => props.theme.typography.size.small};
 		font-weight: ${(props) => props.theme.typography.weight.bold};
 		margin: 0 5px 5px 0;
 	}
@@ -30,7 +30,7 @@ export const Header = styled.div`
 		max-width: 600px;
 	}
 	button {
-		margin 0 0 6.5px 0;
+		margin: 0 0 6.5px 0;
 	}
 `;
 
@@ -96,6 +96,24 @@ export const Select = styled.button`
 	}
 `;
 
+export const TAction = styled.div`
+	position: absolute;
+	top: 7.5px;
+	right: 7.5px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	display: none;
+
+	button {
+		background: ${(props) => props.theme.colors.container.primary.background};
+		border: 1px solid ${(props) => props.theme.colors.border.primary};
+		svg {
+			margin: 0px 0px 2.15px 0;
+		}
+	}
+`;
+
 export const TWrapper = styled.button<{ active: boolean }>`
 	height: 150px;
 	width: 100%;
@@ -104,6 +122,7 @@ export const TWrapper = styled.button<{ active: boolean }>`
 	outline: 2.25px solid ${(props) => (props.active ? props.theme.colors.border.alt1 : 'transparent')};
 	border: 2.25px solid transparent;
 	opacity: ${(props) => (props.active ? '1' : '0.5')};
+	position: relative;
 	img {
 		height: 100%;
 		width: 100%;
@@ -113,6 +132,9 @@ export const TWrapper = styled.button<{ active: boolean }>`
 	}
 	&:hover {
 		opacity: 0.85;
+		${TAction} {
+			display: block;
+		}
 	}
 	&:disabled {
 		opacity: 0.5;

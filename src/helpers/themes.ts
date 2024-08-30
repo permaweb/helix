@@ -26,7 +26,7 @@ export const lightTheme = {
 	semiTransparent2: 'rgba(0, 0, 0, 0.45)',
 	semiTransparent3: 'rgba(0, 0, 0, 0.65)',
 	semiTransparent4: '#AEAEAE45',
-	semiTransparent5: 'rgba(0, 0, 0, 0.15)',
+	semiTransparent5: 'rgba(215, 215, 215, 0.5)',
 	scheme: 'light',
 	light1: '#FFFFFF',
 	dark1: '#151515',
@@ -184,8 +184,8 @@ export const theme = (currentTheme: any): DefaultTheme => ({
 				shadow: currentTheme.negative2,
 			},
 			valid: {
-				outline: currentTheme.neutralA4,
-				shadow: currentTheme.neutral3,
+				outline: currentTheme.primary1,
+				shadow: currentTheme.primary2,
 			},
 			disabled: {
 				background: currentTheme.neutral2,

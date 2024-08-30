@@ -135,6 +135,12 @@ export default function UploadThumbnail() {
 		}
 	};
 
+	const handleRemoveThumbnail = (index: number) => {
+		const updatedThumbnails = thumbnails.filter((_, i) => i !== index);
+		setThumbnails(updatedThumbnails);
+		setActiveThumbnailIndex(updatedThumbnails.length - 1);
+	};
+
 	return (
 		<>
 			<S.Wrapper>
@@ -169,10 +175,21 @@ export default function UploadThumbnail() {
 									<S.TWrapper
 										key={index}
 										active={index === activeThumbnailIndex}
-										onClick={() => handleThumbnailClick(index)}
+										onClick={(e: any) => {
+											e.stopPropagation();
+											handleThumbnailClick(index);
+										}}
 										disabled={uploadReducer.uploadActive}
 									>
 										<img src={thumbnail} />
+										<S.TAction>
+											<IconButton
+												type={'primary'}
+												src={ASSETS.close}
+												handlePress={() => handleRemoveThumbnail(index)}
+												dimensions={{ wrapper: 21.5, icon: 8.5 }}
+											/>
+										</S.TAction>
 									</S.TWrapper>
 								);
 							})}

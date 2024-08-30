@@ -346,11 +346,13 @@ export const MAX_THUMBNAIL_IMAGE_SIZE = 100000;
 export const RENDERERS = {
 	'3d': {
 		label: '3D',
+		description: '3D models (.glb)',
 		domain: 'view_3d-pst',
 		contentType: CONTENT_TYPES.model,
 	},
 	audio: {
 		label: 'Audio',
+		description: 'Audio files (.mp4)',
 		domain: 'audio-renderer',
 		contentType: CONTENT_TYPES.audio,
 	},

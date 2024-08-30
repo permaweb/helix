@@ -64,6 +64,7 @@ export default function Upload() {
 
 	React.useEffect(() => {
 		const handleBeforeUnload = (e: any) => {
+			if (process.env.NODE_ENV === 'development') return;
 			e.preventDefault();
 			e.returnValue = '';
 		};

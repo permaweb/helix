@@ -3,13 +3,23 @@ import styled from 'styled-components';
 import { STYLING } from 'helpers/config';
 
 export const Wrapper = styled.div`
-	padding: 15px 20px 20px 20px;
 	h4 {
 		color: ${(props) => props.theme.colors.font.alt2};
 		font-size: ${(props) => props.theme.typography.size.lg};
 		font-weight: ${(props) => props.theme.typography.weight.bold};
 		line-height: 1.5;
-		margin: 0 0 25px 0;
+		margin: 0 0 15px 0;
+	}
+`;
+
+export const SectionWrapper = styled.div`
+	padding: 15px 20px 20px 20px;
+`;
+
+export const CollectionWrapper = styled(SectionWrapper)`
+	padding: 0;
+	h4 {
+		margin: 0 0 20px 0;
 	}
 `;
 
@@ -35,7 +45,7 @@ export const TRWrapper = styled(CWrapper)`
 `;
 
 export const TWrapper = styled.div`
-	margin: 20px 0 0 0;
+	margin: 60px 0 0 0;
 `;
 
 export const THeader = styled.div`
@@ -56,7 +66,7 @@ export const THeader = styled.div`
 `;
 
 export const TInfo = styled.div`
-	margin: 2.5px 0 20px 0;
+	margin: 2.5px 0 10px 0;
 	span {
 		color: ${(props) => props.theme.colors.font.alt1};
 		font-size: ${(props) => props.theme.typography.size.xxSmall};
@@ -65,7 +75,7 @@ export const TInfo = styled.div`
 `;
 
 export const TBody = styled.div`
-	margin: 10px 0 0 0;
+	margin: 5px 0 0 0;
 	display: flex;
 	flex-wrap: wrap;
 	gap: 10px;
@@ -141,7 +151,7 @@ export const IWrapper = styled.div`
 `;
 
 export const RWrapper = styled.div`
-	margin: 20px 0 0 0;
+	margin: 60px 0 0 0;
 `;
 
 export const RHeader = styled.div`
@@ -162,7 +172,7 @@ export const RHeader = styled.div`
 `;
 
 export const RInfo = styled.div`
-	margin: 2.5px 0 20px 0;
+	margin: 2.5px 0 10px 0;
 	span {
 		color: ${(props) => props.theme.colors.font.alt1};
 		font-size: ${(props) => props.theme.typography.size.xxSmall};

@@ -156,7 +156,7 @@ export const EmptyContainer = styled.div`
 	justify-content: center;
 	gap: 25px;
 	padding: 30px 20px;
-	margin: 40px 0 20px 0;
+	margin: 41.5px 0 20px 0;
 	p {
 		color: ${(props) => props.theme.colors.font.primary};
 		font-weight: ${(props) => props.theme.typography.weight.bold};
