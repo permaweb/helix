@@ -443,9 +443,9 @@ export default function Upload() {
 
 					let processId: string;
 					let retryCount = 0;
-					const maxRetries = 25;
+					const maxSpawnRetries = 25;
 
-					while (!processId && retryCount < maxRetries) {
+					while (!processId && retryCount < maxSpawnRetries) {
 						try {
 							processId = await aos.spawn({
 								module: AO.module,
@@ -458,16 +458,17 @@ export default function Upload() {
 						} catch (e: any) {
 							console.error(`Spawn attempt ${retryCount + 1} failed:`, e);
 							retryCount++;
-							if (retryCount < maxRetries) {
+							if (retryCount < maxSpawnRetries) {
 								await new Promise((r) => setTimeout(r, 1000));
 							} else {
-								throw new Error(`Failed to spawn process after ${maxRetries} attempts`);
+								throw new Error(`Failed to spawn process after ${maxSpawnRetries} attempts`);
 							}
 						}
 					}
 
 					let fetchedAssetId: string;
 					retryCount = 0;
+					const maxFetchRetries = 100;
 					while (!fetchedAssetId) {
 						await new Promise((r) => setTimeout(r, 2000));
 						const gqlResponse = await getGQLData({
@@ -486,8 +487,10 @@ export default function Upload() {
 						} else {
 							console.log(`Transaction not found:`, processId);
 							retryCount++;
-							if (retryCount >= 10) {
-								throw new Error(`Transaction not found after 10 attempts, process deployment retries failed`);
+							if (retryCount >= maxFetchRetries) {
+								throw new Error(
+									`Transaction not found after ${maxFetchRetries} attempts, process deployment retries failed`
+								);
 							}
 						}
 					}
