@@ -120,7 +120,7 @@ export default function UploadSteps(props: IProps) {
 			(uploadReducer.data.banner && (uploadReducer.data.banner.length * 3) / 4 > MAX_COVER_IMAGE_SIZE) ||
 			(uploadReducer.data.thumbnail && (uploadReducer.data.thumbnail.length * 3) / 4 > MAX_THUMBNAIL_IMAGE_SIZE)
 		)
-			return <span>Thumbanil / Banner exceeds max size of 100KB</span>;
+			return <span>Thumbnail / Banner exceeds max size of 100KB</span>;
 		return null;
 	}
 
