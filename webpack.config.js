@@ -15,6 +15,8 @@ const productionAddresses = {
 	PROFILE_REGISTRY: 'SNy4m-DrqxWl01YqGM4sxI8qCni-58re8uuJLvZPypY',
 	PROFILE_SRC: '_R2XYWDPUXVvQrQKFaQRvDTDcDwnQNbqlTd_qvCRSpQ',
 	COLLECTIONS_REGISTRY: 'TFWDmf8a3_nw43GCm_CuYlYoylHAjCcFGbgHfDaGcsg',
+	COLLECTION_SRC: '2ZDuM2VUCN8WHoAKOOjiH4_7Apq0ZHKnTWdLppxCdGY',
+	ASSET_SRC: 'Fmtgzy1Chs-5ZuUwHpQjQrQ7H7v1fjsP0Bi8jVaDIKA',
 };
 
 const nonProductionAddresses = {
@@ -27,6 +29,8 @@ const nonProductionAddresses = {
 	PROFILE_REGISTRY: 'jndJ0phxOaJJU6CHZVX7zo2Wl5vI2KQ1z4i3VnV4DrM',
 	PROFILE_SRC: '9Tpz5_ZT4RRkF-6JUTdaaTMg0ARfkNuuM5zahXyCqZ4',
 	COLLECTIONS_REGISTRY: 'q0QVp2rPXOuqIj6mbRObaC-HMweexSv1Y_Nm9_t1brc',
+	COLLECTION_SRC: '2ZDuM2VUCN8WHoAKOOjiH4_7Apq0ZHKnTWdLppxCdGY',
+	ASSET_SRC: 'Fmtgzy1Chs-5ZuUwHpQjQrQ7H7v1fjsP0Bi8jVaDIKA',
 };
 
 const env = process.env.NODE_ENV || 'development';
@@ -177,6 +181,8 @@ module.exports = {
 			'process.env.PROFILE_REGISTRY': JSON.stringify(addresses.PROFILE_REGISTRY),
 			'process.env.PROFILE_SRC': JSON.stringify(addresses.PROFILE_SRC),
 			'process.env.COLLECTIONS_REGISTRY': JSON.stringify(addresses.COLLECTIONS_REGISTRY),
+			'process.env.COLLECTION_SRC': JSON.stringify(addresses.COLLECTION_SRC),
+			'process.env.ASSET_SRC': JSON.stringify(addresses.ASSET_SRC),
 		}),
 	],
 	resolve: {
