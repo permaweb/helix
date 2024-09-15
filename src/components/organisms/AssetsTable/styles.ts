@@ -105,3 +105,38 @@ export const EmptyLogo = styled.div`
 		border-radius: 50%;
 	}
 `;
+
+export const DWrapper = styled.div`
+	height: fit-content;
+	width: fit-content;
+	position: relative;
+	margin: 5px auto 0 auto;
+`;
+
+export const DDropdown = styled.ul<{ open: boolean }>`
+	width: 225px;
+	padding: 10px 0;
+	display: ${(props) => (props.open ? 'block' : 'none')};
+	position: absolute;
+	top: 26.5px;
+	right: 15%;
+	z-index: 1;
+`;
+
+export const LI = styled.li<{ disabled: boolean }>`
+	pointer-events: ${(props) => (props.disabled ? 'none' : 'default')};
+	text-align: center;
+	height: 32.5px;
+	display: flex;
+	align-items: center;
+	cursor: pointer;
+	color: ${(props) => (props.disabled ? props.theme.colors.font.alt1 : props.theme.colors.font.primary)};
+	font-size: ${(props) => props.theme.typography.size.xSmall};
+	font-weight: ${(props) => props.theme.typography.weight.bold};
+	background: ${(props) => (props.disabled ? props.theme.colors.container.primary.active : 'transparent')};
+	padding: 0 15px;
+	&:hover {
+		background: ${(props) =>
+			props.disabled ? props.theme.colors.container.primary.active : props.theme.colors.container.primary.active};
+	}
+`;

@@ -327,9 +327,9 @@ export const CURRENCIES = {
 
 export const REDIRECTS = {
 	bazar: {
-		asset: (id: string) => `https://ao-bazar.arweave.net/#/asset/${id}`,
-		collection: (id: string) => `https://ao-bazar.arweave.net/#/collection/${id}`,
-		profile: (id: string) => `https://ao-bazar.arweave.net/#/profile/${id}`,
+		asset: (id: string) => `https://bazar.arweave.net/#/asset/${id}`,
+		collection: (id: string) => `https://bazar.arweave.net/#/collection/${id}`,
+		profile: (id: string) => `https://bazar.arweave.net/#/profile/${id}`,
 	},
 	udl: 'https://udlicense.arweave.net/',
 	arconnect: `https://arconnect.io`,

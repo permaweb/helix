@@ -588,7 +588,7 @@ export default function Upload() {
 						<UploadAssets />
 						{uploadReducer.uploadType === 'collection' && (
 							<S.TWrapper>
-								<AssetsTable useIdAction={true} />
+								<AssetsTable useIdAction={true} useActions={false} />
 							</S.TWrapper>
 						)}
 					</S.UWrapper>

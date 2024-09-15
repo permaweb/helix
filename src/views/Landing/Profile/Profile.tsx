@@ -145,7 +145,7 @@ export default function Profile(props: { address: string }) {
 							{fullProfile && fullProfile.id ? (
 								<>
 									<S.TWrapper>
-										<AssetsTable useIdAction={false} />
+										<AssetsTable useIdAction={false} useActions={true} />
 									</S.TWrapper>
 									<S.TWrapper>
 										<CollectionsTable />
