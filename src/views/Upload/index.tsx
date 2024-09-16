@@ -408,13 +408,6 @@ export default function Upload() {
 					if (uploadReducer.data.renderer)
 						assetTags.push({ name: TAGS.keys.renderWith, value: uploadReducer.data.renderer });
 
-					if (collectionId) {
-						assetTags.push({ name: TAGS.keys.collectionId, value: collectionId });
-						if (uploadReducer.data.title) {
-							assetTags.push({ name: TAGS.keys.collectionName, value: cleanProcessField(uploadReducer.data.title) });
-						}
-					}
-
 					const aos = connect();
 
 					let processSrc = null;
@@ -430,7 +423,7 @@ export default function Upload() {
 					}
 
 					if (processSrc) {
-						processSrc = processSrc.replace('[Owner]', `['${arProvider.profile.id}']`);
+						processSrc = processSrc.replaceAll('<CREATOR>', arProvider.profile.id);
 						processSrc = processSrc.replaceAll(`'<NAME>'`, cleanProcessField(title));
 						processSrc = processSrc.replaceAll('<TICKER>', 'ATOMIC');
 						processSrc = processSrc.replaceAll('<DENOMINATION>', '1');
@@ -438,6 +431,10 @@ export default function Upload() {
 
 						if (!uploadReducer.data.transferableTokens) {
 							processSrc = processSrc.replace('Transferable = true', 'Transferable = false');
+						}
+
+						if (collectionId) {
+							processSrc = processSrc.replace('<COLLECTION>', collectionId);
 						}
 					}
 
