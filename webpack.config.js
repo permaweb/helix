@@ -16,7 +16,7 @@ const productionAddresses = {
 	PROFILE_SRC: '_R2XYWDPUXVvQrQKFaQRvDTDcDwnQNbqlTd_qvCRSpQ',
 	COLLECTIONS_REGISTRY: 'TFWDmf8a3_nw43GCm_CuYlYoylHAjCcFGbgHfDaGcsg',
 	COLLECTION_SRC: '2ZDuM2VUCN8WHoAKOOjiH4_7Apq0ZHKnTWdLppxCdGY',
-	ASSET_SRC: '1FgHdEYzFGmpNp2htuwERpFC0Nlr-vYCvaOLptPofnA',
+	ASSET_SRC: 'meNSj8psG3uQrV0Xcgo0NxeNqTmqg_Kthne8UuPhmSs',
 };
 
 const nonProductionAddresses = {
@@ -30,7 +30,7 @@ const nonProductionAddresses = {
 	PROFILE_SRC: '9Tpz5_ZT4RRkF-6JUTdaaTMg0ARfkNuuM5zahXyCqZ4',
 	COLLECTIONS_REGISTRY: 'q0QVp2rPXOuqIj6mbRObaC-HMweexSv1Y_Nm9_t1brc',
 	COLLECTION_SRC: '2ZDuM2VUCN8WHoAKOOjiH4_7Apq0ZHKnTWdLppxCdGY',
-	ASSET_SRC: '1FgHdEYzFGmpNp2htuwERpFC0Nlr-vYCvaOLptPofnA',
+	ASSET_SRC: 'meNSj8psG3uQrV0Xcgo0NxeNqTmqg_Kthne8UuPhmSs',
 };
 
 const env = process.env.NODE_ENV || 'development';
