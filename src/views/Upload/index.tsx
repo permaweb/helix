@@ -434,7 +434,7 @@ export default function Upload() {
 						}
 
 						if (collectionId) {
-							processSrc = processSrc.replace('<COLLECTION>', collectionId);
+							processSrc = processSrc.replaceAll('<COLLECTION>', collectionId);
 						}
 					}
 
