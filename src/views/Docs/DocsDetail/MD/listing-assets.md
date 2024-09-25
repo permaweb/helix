@@ -4,7 +4,7 @@ From Helix you can list your atomic asset collections on the Universal Content M
 
 All collections are listed in the native currency of the permaweb, $U.
 
-**Please note that only collections can be listed directly from Helix. Single assets must be listed from BazAR.**
+**Please note that only collections can be listed directly from Helix. Single assets must be listed from Bazar.**
 
 #### Listing collections
 

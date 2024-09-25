@@ -22,4 +22,4 @@ Creators can also set the terms for how their content can be used with the Unive
 
 #### Conclusion
 
-Atomic assets on Arweave are about building a fairer and freer internet where creators own and control their content. By creating with BazAR, you're contributing to a decentralized ecosystem where creators are empowered to monetize their creativity on their own terms, free from the constraints of traditional platforms and advertisers. So, why wait? [Create atomic assets](https://helix.arweave.net/) and join us in shaping the future of digital ownership and expression.
+Atomic assets on Arweave are about building a fairer and freer internet where creators own and control their content. By creating with Bazar, you're contributing to a decentralized ecosystem where creators are empowered to monetize their creativity on their own terms, free from the constraints of traditional platforms and advertisers. So, why wait? Create atomic assets and join us in shaping the future of digital ownership and expression.
