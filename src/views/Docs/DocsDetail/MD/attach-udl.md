@@ -6,7 +6,7 @@ To upload an atomic asset without attaching a license, uncheck the box next to *
 
 #### What is the Universal Data License (UDL)?
 
-The Universal Data License defines the terms and conditions for using media assets on the permaweb. The UDL establishes a framework for licensing digital media such as images, videos, audio, graphics and more. Instead of platforms setting the terms and conditions, on the permaweb creators define how their media can be utilized. Link to the full UDL [here](https://udlicense.arweave.dev/).
+The Universal Data License defines the terms and conditions for using media assets on the permaweb. The UDL establishes a framework for licensing digital media such as images, videos, audio, graphics and more. Instead of platforms setting the terms and conditions, on the permaweb creators define how their media can be utilized. Link to the full UDL [here](https://orgsxgbx4x37hfuoidzzzuixdwsi57e2eetei2ew6mzwqkxikhoa.arweave.net/dE0rmDfl9_OWjkDznNEXHaSO_JohJkRolvMzaCroUdw).
 
 Since platforms built on the Universal Content Marketplace (UCM) protocol are in their "early" release, not all UDL parameters are currently supported. Please check with the marketplace platforms for more information about how UDL is supported on their platform.
 

@@ -4,7 +4,7 @@ Creating atomic assets may seem daunting at first, but once you understand a few
 
 #### 1. Set up your permaweb profile
 
-Just like on web2 social media, you wouldn’t want to share content from an incomplete profile. The same applies to the permaweb. When you create your permaweb profile, you can set your name, @username, bio, profile picture, and banner image. Learn more about how to create a permaweb profile [here](https://bazar.arweave.dev/#/learn/permaweb-profile).
+Just like on web2 social media, you wouldn’t want to share content from an incomplete profile. The same applies to the permaweb. When you create your permaweb profile, you can set your name, @username, bio, profile picture, and banner image. Learn more about how to create a permaweb profile [here](https://bazar.arweave.net/#/docs/overview/profiles).
 
 #### 2. Decide if you are creating a collection or single uploads
 
@@ -38,5 +38,3 @@ Before uploading, it is important that the order, name, description, fractionali
 #### 5. Upload and share with the permaweb community
 
 After uploading your atomic asset, it’s time to share it with the permaweb community. Tag [@OurBazAR](https://x.com/OurBazAR) in posts on X with your newly created atomic asset!
-
-You can also check out other permaweb social platforms to share your work, such as [Typr](https://www.typr.day/#/).

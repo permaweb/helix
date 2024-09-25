@@ -59,7 +59,7 @@ function CheckoutForm(props: {
 				const paymentResponse = await stripe.confirmPayment({
 					elements,
 					confirmParams: {
-						return_url: `https://helix.arweave.dev`,
+						return_url: `https://helix.arweave.net`,
 					},
 					redirect: 'if_required',
 				});
