@@ -2,9 +2,8 @@ import { ReactSVG } from 'react-svg';
 
 import { Button } from 'components/atoms/Button';
 import { TxAddress } from 'components/atoms/TxAddress';
-import { ASSETS } from 'helpers/config';
-import { getTxEndpoint } from 'helpers/endpoints';
-import { checkAddress, getDisplayValue, splitLicenseTag } from 'helpers/utils';
+import { ASSETS, REDIRECTS } from 'helpers/config';
+import { checkValidAddress, getDisplayValue, splitLicenseTag } from 'helpers/utils';
 import { useLanguageProvider } from 'providers/LanguageProvider';
 
 import * as S from './styles';
@@ -30,11 +29,13 @@ export default function AssetDetailLicenses(props: IProps) {
 			return (
 				<S.LFlex>
 					<p>{getLicenseText(props.asset.license[element].value)}</p>
-					{props.asset.license[element].icon && !props.asset.license[element].value.includes('None') && (
-						<S.LFlexValue>
-							<ReactSVG src={props.asset.license[element].icon} />
-						</S.LFlexValue>
-					)}
+					{props.asset.license[element].icon &&
+						!props.asset.license[element].value.includes('None') &&
+						!props.asset.license[element].value.includes('Disallowed') && (
+							<S.LFlexValue>
+								<ReactSVG src={props.asset.license[element].icon} />
+							</S.LFlexValue>
+						)}
 					{props.asset.license[element].endText && (
 						<S.LFlexValue>
 							<p>{props.asset.license[element].endText}</p>
@@ -43,7 +44,7 @@ export default function AssetDetailLicenses(props: IProps) {
 				</S.LFlex>
 			);
 		} else {
-			if (checkAddress(props.asset.license[element])) {
+			if (checkValidAddress(props.asset.license[element])) {
 				return (
 					<TxAddress
 						address={props.asset.license[element]}
@@ -70,7 +71,7 @@ export default function AssetDetailLicenses(props: IProps) {
 						<Button
 							type={'alt2'}
 							label={language.viewLicense}
-							handlePress={() => window.open(getTxEndpoint(props.asset.license.license), '_blank')}
+							handlePress={() => window.open(REDIRECTS.udl, '_blank')}
 							disabled={false}
 							noMinWidth
 						/>
@@ -85,9 +86,6 @@ export default function AssetDetailLicenses(props: IProps) {
 					) : null;
 				})}
 			</S.Body>
-			{/* <S.Action>
-				<Button type={'primary'} label={language.payLicense} handlePress={() => {}} disabled={true} noMinWidth />
-			</S.Action> */}
 		</S.Wrapper>
 	) : null;
 }

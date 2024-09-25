@@ -1,6 +1,6 @@
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 
-import { fadeIn2, open } from 'helpers/animations';
+import { fadeIn2, open, progressAnimation } from 'helpers/animations';
 import { STYLING } from 'helpers/config';
 
 export const Wrapper = styled.div``;
@@ -97,6 +97,65 @@ export const AGraphic = styled.div`
 	}
 `;
 
+export const ActionWrapper = styled.div<{ loading: boolean | string }>`
+	height: 37.5px;
+	width: 335px;
+	max-width: 90vw;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	margin: 40px auto 0 auto;
+	position: relative;
+	border: 1px solid ${(props) => props.theme.colors.border.primary};
+	border-radius: 20px;
+	overflow: hidden;
+	${(props) =>
+		props.loading === 'true' &&
+		css`
+			&::after {
+				content: '';
+				display: block;
+				position: absolute;
+				top: 0;
+				left: 0;
+				right: 0;
+				bottom: 0;
+				z-index: 0;
+				background-image: linear-gradient(
+					-45deg,
+					${props.theme.colors.container.alt9.background} 25%,
+					${props.theme.colors.container.alt10.background} 25%,
+					${props.theme.colors.container.alt10.background} 50%,
+					${props.theme.colors.container.alt9.background} 50%,
+					${props.theme.colors.container.alt9.background} 75%,
+					${props.theme.colors.container.alt10.background} 75%,
+					${props.theme.colors.container.alt10.background}
+				);
+				background-size: 60px 60px;
+				animation: ${progressAnimation} 2s linear infinite;
+			}
+		`}
+	span {
+		position: relative;
+		z-index: 1;
+		color: ${(props) => props.theme.colors.font.light1};
+		font-size: ${(props) => props.theme.typography.size.base} !important;
+		font-weight: ${(props) => props.theme.typography.weight.xxBold};
+		text-shadow: 0 0 20px ${(props) => props.theme.colors.font.dark1};
+		font-family: ${(props) => props.theme.typography.family.alt1};
+		text-transform: uppercase;
+		white-space: nowrap;
+	}
+	@media (max-width: ${STYLING.cutoffs.secondary}) {
+		width: 100%;
+		margin: 20px 0 0 0;
+		button {
+			min-width: 0;
+			width: 100%;
+		}
+	}
+`;
+
 export const AProgress = styled.div<{ percentage: string }>`
 	height: 37.5px;
 	width: 335px;
@@ -120,14 +179,6 @@ export const AProgress = styled.div<{ percentage: string }>`
 		display: block;
 		text-align: center;
 	}
-	> div {
-		height: 100%;
-		position: absolute;
-		left: 0;
-		width: ${(props) => props.percentage}%;
-		background: ${(props) => props.theme.colors.container.alt6.background};
-		transition: width 0.15s ease;
-	}
 `;
 
 export const APercentage = styled.span`
@@ -143,5 +194,12 @@ export const AMessage = styled.div`
 		font-size: ${(props) => props.theme.typography.size.small};
 		font-weight: ${(props) => props.theme.typography.weight.bold};
 		line-height: 1.5;
+	}
+`;
+
+export const AMessageAlt = styled(AMessage)`
+	span {
+		color: ${(props) => props.theme.colors.font.primary};
+		font-family: ${(props) => props.theme.typography.family.alt1};
 	}
 `;

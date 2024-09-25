@@ -32,7 +32,7 @@ export const Primary = styled.button<{
 	display: flex;
 	justify-content: center;
 	align-items: center;
-	padding: 4.5px 0 0 0;
+	padding: 3.5px 0 0 0;
 	pointer-events: ${(props) => (props.disabled ? 'none' : 'all')};
 	border-radius: 50%;
 

@@ -3,11 +3,15 @@ import React from 'react';
 import { IconButton } from 'components/atoms/IconButton';
 import { Portal } from 'components/atoms/Portal';
 import { ASSETS, DOM } from 'helpers/config';
+import { useLanguageProvider } from 'providers/LanguageProvider';
 
 import * as S from './styles';
 import { IProps } from './types';
 
 export default function Modal(props: IProps) {
+	const languageProvider = useLanguageProvider();
+	const language = languageProvider.object[languageProvider.current];
+
 	React.useEffect(() => {
 		hideDocumentBody();
 		return () => {
@@ -50,9 +54,11 @@ export default function Modal(props: IProps) {
 										handlePress={() => props.handleClose()}
 										active={false}
 										dimensions={{
-											wrapper: 35,
-											icon: 15,
+											wrapper: 33.5,
+											icon: 12.5,
 										}}
+										tooltip={language.close}
+										useBottomToolTip
 									/>
 								</S.Close>
 							)}

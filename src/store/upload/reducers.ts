@@ -7,6 +7,7 @@ import {
 	SET_STEP_DISABLED,
 	SET_UPLOAD,
 	SET_UPLOAD_ACTIVE,
+	SET_UPLOAD_ACTIVE_LICENSE,
 	SET_UPLOAD_COST,
 	SET_UPLOAD_DISABLED,
 	SET_UPLOAD_TYPE,
@@ -25,11 +26,14 @@ const initStateUploadReducer = {
 		collectionCode: '',
 		contentTokens: 100,
 		useFractionalTokens: true,
+		transferableTokens: true,
 		banner: null,
 		thumbnail: null,
 		topics: [],
 		type: '',
+		renderer: null,
 		hasLicense: true,
+		activeLicense: '',
 	},
 	currentStep: 'details' as UploadStepType,
 	nextStepDisabled: true,
@@ -72,6 +76,10 @@ export function uploadReducer(state: UploadReduxType = initStateUploadReducer, a
 			updatedState = { ...state };
 			updatedState.uploadType = action.payload;
 			return updatedState;
+		case SET_UPLOAD_ACTIVE_LICENSE:
+			updatedState = { ...state };
+			updatedState.data.activeLicense = action.payload;
+			return updatedState;
 		case CLEAR_UPLOAD:
 			return {
 				data: {
@@ -86,11 +94,14 @@ export function uploadReducer(state: UploadReduxType = initStateUploadReducer, a
 					collectionCode: '',
 					contentTokens: 100,
 					useFractionalTokens: true,
+					transferableTokens: true,
 					banner: null,
 					thumbnail: null,
+					renderer: null,
 					topics: [],
 					type: '',
 					hasLicense: true,
+					activeLicense: '',
 				},
 				currentStep: 'details' as UploadStepType,
 				nextStepDisabled: true,
@@ -113,11 +124,14 @@ export function uploadReducer(state: UploadReduxType = initStateUploadReducer, a
 					collectionCode: '',
 					contentTokens: 100,
 					useFractionalTokens: true,
+					transferableTokens: true,
 					banner: null,
 					thumbnail: null,
+					renderer: null,
 					topics: [],
 					type: '',
 					hasLicense: true,
+					activeLicense: state.data.activeLicense,
 				},
 				currentStep: 'details' as UploadStepType,
 				nextStepDisabled: true,

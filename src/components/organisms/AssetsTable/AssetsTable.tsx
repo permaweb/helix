@@ -1,22 +1,91 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import { ReactSVG } from 'react-svg';
 
+import { messageResult } from 'api';
 import { getAssetIdsByUser, getGQLData } from 'gql';
 
+import { Button } from 'components/atoms/Button';
 import { Checkbox } from 'components/atoms/Checkbox';
+import { IconButton } from 'components/atoms/IconButton';
 import { Loader } from 'components/atoms/Loader';
+import { Notification } from 'components/atoms/Notification';
 import { Table } from 'components/molecules/Table';
-import { GATEWAYS, PAGINATORS, REDIRECTS, STORAGE, TAGS, TRADE_SOURCES } from 'helpers/config';
+import { ASSETS, GATEWAYS, PAGINATORS, REDIRECTS, STORAGE, TAGS, URLS } from 'helpers/config';
 import { AlignType, CursorEnum, GQLNodeResponseType, GroupIndexType } from 'helpers/types';
 import { formatAddress, getTagValue } from 'helpers/utils';
 import { useArweaveProvider } from 'providers/ArweaveProvider';
 import { useLanguageProvider } from 'providers/LanguageProvider';
 import { RootState } from 'store';
 import * as uploadActions from 'store/upload/actions';
+import { CloseHandler } from 'wrappers/CloseHandler';
 
 import * as S from './styles';
 
-export default function AssetsTable(props: { useIdAction: boolean }) {
+function AssetDropdown(props: { id: string; title: string; handleToggleUpdate: () => void }) {
+	const arProvider = useArweaveProvider();
+
+	const languageProvider = useLanguageProvider();
+	const language = languageProvider.object[languageProvider.current];
+
+	const [open, setOpen] = React.useState<boolean>(false);
+
+	const [loading, setLoading] = React.useState<boolean>(false);
+	const [response, setResponse] = React.useState<string>(null);
+
+	async function handleRemoveAsset() {
+		if (arProvider.walletAddress && arProvider.profile && arProvider.profile.id) {
+			setLoading(true);
+			try {
+				await messageResult({
+					processId: arProvider.profile.id,
+					wallet: arProvider.wallet,
+					action: 'Eval',
+					tags: [],
+					data: `table.remove(Assets, (function() for i, v in ipairs(Assets) do if v.Id == '${props.id}' then return i end end end)())`,
+					useRawData: true,
+				});
+
+				setResponse(`${language.assetRemoved}!`);
+				setOpen(false);
+
+				await new Promise((resolve) => setTimeout(resolve, 1000));
+				props.handleToggleUpdate();
+			} catch (e: any) {
+				console.error(e);
+				setResponse(language.errorOccurred);
+			}
+			setLoading(false);
+		}
+	}
+
+	return (
+		<>
+			<CloseHandler active={open} disabled={!open} callback={() => setOpen(false)}>
+				<S.DWrapper>
+					<IconButton
+						type={'primary'}
+						src={ASSETS.actionMenu}
+						handlePress={() => setOpen(!open)}
+						dimensions={{ wrapper: 27.5, icon: 18.5 }}
+					/>
+					{open && (
+						<S.DDropdown className={'border-wrapper-primary'} open={open}>
+							<S.LI onClick={handleRemoveAsset} disabled={loading}>
+								{response ? response : loading ? `${language.loading}...` : language.removeAsset}
+							</S.LI>
+						</S.DDropdown>
+					)}
+				</S.DWrapper>
+			</CloseHandler>
+			{response && <Notification message={response} callback={() => setResponse(null)} />}
+		</>
+	);
+}
+
+export default function AssetsTable(props: { useIdAction: boolean; useActions: boolean }) {
+	const navigate = useNavigate();
 	const dispatch = useDispatch();
 
 	const uploadReducer = useSelector((state: RootState) => state.uploadReducer);
@@ -37,6 +106,8 @@ export default function AssetsTable(props: { useIdAction: boolean }) {
 	const [currentTableCursor, setCurrentTableCursor] = React.useState<string | null>(null);
 	const [currentRecords, setCurrentRecords] = React.useState<GQLNodeResponseType[] | null>(null);
 
+	const [toggleUpdate, setToggleUpdate] = React.useState<boolean>(false);
+
 	const lastRecordIndex = 1 * recordsPerPage;
 	const firstRecordIndex = lastRecordIndex - recordsPerPage;
 
@@ -52,7 +123,7 @@ export default function AssetsTable(props: { useIdAction: boolean }) {
 				setLoading(true);
 				try {
 					const groups: GroupIndexType = [];
-					const ids = await getAssetIdsByUser({ walletAddress: arProvider.walletAddress });
+					const ids = await getAssetIdsByUser({ address: arProvider.walletAddress });
 					if (ids && ids.length) {
 						setIdCount(ids.length);
 						const groupIndex = new Map(groups.map((group: any) => [group.index, group.ids]));
@@ -77,15 +148,20 @@ export default function AssetsTable(props: { useIdAction: boolean }) {
 						if (groups && groups.length) {
 							setCurrentTableCursor(groups[0].index);
 							setGroupIndex(groups);
+						} else {
+							setLoading(false);
+							setAssets([]);
 						}
+					} else {
+						setLoading(false);
+						setAssets([]);
 					}
 				} catch (e: any) {
 					console.error(e);
 				}
-				setLoading(false);
 			}
 		})();
-	}, [arProvider.walletAddress]);
+	}, [arProvider.walletAddress, uploadReducer.uploadActive, toggleUpdate]);
 
 	React.useEffect(() => {
 		(async function () {
@@ -111,11 +187,10 @@ export default function AssetsTable(props: { useIdAction: boolean }) {
 				} else {
 					setAssets([]);
 				}
-			} else {
-				setAssets([]);
+				setLoading(false);
 			}
 		})();
-	}, [currentTableCursor]);
+	}, [currentTableCursor, groupIndex]);
 
 	React.useEffect(() => {
 		(async function () {
@@ -189,6 +264,14 @@ export default function AssetsTable(props: { useIdAction: boolean }) {
 			};
 		}
 
+		if (props.useActions) {
+			header.actions = {
+				width: '15%',
+				align: 'center' as AlignType,
+				display: language.actions,
+			};
+		}
+
 		return header;
 	}
 
@@ -200,8 +283,6 @@ export default function AssetsTable(props: { useIdAction: boolean }) {
 				const titleTag = getTagValue(element.node.tags, TAGS.keys.ans110.title);
 				const title = titleTag !== STORAGE.none ? titleTag : formatAddress(element.node.id, false);
 				const displayTitle = title ? title : language.titleNotFound;
-
-				const contractSrc = getTagValue(element.node.tags, TAGS.keys.contractSrc);
 
 				let idChecked = false;
 				if (uploadReducer.data && uploadReducer.data.idList) {
@@ -217,12 +298,18 @@ export default function AssetsTable(props: { useIdAction: boolean }) {
 				if (props.useIdAction) {
 					data.select = (
 						<S.CWrapper>
-							<Checkbox
-								checked={idChecked}
-								handleSelect={() => handleId(element.node.id)}
-								disabled={!TRADE_SOURCES.includes(contractSrc) && useDisable}
-							/>
+							<Checkbox checked={idChecked} handleSelect={() => handleId(element.node.id)} disabled={useDisable} />
 						</S.CWrapper>
+					);
+				}
+
+				if (props.useActions) {
+					data.actions = (
+						<AssetDropdown
+							id={element.node.id}
+							title={displayTitle}
+							handleToggleUpdate={() => setToggleUpdate(!toggleUpdate)}
+						/>
 					);
 				}
 
@@ -255,7 +342,7 @@ export default function AssetsTable(props: { useIdAction: boolean }) {
 							title={`${language.assets} (${idCount})`}
 							action={null}
 							header={getTableHeader()}
-							data={getTableData(currentRecords, true)}
+							data={getTableData(currentRecords, false)}
 							recordsPerPage={PAGINATORS.assetTable}
 							showPageNumbers={false}
 							handleCursorFetch={(cursor: string | null) => setCurrentTableCursor(cursor)}
@@ -274,9 +361,13 @@ export default function AssetsTable(props: { useIdAction: boolean }) {
 				);
 			} else {
 				return (
-					<S.MWrapper>
-						<span>{language.noAssets}</span>
-					</S.MWrapper>
+					<S.EmptyContainer className={'border-wrapper-alt1'}>
+						<S.EmptyLogo>
+							<ReactSVG src={ASSETS.asset} />
+						</S.EmptyLogo>
+						<p>{language.noAssetsInfo}</p>
+						<Button type={'alt1'} label={language.upload} handlePress={() => navigate(URLS.upload)} />
+					</S.EmptyContainer>
 				);
 			}
 		}

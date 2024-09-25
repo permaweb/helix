@@ -1,4 +1,4 @@
-### Upload single atomic assets
+## Upload single atomic assets
 
 - Click **Select files to upload** and select the assets that you would like to upload.
 - Under **Actions** you can select **Edit title** and **Edit description** for each asset to be uploaded.

@@ -1,14 +1,9 @@
 import Arweave from 'arweave';
-import { defaultCacheOptions, LoggerFactory, WarpFactory } from 'warp-contracts';
-import { DeployPlugin } from 'warp-contracts-plugin-deploy';
+import { createDataItemSigner, dryrun, message, result, results } from '@permaweb/aoconnect';
 
-import { getGQLData } from 'gql';
-
-import { API_CONFIG, CONTENT_TYPES, CONTRACT_CONFIG, GATEWAYS } from 'helpers/config';
+import { AO, API_CONFIG, CONTENT_TYPES, GATEWAYS } from 'helpers/config';
 import { TagType } from 'helpers/types';
-import { log, logValue } from 'helpers/utils';
-
-LoggerFactory.INST.logLevel('fatal');
+import { getTagValue } from 'helpers/utils';
 
 const arweave = Arweave.init({
 	host: GATEWAYS.arweave,
@@ -17,11 +12,6 @@ const arweave = Arweave.init({
 	timeout: API_CONFIG.timeout,
 	logging: API_CONFIG.logging,
 });
-
-const warp = WarpFactory.forMainnet({
-	...defaultCacheOptions,
-	inMemory: true,
-}).use(new DeployPlugin());
 
 export async function createTransaction(args: { content: any; contentType: string; tags: TagType[] }) {
 	let finalContent: any;
@@ -43,59 +33,225 @@ export async function createTransaction(args: { content: any; contentType: strin
 	}
 }
 
-export async function createContract(args: { assetId: string }) {
+export async function getProfileByWalletAddress(args: { address: string }): Promise<any | null> {
+	const emptyProfile = {
+		id: null,
+		walletAddress: args.address,
+		displayName: null,
+		username: null,
+		bio: null,
+		avatar: null,
+		banner: null,
+	};
+
 	try {
-		let fetchedAssetId: string;
-		while (!fetchedAssetId) {
-			await new Promise((r) => setTimeout(r, 2000));
-			const gqlResponse = await getGQLData({
-				gateway: GATEWAYS.arweave,
-				ids: [args.assetId],
-				tagFilters: null,
-				owners: null,
-				cursor: null,
-				reduxCursor: null,
-				cursorObjectKey: null,
+		const profileLookup = await readHandler({
+			processId: AO.profileRegistry,
+			action: 'Get-Profiles-By-Delegate',
+			data: { Address: args.address },
+		});
+
+		let activeProfileId: string;
+		if (profileLookup && profileLookup.length > 0 && profileLookup[0].ProfileId) {
+			activeProfileId = profileLookup[0].ProfileId;
+		}
+
+		if (activeProfileId) {
+			const fetchedProfile = await readHandler({
+				processId: activeProfileId,
+				action: 'Info',
+				data: null,
 			});
 
-			if (gqlResponse && gqlResponse.data.length) {
-				logValue(`Fetched transaction`, gqlResponse.data[0].node.id, 0);
-				fetchedAssetId = gqlResponse.data[0].node.id;
-			} else {
-				logValue(`Transaction not found`, args.assetId, 0);
-			}
-		}
-
-		const { contractTxId } = await warp.register(fetchedAssetId, CONTRACT_CONFIG.node as any);
-		logValue(`Deployed contract`, contractTxId, 0);
-		return contractTxId;
+			if (fetchedProfile) {
+				return {
+					id: activeProfileId,
+					walletAddress: fetchedProfile.Owner || null,
+					displayName: fetchedProfile.Profile.DisplayName || null,
+					username: fetchedProfile.Profile.UserName || null,
+					bio: fetchedProfile.Profile.Description || null,
+					avatar: fetchedProfile.Profile.ProfileImage || null,
+					banner: fetchedProfile.Profile.CoverImage || null,
+				};
+			} else return emptyProfile;
+		} else return emptyProfile;
 	} catch (e: any) {
-		logValue(`Error deploying contract - Asset ID`, args.assetId, 1);
+		throw new Error(e);
+	}
+}
 
-		const errorString = e.toString();
-		if (errorString.indexOf('500') > -1) {
-			return null;
-		}
+export async function readHandler(args: {
+	processId: string;
+	action: string;
+	tags?: TagType[];
+	data?: any;
+}): Promise<any> {
+	const tags = [{ name: 'Action', value: args.action }];
+	if (args.tags) tags.push(...args.tags);
 
-		if (errorString.indexOf('502') > -1 || errorString.indexOf('504') > -1 || errorString.indexOf('FetchError') > -1) {
-			let retries = 5;
-			for (let i = 0; i < retries; i++) {
-				await new Promise((r) => setTimeout(r, 2000));
-				try {
-					log(`Retrying warp ...`, null);
-					const { contractTxId } = await warp.register(args.assetId, CONTRACT_CONFIG.node as any);
-					log(`Retry succeeded`, 0);
-					return contractTxId;
-				} catch (e2: any) {
-					logValue(`Error deploying contract - Asset ID`, args.assetId, 1);
-					continue;
-				}
+	const response = await dryrun({
+		process: args.processId,
+		tags: tags,
+		data: JSON.stringify(args.data || {}),
+	});
+
+	if (response.Messages && response.Messages.length) {
+		if (response.Messages[0].Data) {
+			return JSON.parse(response.Messages[0].Data);
+		} else {
+			if (response.Messages[0].Tags) {
+				return response.Messages[0].Tags.reduce((acc: any, item: any) => {
+					acc[item.name] = item.value;
+					return acc;
+				}, {});
 			}
 		}
 	}
-
-	throw new Error(`Contract deployment retries failed ...`);
 }
 
-export * from './assets';
+export async function messageResult(args: {
+	processId: string;
+	wallet: any;
+	action: string;
+	tags: TagType[] | null;
+	data: any;
+	useRawData?: boolean;
+}): Promise<any> {
+	try {
+		const tags = [{ name: 'Action', value: args.action }];
+		if (args.tags) tags.push(...args.tags);
+
+		const data = args.useRawData ? args.data : JSON.stringify(args.data);
+
+		const txId = await message({
+			process: args.processId,
+			signer: createDataItemSigner(args.wallet),
+			tags: tags,
+			data: data,
+		});
+
+		const { Messages } = await result({ message: txId, process: args.processId });
+
+		if (Messages && Messages.length) {
+			const response = {};
+
+			Messages.forEach((message: any) => {
+				const action = getTagValue(message.Tags, 'Action') || args.action;
+
+				let responseData = null;
+				const messageData = message.Data;
+
+				if (messageData) {
+					try {
+						responseData = JSON.parse(messageData);
+					} catch {
+						responseData = messageData;
+					}
+				}
+
+				const responseStatus = getTagValue(message.Tags, 'Status');
+				const responseMessage = getTagValue(message.Tags, 'Message');
+
+				response[action] = {
+					id: txId,
+					status: responseStatus,
+					message: responseMessage,
+					data: responseData,
+				};
+			});
+
+			return response;
+		} else return null;
+	} catch (e) {
+		console.error(e);
+	}
+}
+
+export async function messageResults(args: {
+	processId: string;
+	wallet: any;
+	action: string;
+	tags: TagType[] | null;
+	data: any;
+	responses?: string[];
+	handler?: string;
+}): Promise<any> {
+	try {
+		const tags = [{ name: 'Action', value: args.action }];
+		if (args.tags) tags.push(...args.tags);
+
+		await message({
+			process: args.processId,
+			signer: createDataItemSigner(args.wallet),
+			tags: tags,
+			data: JSON.stringify(args.data),
+		});
+
+		const messageResults = await results({
+			process: args.processId,
+			sort: 'DESC',
+			limit: 100,
+		});
+
+		if (messageResults && messageResults.edges && messageResults.edges.length) {
+			const response = {};
+
+			for (const result of messageResults.edges) {
+				if (result.node && result.node.Messages && result.node.Messages.length) {
+					const resultSet = [args.action];
+					if (args.responses) resultSet.push(...args.responses);
+
+					for (const message of result.node.Messages) {
+						const action = getTagValue(message.Tags, 'Action');
+
+						if (action) {
+							let responseData = null;
+							const messageData = message.Data;
+
+							if (messageData) {
+								try {
+									responseData = JSON.parse(messageData);
+								} catch {
+									responseData = messageData;
+								}
+							}
+
+							const responseStatus = getTagValue(message.Tags, 'Status');
+							const responseMessage = getTagValue(message.Tags, 'Message');
+
+							if (action === 'Action-Response') {
+								const responseHandler = getTagValue(message.Tags, 'Handler');
+								if (args.handler && args.handler === responseHandler) {
+									response[action] = {
+										status: responseStatus,
+										message: responseMessage,
+										data: responseData,
+									};
+								}
+							} else {
+								if (resultSet.includes(action)) {
+									response[action] = {
+										status: responseStatus,
+										message: responseMessage,
+										data: responseData,
+									};
+								}
+							}
+
+							if (Object.keys(response).length === resultSet.length) break;
+						}
+					}
+				}
+			}
+
+			return response;
+		}
+
+		return null;
+	} catch (e) {
+		console.error(e);
+	}
+}
+
 export * from './follow';
+export * from './profiles';

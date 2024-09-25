@@ -1,7 +1,6 @@
-import { lazy, Suspense } from 'react';
+import { lazy } from 'react';
 import { Route, Routes } from 'react-router-dom';
 
-import { Loader } from 'components/atoms/Loader';
 import { URLS } from 'helpers/config';
 
 const Landing = getLazyImport('Landing');
@@ -11,15 +10,13 @@ const NotFound = getLazyImport('NotFound');
 
 export default function _Routes() {
 	return (
-		<Suspense fallback={<Loader />}>
-			<Routes>
-				<Route path={URLS.base} element={<Landing />} />
-				<Route path={URLS.upload} element={<Upload />} />
-				<Route path={URLS.docs} element={<Docs />} />
-				<Route path={`${URLS.docs}:active/*`} element={<Docs />} />
-				<Route path={'*'} element={<NotFound />} />
-			</Routes>
-		</Suspense>
+		<Routes>
+			<Route path={URLS.base} element={<Landing />} />
+			<Route path={URLS.upload} element={<Upload />} />
+			<Route path={URLS.docs} element={<Docs />} />
+			<Route path={`${URLS.docs}:active/*`} element={<Docs />} />
+			<Route path={'*'} element={<NotFound />} />
+		</Routes>
 	);
 }
 

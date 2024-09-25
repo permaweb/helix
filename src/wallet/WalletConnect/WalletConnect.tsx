@@ -1,9 +1,11 @@
 import React from 'react';
 
 import { Avatar } from 'components/atoms/Avatar';
-import { Button } from 'components/atoms/Button';
+// import { Button } from 'components/atoms/Button';
+import { Modal } from 'components/molecules/Modal';
 import { TurboBalanceFund } from 'components/molecules/TurboBalanceFund';
-import { formatAddress, formatARAmount, getTurboBalance } from 'helpers/utils';
+import { ProfileManage } from 'components/organisms/ProfileManage';
+import { formatAddress, formatARAmount } from 'helpers/utils';
 import { useArweaveProvider } from 'providers/ArweaveProvider';
 import { useLanguageProvider } from 'providers/LanguageProvider';
 import { CloseHandler } from 'wrappers/CloseHandler';
@@ -15,6 +17,7 @@ export default function WalletConnect(_props: { callback?: () => void }) {
 	const languageProvider = useLanguageProvider();
 	const language = languageProvider.object[languageProvider.current];
 
+	const [showManage, setShowManage] = React.useState<boolean>(false);
 	const [showWallet, setShowWallet] = React.useState<boolean>(false);
 	const [showWalletDropdown, setShowWalletDropdown] = React.useState<boolean>(false);
 	const [showFund, setShowFund] = React.useState<boolean>(false);
@@ -33,8 +36,8 @@ export default function WalletConnect(_props: { callback?: () => void }) {
 			setLabel(`${language.fetching}...`);
 		} else {
 			if (arProvider.walletAddress) {
-				if (arProvider.profile && arProvider.profile.handle) {
-					setLabel(arProvider.profile.handle);
+				if (arProvider.profile && arProvider.profile.username) {
+					setLabel(arProvider.profile.username);
 				} else {
 					setLabel(formatAddress(arProvider.walletAddress, false));
 				}
@@ -78,15 +81,10 @@ export default function WalletConnect(_props: { callback?: () => void }) {
 			>
 				<S.Wrapper>
 					<S.PWrapper>
-						{label && (
-							<S.LAction onClick={handlePress}>
-								<span>{label}</span>
-							</S.LAction>
-						)}
 						<Avatar owner={arProvider.profile} dimensions={{ wrapper: 32.5, icon: 21.5 }} callback={handlePress} />
 					</S.PWrapper>
 					{showWalletDropdown && (
-						<S.Dropdown className={'border-wrapper-primary'}>
+						<S.Dropdown className={'border-wrapper-alt2'}>
 							<S.DHeaderWrapper>
 								<S.DHeaderFlex>
 									<Avatar owner={arProvider.profile} dimensions={{ wrapper: 35, icon: 23.5 }} callback={null} />
@@ -98,9 +96,9 @@ export default function WalletConnect(_props: { callback?: () => void }) {
 								<S.BWrapper>
 									<div>
 										<p>{language.arBalance}</p>
-										<span>{formatARAmount(arProvider.availableBalance ? arProvider.availableBalance : 0)}</span>
+										<span>{formatARAmount(arProvider.arBalance ? arProvider.arBalance : 0)}</span>
 									</div>
-									<div>
+									{/* <div>
 										<S.BHeader>
 											<p>{language.turboBalance}</p>
 											<S.BHeaderActions>
@@ -124,7 +122,7 @@ export default function WalletConnect(_props: { callback?: () => void }) {
 											</S.BHeaderActions>
 										</S.BHeader>
 										<span>{getTurboBalance(arProvider.turboBalance)}</span>
-									</div>
+									</div> */}
 								</S.BWrapper>
 							</S.DHeaderWrapper>
 							<S.DBodyWrapper>
@@ -138,6 +136,18 @@ export default function WalletConnect(_props: { callback?: () => void }) {
 				</S.Wrapper>
 			</CloseHandler>
 			{showFund && <TurboBalanceFund handleClose={() => setShowFund(false)} />}
+			{showManage && (
+				<Modal
+					header={arProvider.profile && arProvider.profile.id ? language.editProfile : `${language.createProfile}!`}
+					handleClose={() => setShowManage(false)}
+				>
+					<ProfileManage
+						profile={arProvider.profile && arProvider.profile.id ? arProvider.profile : null}
+						handleClose={() => setShowManage(false)}
+						handleUpdate={null}
+					/>
+				</Modal>
+			)}
 		</>
 	);
 }

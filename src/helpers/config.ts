@@ -9,8 +9,10 @@ import asset from 'assets/asset.svg';
 import bazar from 'assets/bazar.svg';
 import checkmark from 'assets/checkmark.svg';
 import close from 'assets/close.svg';
+import collections from 'assets/collections.svg';
 import comments from 'assets/comments.svg';
 import copy from 'assets/copy.svg';
+import dark from 'assets/dark.svg';
 import details from 'assets/details.svg';
 import docs from 'assets/docs.svg';
 import download from 'assets/download.svg';
@@ -19,8 +21,10 @@ import fullScreen from 'assets/fullscreen.svg';
 import image from 'assets/image.svg';
 import info from 'assets/info.svg';
 import landing from 'assets/landing.svg';
+import light from 'assets/light.svg';
 import link from 'assets/link.svg';
 import logo from 'assets/logo.svg';
+import media from 'assets/media.svg';
 import menu from 'assets/menu.svg';
 import miniPlayerActive from 'assets/miniplayer-active.svg';
 import miniPlayerInactive from 'assets/miniplayer-inactive.svg';
@@ -31,19 +35,32 @@ import search from 'assets/search.svg';
 import share from 'assets/share.svg';
 import stamp from 'assets/stamp.svg';
 import theme from 'assets/theme.svg';
-import u from 'assets/u.svg';
 import upload from 'assets/upload.svg';
 import uploadGraphic from 'assets/upload-graphic.riv';
 import user from 'assets/user.svg';
 import volumeActive from 'assets/volume-active.svg';
 import volumeInactive from 'assets/volume-inactive.svg';
 import wallet from 'assets/wallet.svg';
+import wrappedAr from 'assets/wrapped-ar.svg';
 import x from 'assets/x.svg';
 
 import { UploadStepType, WalletEnum } from './types';
 
 export const APP = {
 	name: 'Helix',
+};
+
+export const AO = {
+	module: process.env.MODULE,
+	scheduler: process.env.SCHEDULER,
+	assetSrc: process.env.ASSET_SRC,
+	defaultToken: process.env.DEFAULT_TOKEN,
+	ucm: process.env.UCM,
+	pixl: process.env.PIXL,
+	collectionsRegistry: process.env.COLLECTIONS_REGISTRY,
+	collectionSrc: process.env.COLLECTION_SRC,
+	profileRegistry: process.env.PROFILE_REGISTRY,
+	profileSrc: process.env.PROFILE_SRC,
 };
 
 export const ASSETS = {
@@ -56,11 +73,14 @@ export const ASSETS = {
 	bazar: bazar,
 	checkmark: checkmark,
 	close: close,
+	collections: collections,
 	comments: comments,
 	copy: copy,
 	details: details,
 	docs: docs,
 	download: download,
+	dark: dark,
+	light: light,
 	following: following,
 	fullScreen: fullScreen,
 	image: image,
@@ -68,6 +88,7 @@ export const ASSETS = {
 	landing: landing,
 	link: link,
 	logo: logo,
+	media: media,
 	menu: menu,
 	miniPlayerActive: miniPlayerActive,
 	miniPlayerInactive: miniPlayerInactive,
@@ -77,13 +98,13 @@ export const ASSETS = {
 	share: share,
 	stamp: stamp,
 	theme: theme,
-	u: u,
 	upload: upload,
 	uploadGraphic: uploadGraphic,
 	user: user,
 	volumeActive: volumeActive,
 	volumeInactive: volumeInactive,
 	wallet: wallet,
+	wrappedAr: wrappedAr,
 	wallets: {
 		arconnect: arconnect,
 		arweaveApp: arweaveApp,
@@ -106,12 +127,14 @@ export const TAGS = {
 		avatar: 'Avatar',
 		banner: 'Banner',
 		channelTitle: 'Channel-Title',
-		collectionCode: 'Collection-Code',
+		collectionId: 'Collection-Id',
+		collectionName: 'Collection-Name',
 		contentLength: 'Content-Length',
 		contentType: 'Content-Type',
 		contractManifest: 'Contract-Manifest',
 		contractSrc: 'Contract-Src',
 		creator: 'Creator',
+		currency: 'Currency',
 		dataProtocol: 'Data-Protocol',
 		dataSource: 'Data-Source',
 		dateCreated: 'Date-Created',
@@ -120,6 +143,7 @@ export const TAGS = {
 		initialOwner: 'Initial-Owner',
 		license: 'License',
 		name: 'Name',
+		profileCreator: 'Profile-Creator',
 		profileIndex: 'Profile-Index',
 		protocolName: 'Protocol-Name',
 		renderWith: 'Render-With',
@@ -139,28 +163,19 @@ export const TAGS = {
 	},
 	values: {
 		ansVersion: 'ANS-110',
-		collection: 'Collection',
+		collection: 'AO-Collection',
 		comment: 'comment',
-		contractManifest:
-			'{"evaluationOptions":{"sourceType":"redstone-sequencer","allowBigInt":true,"internalWrites":true,"unsafeClient":"skip","useConstructor":true}}',
 		document: 'Document',
 		followDataProtocol: 'Follow',
 		license: 'dE0rmDfl9_OWjkDznNEXHaSO_JohJkRolvMzaCroUdw',
+		licenseCurrency: 'xU9zFkq3X2ZQ6olwNVvr1vUWIjc3kXTWr7xKQD6dh10',
 		profileVersions: {
 			'1': 'Account-0.3',
 		},
-		smartweaveAppName: 'SmartWeaveContract',
-		smartweaveAppVersion: '0.3.0',
 		ticker: 'ATOMIC ASSET',
 		title: (title: string) => `${title}`,
 	},
 };
-
-export const ASSET_CONTRACT = {
-	src: 'Of9pi--Gj7hCTawhgxOwbuWnFI1h24TTgO5pw8ENJNQ',
-};
-
-export const TRADE_SOURCES = [ASSET_CONTRACT.src, 'h9v17KHV4SXwdW2-JHU6a23f6R0YtbXZJJht8LfP8QM'];
 
 function createURLs() {
 	const base = `/`;
@@ -220,8 +235,8 @@ export const STYLING = {
 			max: '47.5px',
 		},
 		nav: {
-			headerHeight: '65px',
-			panelWidthClosed: '85px',
+			headerHeight: '70px',
+			panelWidthClosed: '70px',
 			panelWidthOpen: '250px',
 		},
 		radius: {
@@ -237,12 +252,11 @@ export const CONTENT_TYPES = {
 	json: 'application/json',
 	mp4: 'video/mp4',
 	textPlain: 'text/plain',
+	model: 'model/gltf-binary',
+	audio: 'audio/mpeg',
 };
 
-export const AR_WALLETS = [
-	{ type: WalletEnum.arConnect, logo: ASSETS.wallets.arconnect },
-	{ type: WalletEnum.othent, logo: ASSETS.wallets.othent },
-];
+export const AR_WALLETS = [{ type: WalletEnum.arConnect, logo: ASSETS.wallets.arconnect }];
 
 export const WALLET_PERMISSIONS = ['ACCESS_ADDRESS', 'ACCESS_PUBLIC_KEY', 'SIGN_TRANSACTION', 'DISPATCH', 'SIGNATURE'];
 
@@ -256,6 +270,9 @@ export const AR_PROFILE = {
 };
 
 export const DEFAULT_THUMBNAIL = 'nmEZucV8rT47rAh1gA3HO-PQTZ0qCKTS6oqUT4D09Pk';
+
+export const DEFAULT_UCM_BANNER = 'eXCtpVbcd_jZ0dmU2PZ8focaKxBGECBQ8wMib7sIVPo';
+export const DEFAULT_UCM_THUMBNAIL = 'lJovHqM9hwNjHV5JoY9NGWtt0WD-5D4gOqNL2VWW5jk';
 
 export const COMMENT_SPEC = {
 	protcolId: 'comment',
@@ -277,9 +294,7 @@ export const UPLOAD_CONFIG = {
 	chunkSize: 7500000,
 };
 
-export const CONTRACT_CONFIG = {
-	node: 'arweave',
-};
+export const MAX_UPLOAD_SIZE = 10000000;
 
 export const UPLOAD_STEPS: UploadStepType[] = ['details', 'license', 'checks'];
 
@@ -306,7 +321,7 @@ export const ALLOWED_ASSET_TYPES_DISPLAY = [];
 export const CURRENCIES = {
 	u: {
 		label: 'U',
-		icon: ASSETS.u,
+		icon: ASSETS.wrappedAr,
 	},
 };
 
@@ -316,9 +331,29 @@ export const REDIRECTS = {
 		collection: (id: string) => `https://bazar.arweave.net/#/collection/${id}`,
 		profile: (id: string) => `https://bazar.arweave.net/#/profile/${id}`,
 	},
+	udl: 'https://udlicense.arweave.net/',
+	arconnect: `https://arconnect.io`,
 };
 
 export const DRE_NODE = 'https://dre-u.warp.cc/contract';
 
 export const STRIPE_PUBLISHABLE_KEY =
 	'pk_live_51JUAtwC8apPOWkDLMQqNF9sPpfneNSPnwX8YZ8y1FNDl6v94hZIwzgFSYl27bWE4Oos8CLquunUswKrKcaDhDO6m002Yj9AeKj';
+
+export const MAX_COVER_IMAGE_SIZE = 100000;
+export const MAX_THUMBNAIL_IMAGE_SIZE = 100000;
+
+export const RENDERERS = {
+	'3d': {
+		label: '3D',
+		description: '3D models (.glb)',
+		domain: 'view_3d-pst',
+		contentType: CONTENT_TYPES.model,
+	},
+	audio: {
+		label: 'Audio',
+		description: 'Audio files (.mp4)',
+		domain: 'audio-renderer',
+		contentType: CONTENT_TYPES.audio,
+	},
+};

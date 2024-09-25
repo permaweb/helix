@@ -9,6 +9,7 @@ import {
 	SET_STEP_DISABLED,
 	SET_UPLOAD,
 	SET_UPLOAD_ACTIVE,
+	SET_UPLOAD_ACTIVE_LICENSE,
 	SET_UPLOAD_COST,
 	SET_UPLOAD_DISABLED,
 	SET_UPLOAD_TYPE,
@@ -72,6 +73,15 @@ export function setUploadType(payload: UploadType) {
 	return (dispatch: Dispatch) => {
 		dispatch({
 			type: SET_UPLOAD_TYPE,
+			payload: payload,
+		});
+	};
+}
+
+export function setUploadActiveLicense(payload: string) {
+	return (dispatch: Dispatch) => {
+		dispatch({
+			type: SET_UPLOAD_ACTIVE_LICENSE,
 			payload: payload,
 		});
 	};

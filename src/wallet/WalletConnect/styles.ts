@@ -14,11 +14,18 @@ export const PWrapper = styled.div`
 	align-items: center;
 `;
 
+export const ProfileWrapper = styled.div`
+	@media (max-width: ${STYLING.cutoffs.initial}) {
+		display: none;
+	}
+`;
+
 export const LAction = styled.button`
+	margin: 0 0 0 20px;
 	span {
 		color: ${(props) => props.theme.colors.font.primary};
 		font-family: ${(props) => props.theme.typography.family.alt1};
-		font-size: ${(props) => props.theme.typography.size.xSmall};
+		font-size: ${(props) => props.theme.typography.size.small};
 		font-weight: ${(props) => props.theme.typography.weight.xBold};
 		display: block;
 		margin: 0 15px 0 0;
@@ -44,7 +51,7 @@ export const FlexAction = styled.div`
 `;
 
 export const Dropdown = styled.ul`
-	width: 350px;
+	width: 315px;
 	max-width: 90vw;
 	padding: 20px 0 10px 0;
 	position: absolute;
@@ -81,8 +88,8 @@ export const DHeader = styled.div`
 export const BWrapper = styled.div`
 	margin: 20px 0 0 0;
 	padding: 15px;
-	border-top: 1px solid ${(props) => props.theme.colors.border.primary};
-	border-bottom: 1px solid ${(props) => props.theme.colors.border.primary};
+	border-top: 1px solid ${(props) => props.theme.colors.border.alt4};
+	border-bottom: 1px solid ${(props) => props.theme.colors.border.alt4};
 	p {
 		color: ${(props) => props.theme.colors.font.primary};
 		font-size: ${(props) => props.theme.typography.size.small};
@@ -149,6 +156,6 @@ export const DBodyWrapper = styled.ul`
 
 export const DFooterWrapper = styled(DBodyWrapper)`
 	padding: 10px 0 0 0;
-	border-top: 1px solid ${(props) => props.theme.colors.border.primary};
+	border-top: 1px solid ${(props) => props.theme.colors.border.alt4};
 	border-bottom: none;
 `;

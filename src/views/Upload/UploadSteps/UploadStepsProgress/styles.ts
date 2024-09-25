@@ -26,7 +26,7 @@ export const Step = styled.div<{ active: boolean; completed: boolean }>`
 	position: relative;
 	span {
 		color: ${(props) =>
-			props.active || props.completed ? props.theme.colors.indicator.active : props.theme.colors.font.alt1};
+			props.active || props.completed ? props.theme.colors.indicator.primary : props.theme.colors.font.alt1};
 		font-size: ${(props) => props.theme.typography.size.xSmall};
 		font-weight: ${(props) => props.theme.typography.weight.bold};
 		display: block;
@@ -39,10 +39,10 @@ export const SIndicator = styled.div<{ active: boolean; completed: boolean }>`
 	height: 20px;
 	width: 20px;
 	background: ${(props) =>
-		props.completed ? props.theme.colors.indicator.active : props.theme.colors.container.primary.background};
+		props.completed ? props.theme.colors.indicator.primary : props.theme.colors.container.primary.background};
 	border: 2.5px solid
 		${(props) =>
-			props.active || props.completed ? props.theme.colors.indicator.active : props.theme.colors.border.alt3};
+			props.active || props.completed ? props.theme.colors.indicator.primary : props.theme.colors.border.alt3};
 	border-radius: 50%;
 	display: flex;
 	justify-content: center;
@@ -58,5 +58,5 @@ export const Line = styled.div<{ completed: boolean }>`
 	height: 2.5px;
 	width: 50%;
 	border-top: 2.5px solid
-		${(props) => (props.completed ? props.theme.colors.indicator.active : props.theme.colors.border.alt3)};
+		${(props) => (props.completed ? props.theme.colors.indicator.primary : props.theme.colors.border.alt3)};
 `;

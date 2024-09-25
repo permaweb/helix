@@ -1,8 +1,16 @@
+import { lazy, Suspense } from 'react';
+
+import { Loader } from 'components/atoms/Loader';
 import { DOM } from 'helpers/config';
 import Navigation from 'navigation';
-import { Routes } from 'routes';
 
 import * as S from './styles';
+
+const Routes = lazy(() =>
+	import(`../routes/Routes.tsx` as any).then((module) => ({
+		default: module.default,
+	}))
+);
 
 export default function App() {
 	return (
@@ -10,10 +18,12 @@ export default function App() {
 			<div id={DOM.loader} />
 			<div id={DOM.notification} />
 			<div id={DOM.overlay} />
-			<Navigation />
-			<S.View>
-				<Routes />
-			</S.View>
+			<Suspense fallback={<Loader />}>
+				<Navigation />
+				<S.View className={'scroll-wrapper'}>
+					<Routes />
+				</S.View>
+			</Suspense>
 		</>
 	);
 }

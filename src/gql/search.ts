@@ -2,7 +2,7 @@ import { getGQLData, getProfiles, structureAsset } from 'gql';
 
 import { GATEWAYS, TAGS } from 'helpers/config';
 import { AGQLResponseType, AssetGQLResponseType, AssetType, CursorEnum, GQLNodeResponseType } from 'helpers/types';
-import { checkAddress, getTagValue } from 'helpers/utils';
+import { checkValidAddress, getTagValue } from 'helpers/utils';
 
 export async function search(args: { term: string; cursor: string | null }): Promise<AssetGQLResponseType | null> {
 	const emptyResponseObject = {
@@ -12,7 +12,7 @@ export async function search(args: { term: string; cursor: string | null }): Pro
 		previousCursor: null,
 	};
 	try {
-		const addressCheck = checkAddress(args.term);
+		const addressCheck = checkValidAddress(args.term);
 
 		const gqlResponse: AGQLResponseType = await getGQLData({
 			gateway: GATEWAYS.goldsky,

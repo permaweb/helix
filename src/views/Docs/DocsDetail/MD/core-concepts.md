@@ -1,4 +1,4 @@
-### Core concepts
+## Core concepts
 
 **Fundamental concepts of Helix and the permaweb.**
 
@@ -38,4 +38,4 @@ The Universal Content Marketplace (UCM) is a revolutionary protocol built on the
 
 You can learn more about UCM's latest migration onto AO here. [here](https://bazar.arweave.net/#/learn/key-concepts/bazar-on-ao).
 
-Explore [Bazar](https://bazar.arweave.net/#/), the first digital content marketplace built on the UCM protocol.
+Explore [Bazar](https://bazar.arweave.net/#/), a digital content marketplace built on the UCM protocol.

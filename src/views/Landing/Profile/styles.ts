@@ -6,9 +6,12 @@ export const Wrapper = styled.div``;
 
 export const HeaderInfo = styled.div`
 	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
 	flex-wrap: wrap;
 	gap: 25px;
-	padding: 20px;
+	padding: 40px 20px 20px 20px;
 	border-radius: ${STYLING.dimensions.radius.primary};
 `;
 
@@ -24,7 +27,7 @@ export const HeaderAvatar = styled.div`
 	svg {
 		height: 80px;
 		width: 80px;
-		stroke: ${(props) => props.theme.colors.icon.primary.fill};
+		padding: 5px 0 0 0;
 	}
 	img {
 		height: 100%;
@@ -35,21 +38,55 @@ export const HeaderAvatar = styled.div`
 `;
 
 export const HeaderHA = styled.div`
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	gap: 7.5px;
 	h4 {
 		color: ${(props) => props.theme.colors.font.primary};
 		font-size: clamp(24px, 3.25vw, 32px);
 		font-weight: ${(props) => props.theme.typography.weight.xxBold};
+		text-align: center;
 		line-height: 1.5;
 		overflow-wrap: anywhere;
 	}
 `;
 
 export const HeaderInfoDetail = styled.div`
-	margin: 2.5px 0 0 0;
 	span {
 		color: ${(props) => props.theme.colors.font.primary};
 		font-size: ${(props) => props.theme.typography.size.small};
 		font-weight: ${(props) => props.theme.typography.weight.medium};
+		text-align: center;
+	}
+`;
+
+export const HeaderInfoBio = styled(HeaderInfoDetail)`
+	margin: 2.5px 0 0 0;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	flex-wrap: wrap;
+	gap: 10px;
+	max-width: 800px;
+	p {
+		color: ${(props) => props.theme.colors.font.alt1};
+		font-size: ${(props) => props.theme.typography.size.small};
+		font-weight: ${(props) => props.theme.typography.weight.bold};
+		line-height: 1.65;
+	}
+	span {
+		color: ${(props) => props.theme.colors.font.alt1};
+		font-size: ${(props) => props.theme.typography.size.small};
+	}
+	button {
+		color: ${(props) => props.theme.colors.font.primary};
+		font-size: ${(props) => props.theme.typography.size.small};
+		font-weight: ${(props) => props.theme.typography.weight.bold};
+		&:hover {
+			color: ${(props) => props.theme.colors.font.alt1};
+		}
 	}
 `;
 
@@ -136,9 +173,10 @@ export const HeaderAddress = styled.button`
 export const HeaderActions = styled.div`
 	height: fit-content;
 	display: flex;
+	justify-content: center;
 	flex-wrap: wrap;
 	gap: 15px;
-	margin: 0 0 0 auto;
+	margin: 0 auto;
 `;
 
 export const Body = styled.div`
@@ -148,6 +186,25 @@ export const Body = styled.div`
 	flex-wrap: wrap;
 	gap: 40px;
 	margin: 40px 0 0 0;
+`;
+
+export const CreateWrapper = styled.div`
+	width: fit-content;
+	margin: 0 auto;
+	button {
+		width: 300px !important;
+		max-width: 100% !important;
+		span {
+			font-size: ${(props) => props.theme.typography.size.lg} !important;
+			font-weight: ${(props) => props.theme.typography.weight.bold} !important;
+			font-family: ${(props) => props.theme.typography.family.alt1} !important;
+		}
+		svg {
+			height: 22.5px !important;
+			width: 22.5px !important;
+			padding: 4.5px 0 0 0;
+		}
+	}
 `;
 
 export const TWrapper = styled.div`

@@ -6,13 +6,13 @@ export const lightTheme = {
 	negative1: '#DF4657',
 	negative2: '#EF6C82',
 	neutral1: '#FFFFFF',
-	neutral2: '#F1F1F1',
-	neutral3: '#8D8D8D',
+	neutral2: '#f1f4fa',
+	neutral3: '#90949C',
 	neutral4: '#C9C9C9',
 	neutral5: '#CCCCCC',
 	neutral6: '#F7F7F7',
 	neutral7: '#FAFAFA',
-	neutral8: '#B1B1B1',
+	neutral8: '#C8CACF',
 	neutralA1: '#0A0A0A',
 	neutralA2: '#606060',
 	neutralA3: '#5C5C5C',
@@ -26,7 +26,7 @@ export const lightTheme = {
 	semiTransparent2: 'rgba(0, 0, 0, 0.45)',
 	semiTransparent3: 'rgba(0, 0, 0, 0.65)',
 	semiTransparent4: '#AEAEAE45',
-	semiTransparent5: 'rgba(0, 0, 0, 0.15)',
+	semiTransparent5: 'rgba(215, 215, 215, 0.5)',
 	scheme: 'light',
 	light1: '#FFFFFF',
 	dark1: '#151515',
@@ -49,7 +49,7 @@ export const darkTheme = {
 	neutralA1: '#FFFFFF',
 	neutralA2: '#F1F1F1',
 	neutralA3: '#E0E0E0',
-	neutralA4: '#C9C9C9',
+	neutralA4: '#D2D2D2',
 	neutralA5: '#F7F7F7',
 	neutralA6: '#FAFAFA',
 	overlay1: 'rgba(0, 0, 0, 0.5)',
@@ -159,6 +159,12 @@ export const theme = (currentTheme: any): DefaultTheme => ({
 			alt8: {
 				background: currentTheme.dark1,
 			},
+			alt9: {
+				background: currentTheme.primary1,
+			},
+			alt10: {
+				background: currentTheme.primary2,
+			},
 		},
 		font: {
 			primary: currentTheme.neutralA1,
@@ -168,6 +174,7 @@ export const theme = (currentTheme: any): DefaultTheme => ({
 			alt4: currentTheme.neutral1,
 			alt5: currentTheme.primary2,
 			light1: currentTheme.light1,
+			dark1: currentTheme.dark1,
 		},
 		form: {
 			background: currentTheme.neutral1,
@@ -177,8 +184,8 @@ export const theme = (currentTheme: any): DefaultTheme => ({
 				shadow: currentTheme.negative2,
 			},
 			valid: {
-				outline: currentTheme.neutralA4,
-				shadow: currentTheme.neutral3,
+				outline: currentTheme.primary1,
+				shadow: currentTheme.primary2,
 			},
 			disabled: {
 				background: currentTheme.neutral2,
@@ -214,7 +221,7 @@ export const theme = (currentTheme: any): DefaultTheme => ({
 			},
 		},
 		indicator: {
-			active: currentTheme.primary2,
+			primary: currentTheme.primary2,
 		},
 		link: {
 			color: currentTheme.neutralA1,

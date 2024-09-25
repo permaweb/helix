@@ -3,7 +3,6 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { ReactSVG } from 'react-svg';
 
 import { IconButton } from 'components/atoms/IconButton';
-import { Search } from 'components/molecules/Search';
 import { ASSETS, STYLING, URLS } from 'helpers/config';
 import { NavPathType } from 'helpers/types';
 import * as windowUtils from 'helpers/window';
@@ -79,10 +78,10 @@ export default function Navigation() {
 						src={ASSETS.menu}
 						type={'primary'}
 						handlePress={() => setPanelOpen(!panelOpen)}
-						dimensions={{ wrapper: 32.5, icon: 21.5 }}
+						dimensions={{ wrapper: 32.5, icon: 19.5 }}
 					/>
 				</S.MWrapper>
-				<S.LWrapper className={'border-wrapper-primary'}>
+				<S.LWrapper>
 					<Link to={URLS.base} onClick={() => setPanelOpen(false)}>
 						<ReactSVG src={ASSETS.logo} />
 						<span>Helix</span>
@@ -97,16 +96,13 @@ export default function Navigation() {
 			<S.Wrapper>
 				{getMenu()}
 				<S.SEWrapper>
-					<S.SWrapper>
-						<Search />
-					</S.SWrapper>
 					<S.EWrapper>
 						<S.TWrapper>
 							<IconButton
-								src={ASSETS.theme}
+								src={themeProvider.current === 'light' ? ASSETS.light : ASSETS.dark}
 								type={'primary'}
 								handlePress={() => themeProvider.setCurrent(themeProvider.current === 'light' ? 'dark' : 'light')}
-								dimensions={{ wrapper: 32.5, icon: 16.5 }}
+								dimensions={{ wrapper: 32.5, icon: 18.5 }}
 								tooltip={language.toggleTheme}
 								useBottomToolTip
 								active={true}
@@ -117,7 +113,7 @@ export default function Navigation() {
 								src={ASSETS.upload}
 								type={'primary'}
 								handlePress={() => navigate(URLS.upload)}
-								dimensions={{ wrapper: 32.5, icon: 21.5 }}
+								dimensions={{ wrapper: 32.5, icon: 18.5 }}
 								tooltip={language.upload}
 								useBottomToolTip
 								active={true}

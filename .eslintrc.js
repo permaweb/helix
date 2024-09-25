@@ -16,16 +16,7 @@ module.exports = {
 					{
 						groups: [
 							['^react', '^@?\\w'],
-							[
-								'^arweave',
-								'arbundles',
-								'@irys/sdk',
-								'^warp',
-								'^permaweb-orderbook',
-								'^permaweb-sdk',
-								'^@permaweb/stampjs',
-								'^@?\\w',
-							],
+							['^arweave', 'arbundles', '@irys/sdk', '^warp', '@permaweb/aoconnect', '^@permaweb/stampjs', '^@?\\w'],
 							['^(@|api)(/.*|$)', '^(@|gql)(/.*|$)'],
 							[
 								'^(@|app)(/.*|$)',

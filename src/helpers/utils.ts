@@ -3,7 +3,7 @@ import Arweave from 'arweave';
 import { API_CONFIG, GATEWAYS, STORAGE } from './config';
 import { DateType, ProfileType } from './types';
 
-export function checkAddress(address: string | null) {
+export function checkValidAddress(address: string | null) {
 	if (!address) return false;
 	return /^[a-z0-9_-]{43}$/i.test(address);
 }
@@ -14,8 +14,8 @@ export function getUniqueAddresses(addresses: string[]) {
 
 export function formatAddress(address: string | null, wrap: boolean) {
 	if (!address) return '';
-	if (!checkAddress(address)) return address;
-	const formattedAddress = address.substring(0, 5) + '...' + address.substring(36, address.length - 1);
+	if (!checkValidAddress(address)) return address;
+	const formattedAddress = address.substring(0, 5) + '...' + address.substring(36, address.length);
 	return wrap ? `(${formattedAddress})` : formattedAddress;
 }
 
@@ -99,11 +99,24 @@ export function getCreatorLabel(creator: ProfileType) {
 	else return formatAddress(creator.walletAddress, false);
 }
 
-export function getByteSize(bytes: number) {
+export function getByteSize(input: string | Buffer): number {
+	let sizeInBytes: number;
+	if (Buffer.isBuffer(input)) {
+		sizeInBytes = input.length;
+	} else if (typeof input === 'string') {
+		sizeInBytes = Buffer.byteLength(input, 'utf-8');
+	} else {
+		throw new Error('Input must be a string or a Buffer');
+	}
+
+	return sizeInBytes;
+}
+
+export function getByteSizeDisplay(bytes: number) {
 	const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
 	if (bytes === 0) return '0 Bytes';
-	const i = Math.floor(Math.log(bytes) / Math.log(1024));
-	return (bytes / Math.pow(1024, i)).toFixed(2) + ' ' + sizes[i];
+	const i = Math.floor(Math.log(bytes) / Math.log(1000));
+	return bytes / Math.pow(1000, i) + ' ' + sizes[i];
 }
 
 export function formatTime(time: number) {
@@ -196,4 +209,29 @@ export function getDisplayValue(value: string) {
 	let result = value.replace(/([A-Z])/g, ' $1').trim();
 	result = result.charAt(0).toUpperCase() + result.slice(1);
 	return result;
+}
+
+export function stripFileExtension(fileName) {
+	// Split the file name by dot
+	const parts = fileName.split('.');
+
+	// If there's no dot, return the original file name
+	if (parts.length === 1) {
+		return fileName;
+	}
+
+	// Remove the last part (extension) and join the remaining parts back together
+	return parts.slice(0, -1).join('.');
+}
+
+export function cleanProcessField(value: string) {
+	let updatedValue: string;
+	updatedValue = value.replace(/\[|\]/g, '');
+	return `[[${updatedValue}]]`;
+}
+
+export function cleanTagValue(value: string) {
+	let updatedValue: string;
+	updatedValue = value.replace(/\[|\]/g, '');
+	return updatedValue;
 }

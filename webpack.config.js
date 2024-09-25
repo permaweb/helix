@@ -5,6 +5,40 @@ const CopyWebpackPlugin = require('copy-webpack-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 
+const productionAddresses = {
+	MODULE: 'Pq2Zftrqut0hdisH_MC2pDOT6S4eQFoxGsFUzR6r350',
+	SCHEDULER: '_GQ33BkPtZrqxA84vM8Zk-N2aO0toNNu_C-l-rawrBA',
+	DEFAULT_TOKEN: 'xU9zFkq3X2ZQ6olwNVvr1vUWIjc3kXTWr7xKQD6dh10',
+	UCM: 'U3TjJAZWJjlWBB4KAXSHKzuky81jtyh0zqH8rUL4Wd0',
+	UCM_ACTIVITY: 'SNDvAf2RF-jhPmRrGUcs_b1nKlzU6vamN9zl0e9Zi4c',
+	PIXL: 'DM3FoZUq_yebASPhgd8pEIRIzDW6muXEhxz5-JwbZwo',
+	PROFILE_REGISTRY: 'SNy4m-DrqxWl01YqGM4sxI8qCni-58re8uuJLvZPypY',
+	PROFILE_SRC: '_R2XYWDPUXVvQrQKFaQRvDTDcDwnQNbqlTd_qvCRSpQ',
+	COLLECTIONS_REGISTRY: 'TFWDmf8a3_nw43GCm_CuYlYoylHAjCcFGbgHfDaGcsg',
+	COLLECTION_SRC: '2ZDuM2VUCN8WHoAKOOjiH4_7Apq0ZHKnTWdLppxCdGY',
+	ASSET_SRC: 'meNSj8psG3uQrV0Xcgo0NxeNqTmqg_Kthne8UuPhmSs',
+};
+
+const nonProductionAddresses = {
+	MODULE: 'Pq2Zftrqut0hdisH_MC2pDOT6S4eQFoxGsFUzR6r350',
+	SCHEDULER: '_GQ33BkPtZrqxA84vM8Zk-N2aO0toNNu_C-l-rawrBA',
+	DEFAULT_TOKEN: 'xU9zFkq3X2ZQ6olwNVvr1vUWIjc3kXTWr7xKQD6dh10',
+	UCM: 'qtDwylCwyhhsGPKIYAi2Ao342mdhvFUPqdbDOudzaiM',
+	UCM_ACTIVITY: 'GC9M776w8UEZVkvAGcLqhrH10uumkbQUYrnIo1AiWHo',
+	PIXL: 'DM3FoZUq_yebASPhgd8pEIRIzDW6muXEhxz5-JwbZwo',
+	PROFILE_REGISTRY: 'jndJ0phxOaJJU6CHZVX7zo2Wl5vI2KQ1z4i3VnV4DrM',
+	PROFILE_SRC: '9Tpz5_ZT4RRkF-6JUTdaaTMg0ARfkNuuM5zahXyCqZ4',
+	COLLECTIONS_REGISTRY: 'q0QVp2rPXOuqIj6mbRObaC-HMweexSv1Y_Nm9_t1brc',
+	COLLECTION_SRC: '2ZDuM2VUCN8WHoAKOOjiH4_7Apq0ZHKnTWdLppxCdGY',
+	ASSET_SRC: 'meNSj8psG3uQrV0Xcgo0NxeNqTmqg_Kthne8UuPhmSs',
+};
+
+const env = process.env.NODE_ENV || 'development';
+const isProduction = env === 'production';
+const isStaging = env === 'staging';
+
+const addresses = isProduction ? productionAddresses : isStaging ? nonProductionAddresses : productionAddresses;
+
 module.exports = {
 	entry: './src/index.tsx',
 	output: {
@@ -12,14 +46,14 @@ module.exports = {
 		filename: 'bundle.js',
 	},
 	devtool: 'eval',
-	mode: process.env.NODE_ENV || 'development',
+	mode: isProduction || isStaging ? 'production' : 'development',
 	devServer: {
 		static: {
 			directory: path.join(__dirname, 'dist'),
 		},
 		hot: true,
 		historyApiFallback: true,
-		port: 3000,
+		port: 3001,
 		open: false,
 		compress: true,
 		client: {
@@ -27,7 +61,7 @@ module.exports = {
 		},
 	},
 	optimization:
-		process.env.NODE_ENV === 'production'
+		isProduction || isStaging
 			? {
 					minimize: true,
 					minimizer: [
@@ -137,6 +171,19 @@ module.exports = {
 			'global.setImmediate': [require.resolve('timers'), 'setImmediate'],
 		}),
 		new webpack.NoEmitOnErrorsPlugin(),
+		new webpack.DefinePlugin({
+			'process.env.MODULE': JSON.stringify(addresses.MODULE),
+			'process.env.SCHEDULER': JSON.stringify(addresses.SCHEDULER),
+			'process.env.DEFAULT_TOKEN': JSON.stringify(addresses.DEFAULT_TOKEN),
+			'process.env.UCM': JSON.stringify(addresses.UCM),
+			'process.env.UCM_ACTIVITY': JSON.stringify(addresses.UCM_ACTIVITY),
+			'process.env.PIXL': JSON.stringify(addresses.PIXL),
+			'process.env.PROFILE_REGISTRY': JSON.stringify(addresses.PROFILE_REGISTRY),
+			'process.env.PROFILE_SRC': JSON.stringify(addresses.PROFILE_SRC),
+			'process.env.COLLECTIONS_REGISTRY': JSON.stringify(addresses.COLLECTIONS_REGISTRY),
+			'process.env.COLLECTION_SRC': JSON.stringify(addresses.COLLECTION_SRC),
+			'process.env.ASSET_SRC': JSON.stringify(addresses.ASSET_SRC),
+		}),
 	],
 	resolve: {
 		extensions: ['.tsx', '.ts', '.jsx', '.js'],
@@ -188,8 +235,6 @@ module.exports = {
 			wrappers: path.resolve(__dirname, 'src/wrappers/'),
 			'asn1.js': path.resolve(__dirname, 'node_modules/asn1.js'),
 			elliptic: path.resolve(__dirname, 'node_modules/elliptic'),
-			'@bundlr-network/client': '@bundlr-network/client/build/cjs/web/bundlr',
-			arweave: path.resolve(__dirname, 'node_modules/arweave'),
 		},
 	},
 	output: {

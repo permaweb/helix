@@ -1,12 +1,9 @@
 import React from 'react';
+import { useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import { ReactSVG } from 'react-svg';
 
-import Arweave from 'arweave';
-import { defaultCacheOptions, LoggerFactory, WarpFactory } from 'warp-contracts';
-import { DeployPlugin } from 'warp-contracts-plugin-deploy';
-import { InjectedArweaveSigner } from 'warp-contracts-plugin-signature';
-import { OrderBook, OrderBookType } from 'permaweb-orderbook';
-
-import { getGQLData } from 'gql';
+import { messageResults, readHandler } from 'api';
 
 import { Button } from 'components/atoms/Button';
 import { FormField } from 'components/atoms/FormField';
@@ -14,33 +11,26 @@ import { IconButton } from 'components/atoms/IconButton';
 import { Loader } from 'components/atoms/Loader';
 import { Modal } from 'components/molecules/Modal';
 import { Table } from 'components/molecules/Table';
-import {
-	API_CONFIG,
-	ASSETS,
-	CURRENCIES,
-	DRE_NODE,
-	GATEWAYS,
-	PAGINATORS,
-	REDIRECTS,
-	STORAGE,
-	TAGS,
-} from 'helpers/config';
-import { getTxEndpoint } from 'helpers/endpoints';
-import { AlignType, CursorEnum, GQLNodeResponseType } from 'helpers/types';
-import { formatAddress, getTagValue, log, logValue } from 'helpers/utils';
+import { AO, ASSETS, PAGINATORS, REDIRECTS, URLS } from 'helpers/config';
+import { AlignType, CollectionType } from 'helpers/types';
+import { checkValidAddress, formatAddress } from 'helpers/utils';
 import { useArweaveProvider } from 'providers/ArweaveProvider';
 import { useLanguageProvider } from 'providers/LanguageProvider';
+import { RootState } from 'store';
 import { CloseHandler } from 'wrappers/CloseHandler';
 
 import * as S from './styles';
 
-LoggerFactory.INST.logLevel('fatal');
+const DENOMINATION = Math.pow(10, 12);
 
 function CollectionDropdown(props: { id: string; title: string }) {
 	const arProvider = useArweaveProvider();
 
 	const languageProvider = useLanguageProvider();
 	const language = languageProvider.object[languageProvider.current];
+
+	const [collection, setCollection] = React.useState<any>(null);
+	const [fetchingcCollection, setFetchingCollection] = React.useState<any>(null);
 
 	const [price, setPrice] = React.useState<number>(0);
 	const [percentage, setPercentage] = React.useState<number>(100);
@@ -49,84 +39,104 @@ function CollectionDropdown(props: { id: string; title: string }) {
 	const [listingModalOpen, setListingModalOpen] = React.useState<boolean>(false);
 
 	const [loading, setLoading] = React.useState<boolean>(false);
-	const [orderBook, setOrderBook] = React.useState<OrderBookType | null>(null);
 	const [response, setResponse] = React.useState<{ status: boolean; message: string }>(null);
 
 	React.useEffect(() => {
-		const arweave = Arweave.init({
-			host: GATEWAYS.arweave,
-			port: API_CONFIG.port,
-			protocol: API_CONFIG.protocol,
-			timeout: API_CONFIG.timeout,
-			logging: API_CONFIG.logging,
-		});
+		(async function () {
+			if (props.id && checkValidAddress(props.id) && listingModalOpen && !collection) {
+				setFetchingCollection(true);
+				try {
+					const fetchResponse = await readHandler({
+						processId: props.id,
+						action: 'Info',
+					});
 
-		const warp = WarpFactory.forMainnet({
-			...defaultCacheOptions,
-			inMemory: true,
-		}).use(new DeployPlugin());
-
-		setOrderBook(
-			OrderBook.init({
-				currency: CURRENCIES.u.label as 'U',
-				arweaveGet: arweave,
-				arweavePost: arweave,
-				bundlrKey: arProvider.wallet ? arProvider.wallet : null,
-				warp: warp,
-				warpDreNode: DRE_NODE,
-			})
-		);
-	}, [arProvider.wallet, DRE_NODE]);
+					if (fetchResponse && fetchResponse.Assets) setCollection(fetchResponse);
+				} catch (e: any) {
+					console.error(e);
+				}
+				setFetchingCollection(false);
+			}
+		})();
+	}, [props.id, listingModalOpen]);
 
 	async function handleSubmit() {
-		if (arProvider.wallet && orderBook) {
+		if (
+			arProvider.wallet &&
+			arProvider.profile &&
+			arProvider.profile.id &&
+			collection &&
+			collection.Assets &&
+			collection.Assets.length
+		) {
+			let responseMessage = '';
 			setLoading(true);
 			try {
-				const collectionObj = {
-					collectionId: props.id,
-					price: price,
-					percentage: percentage,
-				};
-
-				const signer = new InjectedArweaveSigner(arProvider.wallet);
-				signer.getAddress = window.arweaveWallet.getActiveAddress;
-				await signer.setPublicKey();
-
-				const collectionManifest = await (await fetch(getTxEndpoint(collectionObj.collectionId))).json();
-				const items = collectionManifest.items;
-				const assetStates = {};
-
-				for (let i = 0; i < items.length; i++) {
-					const assetState = await orderBook.env.arClient.read(items[i]);
-					const walletQty = assetState.balances[arProvider.walletAddress];
-					assetStates[items[i]] = assetState;
-					if (!walletQty) {
-						log(`No balance on asset ${items[i]}`, 1);
-					}
-				}
-
-				let errorCount: number = 0;
-				for (let i = 0; i < items.length; i++) {
-					try {
-						const assetState = assetStates[items[i]];
-						const walletQty = assetState.balances[arProvider.walletAddress];
-						const intendedSaleQty = Math.ceil((collectionObj.percentage / 100) * walletQty);
-						await orderBook.sell({
-							assetId: items[i],
-							price: collectionObj.price * 1e6,
-							qty: intendedSaleQty,
-							wallet: signer,
-							walletAddress: arProvider.walletAddress,
-						});
-						logValue(`Listed asset`, `${items[i]}`, 0);
-					} catch {
-						errorCount = errorCount + 1;
-					}
-				}
 				setResponse({
-					status: errorCount !== items.length,
-					message: `${language.listingsCreated(items.length - errorCount, items.length)}`,
+					status: true,
+					message: responseMessage,
 				});
+				for (let i = 0; i < collection.Assets.length; i++) {
+					try {
+						const infoResponse = await readHandler({
+							processId: collection.Assets[i],
+							action: 'Info',
+						});
+
+						const title = `(${i + 1}) ${infoResponse.Name || '-'}`;
+						let balance = 0;
+						if (infoResponse && infoResponse.Balances && infoResponse.Balances[arProvider.profile.id]) {
+							balance = Number(infoResponse.Balances[arProvider.profile.id]);
+						}
+
+						if (balance > 0) {
+							const pair = [collection.Assets[i], AO.defaultToken];
+							const dominantToken = pair[0];
+							const swapToken = pair[1];
+							const recipient = AO.ucm;
+
+							const quantity = Math.floor((percentage / 100) * balance).toString();
+							const unitPrice = (price * DENOMINATION).toString();
+
+							const transferTags = [
+								{ name: 'Target', value: dominantToken },
+								{ name: 'Recipient', value: recipient },
+								{ name: 'Quantity', value: quantity },
+								{ name: 'X-Order-Action', value: 'Create-Order' },
+								{ name: 'X-Swap-Token', value: swapToken },
+								{ name: 'X-Price', value: unitPrice },
+							];
+
+							const orderResponse: any = await messageResults({
+								processId: arProvider.profile.id,
+								action: 'Transfer',
+								wallet: arProvider.wallet,
+								tags: transferTags,
+								data: null,
+								responses: ['Transfer-Success', 'Transfer-Error'],
+								handler: 'Create-Order',
+							});
+							if (orderResponse) {
+								responseMessage += `${title}: Listing created!\n`;
+								setResponse({
+									status: true,
+									message: responseMessage,
+								});
+							} else {
+								responseMessage += `${title}: ` + language.errorOccurred + '\n';
+								setResponse({ status: false, message: responseMessage });
+							}
+						} else {
+							responseMessage += `${title}: Not enough tokens to create listing!\n`;
+							setResponse({
+								status: false,
+								message: responseMessage,
+							});
+						}
+					} catch (e: any) {
+						setResponse({ status: false, message: e.message ? e.message : language.errorOccurred });
+					}
+				}
 			} catch (e: any) {
 				console.error(e);
 				setResponse({ status: false, message: e.message ? e.message : language.errorOccurred });
@@ -176,55 +186,65 @@ function CollectionDropdown(props: { id: string; title: string }) {
 
 	function getListingModal() {
 		return (
-			<Modal header={language.createListings} handleClose={() => setListingModalOpen(false)}>
-				<S.MCWrapper>
-					<S.MBody>
-						<S.MHeader>
-							<p>{`${language.collection}: ${props.title}`}</p>
-						</S.MHeader>
-						<FormField
-							type={'number'}
-							label={language.listingPrice}
-							value={isNaN(price) ? '' : price}
-							onChange={(e: React.ChangeEvent<HTMLInputElement>) => handlePriceInput(e, 'price')}
-							disabled={loading || response !== null}
-							invalid={getInvalidPrice()}
-							tooltip={language.listingPriceInfo}
-						/>
-						<FormField
-							type={'number'}
-							label={language.listingPercentage}
-							value={isNaN(percentage) ? '' : percentage}
-							onChange={(e: React.ChangeEvent<HTMLInputElement>) => handlePriceInput(e, 'percentage')}
-							disabled={loading || response !== null}
-							invalid={getInvalidPercentage()}
-							tooltip={language.listingPercentageInfo}
-						/>
-						{(loading || response !== null) && (
-							<S.MMessage className={'border-wrapper-alt1'}>
-								<span>{loading ? `${language.listingsCreating}...` : response.message}</span>
-							</S.MMessage>
-						)}
-					</S.MBody>
-					<S.MActions>
-						<Button
-							type={'primary'}
-							label={response ? language.close : language.cancel}
-							handlePress={() => setListingModalOpen(false)}
-							disabled={loading}
-							noMinWidth
-						/>
-						<Button
-							type={'alt1'}
-							label={response && response.status ? language.viewOnBazar : language.submit}
-							handlePress={() => (response ? window.open(REDIRECTS.bazar.collection(props.id)) : handleSubmit())}
-							disabled={loading || price <= 0 || percentage <= 0 || percentage > 100 || (response && !response.status)}
-							loading={loading}
-							noMinWidth
-						/>
-					</S.MActions>
-				</S.MCWrapper>
-			</Modal>
+			<>
+				<Modal header={language.createListings} handleClose={() => setListingModalOpen(false)}>
+					<S.MCWrapper>
+						<S.MBody>
+							<S.MHeader>
+								<p>{`${language.collection}: ${props.title}`}</p>
+							</S.MHeader>
+							<FormField
+								type={'number'}
+								label={language.listingPrice}
+								value={isNaN(price) ? '' : price}
+								onChange={(e: React.ChangeEvent<HTMLInputElement>) => handlePriceInput(e, 'price')}
+								disabled={loading || response !== null || !collection}
+								invalid={getInvalidPrice()}
+								tooltip={language.listingPriceInfo}
+							/>
+							<FormField
+								type={'number'}
+								label={language.listingPercentage}
+								value={isNaN(percentage) ? '' : percentage}
+								onChange={(e: React.ChangeEvent<HTMLInputElement>) => handlePriceInput(e, 'percentage')}
+								disabled={loading || response !== null || !collection}
+								invalid={getInvalidPercentage()}
+								tooltip={language.listingPercentageInfo}
+							/>
+							{response && response.message && response.message.length && (
+								<S.MMessage className={'border-wrapper-alt1'}>{response && <pre>{response.message}</pre>}</S.MMessage>
+							)}
+						</S.MBody>
+						<S.MFooter>
+							<S.MFetchWrapper>{fetchingcCollection && <span>{`${language.fetching}...`}</span>}</S.MFetchWrapper>
+							<S.MActions>
+								<Button
+									type={'primary'}
+									label={response ? language.close : language.cancel}
+									handlePress={() => setListingModalOpen(false)}
+									disabled={loading || !collection}
+									noMinWidth
+								/>
+								<Button
+									type={'alt1'}
+									label={response && response.status ? language.viewOnBazar : language.submit}
+									handlePress={() => (response ? window.open(REDIRECTS.bazar.collection(props.id)) : handleSubmit())}
+									disabled={
+										loading ||
+										price <= 0 ||
+										percentage <= 0 ||
+										percentage > 100 ||
+										(response && !response.status) ||
+										!collection
+									}
+									loading={loading}
+									noMinWidth
+								/>
+							</S.MActions>
+						</S.MFooter>
+					</S.MCWrapper>
+				</Modal>
+			</>
 		);
 	}
 
@@ -253,42 +273,57 @@ function CollectionDropdown(props: { id: string; title: string }) {
 }
 
 export default function CollectionsTable() {
+	const navigate = useNavigate();
+
 	const arProvider = useArweaveProvider();
+
+	const uploadReducer = useSelector((state: RootState) => state.uploadReducer);
 
 	const languageProvider = useLanguageProvider();
 	const language = languageProvider.object[languageProvider.current];
 
-	const [collections, setCollections] = React.useState<GQLNodeResponseType[] | null>(null);
+	const [collections, setCollections] = React.useState<CollectionType[] | null>(null);
 	const [idCount, setIdCount] = React.useState<number>(0);
 
 	const [loading, setLoading] = React.useState<boolean>(false);
 
 	React.useEffect(() => {
 		(async function () {
-			setLoading(true);
-			try {
-				const collectionsResponse = await getGQLData({
-					gateway: GATEWAYS.arweave,
-					ids: null,
-					tagFilters: [
-						{ name: TAGS.keys.dataProtocol, values: [TAGS.values.collection] },
-						{ name: TAGS.keys.creator, values: [arProvider.walletAddress] },
-					],
-					owners: null,
-					cursor: null,
-					reduxCursor: null,
-					cursorObjectKey: CursorEnum.IdGQL,
-				});
-				if (collectionsResponse) {
-					setCollections(collectionsResponse.data);
-					setIdCount(collectionsResponse.data.length);
+			if (arProvider.profile && arProvider.profile.id) {
+				setLoading(true);
+				try {
+					const response = await readHandler({
+						processId: AO.collectionsRegistry,
+						action: 'Get-Collections-By-User',
+						tags: [{ name: 'Creator', value: arProvider.profile.id }],
+					});
+
+					if (response && response.Collections && response.Collections.length) {
+						setIdCount(response.Collections.length);
+						setCollections(
+							response.Collections.map((collection: any) => {
+								return {
+									id: collection.Id,
+									title: collection.Name,
+									description: collection.Description,
+									creator: collection.Creator,
+									dateCreated: collection.DateCreated,
+									banner: collection.Banner,
+									thumbnail: collection.Thumbnail,
+								};
+							})
+						);
+					} else {
+						setIdCount(0);
+						setCollections([]);
+					}
+				} catch (e: any) {
+					console.error(e);
 				}
-			} catch (e: any) {
-				console.error(e);
+				setLoading(false);
 			}
-			setLoading(false);
 		})();
-	}, [arProvider.walletAddress]);
+	}, [arProvider.profile, uploadReducer.uploadActive]);
 
 	function getTableHeader() {
 		const header: any = {};
@@ -297,6 +332,7 @@ export default function CollectionsTable() {
 			align: 'left' as AlignType,
 			display: language.title,
 		};
+
 		header.actions = {
 			width: '15%',
 			align: 'center' as AlignType,
@@ -308,20 +344,17 @@ export default function CollectionsTable() {
 
 	function getTableData() {
 		if (collections && collections.length) {
-			return collections.map((element: GQLNodeResponseType) => {
+			return collections.map((collection: CollectionType) => {
 				const data: any = {};
-
-				const titleTag = getTagValue(element.node.tags, TAGS.keys.ans110.title);
-				const title = titleTag !== STORAGE.none ? titleTag : formatAddress(element.node.id, false);
-				const displayTitle = title ? title : language.titleNotFound;
+				const title = collection.title ?? formatAddress(collection.id, false);
 
 				data.collectionTitle = (
-					<a href={REDIRECTS.bazar.collection(element.node.id)} target={'_blank'}>
-						<p>{displayTitle}</p>
+					<a href={REDIRECTS.bazar.collection(collection.id)} target={'_blank'}>
+						<p>{title}</p>
 					</a>
 				);
 
-				data.actions = <CollectionDropdown id={element.node.id} title={displayTitle} />;
+				data.actions = <CollectionDropdown id={collection.id} title={title} />;
 
 				return {
 					data: data,
@@ -363,9 +396,13 @@ export default function CollectionsTable() {
 				);
 			} else {
 				return (
-					<S.MWrapper>
-						<span>{language.noCollections}</span>
-					</S.MWrapper>
+					<S.EmptyContainer className={'border-wrapper-alt1'}>
+						<S.EmptyLogo>
+							<ReactSVG src={ASSETS.collections} />
+						</S.EmptyLogo>
+						<p>{language.noCollectionsInfo}</p>
+						<Button type={'alt1'} label={language.upload} handlePress={() => navigate(URLS.upload)} />
+					</S.EmptyContainer>
 				);
 			}
 		}

@@ -129,6 +129,16 @@ export type FullProfileType = ProfileType & {
 	bio: string;
 };
 
+export type CollectionType = {
+	id: string;
+	title: string;
+	description: string | null;
+	creator: string;
+	dateCreated: string;
+	banner: string | null;
+	thumbnail: string | null;
+};
+
 export enum WalletEnum {
 	arConnect = 'arconnect',
 	arweaveApp = 'arweave.app',
@@ -178,7 +188,9 @@ export type UploadPayloadType =
 	| 'collectionCode'
 	| 'contentTokens'
 	| 'useFractionalTokens'
+	| 'transferableTokens'
 	| 'topics'
+	| 'renderer'
 	| 'content'
 	| 'contentList'
 	| 'contentType'
@@ -186,7 +198,8 @@ export type UploadPayloadType =
 	| 'idList'
 	| 'banner'
 	| 'thumbnail'
-	| 'hasLicense';
+	| 'hasLicense'
+	| 'activeLicense';
 
 export type UploadPayloadDataType = { field: UploadPayloadType; data: any };
 
@@ -208,6 +221,7 @@ export type UploadReduxType = {
 		topics: string[];
 		type: string;
 		hasLicense: boolean;
+		activeLicense: string;
 	};
 	currentStep: UploadStepType;
 	nextStepDisabled: boolean;
@@ -247,28 +261,38 @@ export type TableHeaderType = {
 
 export type ActiveFieldAddType = 'title' | 'description';
 
-export type PagingType = {
-	limit: number;
-	items: number;
-	page: number;
-};
-
-export type BalanceType = {
-	contract_tx_id: string;
-	token_ticker: string;
-	token_name: string;
-	balance: string;
-	sort_key: string;
-};
-
-export type UserBalancesType = {
-	paging: PagingType;
-	balances: BalanceType[];
-};
-
 export type GroupIndexType = { index: string; ids: string[] }[];
 
 export type NotificationResponseType = {
 	status: boolean;
 	message: string | null;
+};
+
+export type AOProfileType = {
+	id: string;
+	walletAddress: string;
+	displayName: string | null;
+	username: string | null;
+	bio: string | null;
+	avatar: string | null;
+	banner: string | null;
+};
+
+export type ProfileHeaderType = AOProfileType;
+
+export type RegistryProfileType = {
+	id: string;
+	avatar: string | null;
+	username: string;
+	bio?: string;
+};
+
+export type NotificationType = {
+	message: string;
+	status: 'success' | 'warning';
+};
+
+export type RendererType = {
+	label: string;
+	domain: string;
 };

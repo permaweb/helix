@@ -1,9 +1,9 @@
-// tooltip={language.bannerInfo}
-
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { ReactSVG } from 'react-svg';
 
+import { IconButton } from 'components/atoms/IconButton';
+import { Modal } from 'components/molecules/Modal';
 import { ALLOWED_BANNER_TYPES, ASSETS } from 'helpers/config';
 import { useLanguageProvider } from 'providers/LanguageProvider';
 import { RootState } from 'store';
@@ -23,6 +23,7 @@ export default function UploadBanner() {
 
 	const [activeBannerIndex, setActiveBannerIndex] = React.useState<number | null>(null);
 	const [banners, setBanners] = React.useState([]);
+	const [showTooltip, setShowTooltip] = React.useState<boolean>(false);
 
 	React.useEffect(() => {
 		if (banners.length && activeBannerIndex !== null) {
@@ -30,7 +31,7 @@ export default function UploadBanner() {
 		}
 	}, [activeBannerIndex, banners]);
 
-	const handleThumbnailClick = (index: number) => {
+	const handleBannerClick = (index: number) => {
 		setActiveBannerIndex(index);
 	};
 
@@ -42,9 +43,9 @@ export default function UploadBanner() {
 
 				reader.onload = (event: ProgressEvent<FileReader>) => {
 					if (event.target?.result) {
-						const updatedThumbnails = [...banners, event.target.result];
-						setBanners(updatedThumbnails);
-						setActiveBannerIndex(updatedThumbnails.length - 1);
+						const updatedBanners = [...banners, event.target.result];
+						setBanners(updatedBanners);
+						setActiveBannerIndex(updatedBanners.length - 1);
 					}
 				};
 
@@ -53,11 +54,24 @@ export default function UploadBanner() {
 		}
 	}
 
+	const handleRemoveBanner = (index: number) => {
+		const updatedBanners = banners.filter((_, i) => i !== index);
+		setBanners(updatedBanners);
+		setActiveBannerIndex(updatedBanners.length - 1);
+	};
+
 	return (
 		<>
 			<S.Wrapper>
 				<S.Header>
 					<p>{language.banner}</p>
+					<IconButton
+						type={'primary'}
+						active={false}
+						src={ASSETS.info}
+						handlePress={() => setShowTooltip(!showTooltip)}
+						dimensions={{ wrapper: 22.5, icon: 13.5 }}
+					/>
 				</S.Header>
 				<S.Body>
 					<S.Select disabled={uploadReducer.uploadActive} onClick={() => fileInputRef.current.click()}>
@@ -71,10 +85,21 @@ export default function UploadBanner() {
 									<S.TWrapper
 										key={index}
 										active={index === activeBannerIndex}
-										onClick={() => handleThumbnailClick(index)}
+										onClick={(e: any) => {
+											e.stopPropagation();
+											handleBannerClick(index);
+										}}
 										disabled={uploadReducer.uploadActive}
 									>
 										<img src={banner} />
+										<S.TAction>
+											<IconButton
+												type={'primary'}
+												src={ASSETS.close}
+												handlePress={() => handleRemoveBanner(index)}
+												dimensions={{ wrapper: 21.5, icon: 8.5 }}
+											/>
+										</S.TAction>
 									</S.TWrapper>
 								);
 							})}
@@ -89,6 +114,13 @@ export default function UploadBanner() {
 					/>
 				</S.Body>
 			</S.Wrapper>
+			{showTooltip && (
+				<Modal header={language.banner} handleClose={() => setShowTooltip(false)}>
+					<S.Tooltip>
+						<p>{language.bannerInfo}</p>
+					</S.Tooltip>
+				</Modal>
+			)}
 		</>
 	);
 }

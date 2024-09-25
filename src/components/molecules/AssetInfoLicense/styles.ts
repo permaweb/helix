@@ -74,6 +74,7 @@ export const LFlexValue = styled.div`
 	margin: 0 0 0 7.5px;
 	text-align: right;
 	svg {
+		height: 17.5px;
 		width: 17.5px;
 	}
 `;

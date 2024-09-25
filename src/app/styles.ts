@@ -31,7 +31,7 @@ export const GlobalStyle = createGlobalStyle`
 
   body {
     line-height: 1;
-    background: ${(props) => props.theme.colors.view.background};
+    background: ${(props) => props.theme.colors.container.alt2.background};
   }
 
   ol, ul {
@@ -177,14 +177,14 @@ export const GlobalStyle = createGlobalStyle`
 
   .border-wrapper-alt2 {
     background: ${(props) => props.theme.colors.container.primary.background};
-    box-shadow: 0 5px 15px 2.5px ${(props) => props.theme.colors.shadow.primary};
+    box-shadow: 0 1px 2px 0.5px ${(props) => props.theme.colors.shadow.primary};
     border: 1px solid ${(props) => props.theme.colors.border.alt4};
     border-radius: ${STYLING.dimensions.radius.primary};
   }
 
   .max-view-wrapper {
     width: 100%;
-    max-width: ${STYLING.cutoffs.max};
+		max-width: ${STYLING.cutoffs.max};
     margin: 0 auto;
   }
 
@@ -215,10 +215,13 @@ export const GlobalStyle = createGlobalStyle`
     animation: ${open} ${fadeIn1};
   }
 
+	.modal-wrapper {
+		padding: 0 20px 20px 20px;
+	}
+
   .scroll-wrapper {
     overflow: auto;
 
-    scrollbar-width: thin;
     scrollbar-color: transparent transparent;
     ::-webkit-scrollbar {
       width: 8px;
@@ -243,13 +246,30 @@ export const GlobalStyle = createGlobalStyle`
 `;
 
 export const View = styled.div`
-	min-height: calc(100vh - ${STYLING.dimensions.nav.headerHeight});
-	width: calc(100vw - ${STYLING.dimensions.nav.panelWidthClosed} - 15.75px);
-	margin: ${STYLING.dimensions.nav.headerHeight} 0 0 ${STYLING.dimensions.nav.panelWidthClosed};
-	padding: 20px;
+	height: calc(100vh - ${STYLING.dimensions.nav.headerHeight} - 10px);
+	width: calc(100vw - ${STYLING.dimensions.nav.panelWidthClosed} - 20px);
+	position: absolute;
+	top: ${STYLING.dimensions.nav.headerHeight};
+	left: calc(${STYLING.dimensions.nav.panelWidthClosed} + 10px);
+	padding: 25px 10px 25px 25px;
+	overflow-y: scroll;
+	border: 1px solid ${(props) => props.theme.colors.border.alt4};
+	background: ${(props) => props.theme.colors.view.background};
+	border-radius: ${STYLING.dimensions.radius.alt1};
+	animation: ${open} ${fadeIn1};
 	@media (max-width: ${STYLING.cutoffs.initial}) {
+		min-height: calc(100vh - ${STYLING.dimensions.nav.headerHeight});
+		height: fit-content;
 		width: 100%;
+		position: relative;
+		top: 0;
+		left: 0;
+		padding: 20px;
 		margin: ${STYLING.dimensions.nav.headerHeight} 0 0 0;
+		border-top-left-radius: ${STYLING.dimensions.radius.alt1};
+		border-top-right-radius: ${STYLING.dimensions.radius.alt1};
+		border-bottom-left-radius: 0;
+		border-bottom-right-radius: 0;
 	}
 `;
 

@@ -2,18 +2,17 @@ import React from 'react';
 import { randomBytes } from 'crypto-browserify';
 
 import Arweave from 'arweave';
-import { bufferTob64Url } from 'arweave/node/lib/utils.js';
-import { ArweaveWebWallet } from 'arweave-wallet-connector';
+import { bufferTob64Url } from 'arweave/node/lib/utils';
 import { ArconnectSigner } from 'arbundles';
-import { Othent } from 'permaweb-sdk/dist/helpers/wallet';
 
-import { getCurrentProfile } from 'gql';
+import { getProfileByWalletAddress, readHandler } from 'api';
 
 import { Modal } from 'components/molecules/Modal';
-import { API_CONFIG, APP, AR_WALLETS, ASSETS, GATEWAYS, WALLET_PERMISSIONS } from 'helpers/config';
+import { AO, API_CONFIG, AR_WALLETS, GATEWAYS, REDIRECTS, WALLET_PERMISSIONS } from 'helpers/config';
 import { getARBalanceEndpoint, getTurboBalanceEndpoint } from 'helpers/endpoints';
-import { ProfileType, WalletEnum } from 'helpers/types';
+import { ProfileHeaderType, WalletEnum } from 'helpers/types';
 import { getARAmountFromWinc } from 'helpers/utils';
+import Othent from 'helpers/wallet';
 import { useLanguageProvider } from 'providers/LanguageProvider';
 
 import * as S from './styles';
@@ -23,12 +22,17 @@ interface ArweaveContextState {
 	wallet: any;
 	walletAddress: string | null;
 	walletType: WalletEnum | null;
-	availableBalance: number | null;
+	arBalance: number | null;
+	tokenBalances: { [address: string]: number } | null;
+	toggleTokenBalanceUpdate: boolean;
+	setToggleTokenBalanceUpdate: (toggleUpdate: boolean) => void;
 	handleConnect: any;
 	handleDisconnect: () => void;
 	walletModalVisible: boolean;
 	setWalletModalVisible: (open: boolean) => void;
-	profile: any;
+	profile: ProfileHeaderType;
+	toggleProfileUpdate: boolean;
+	setToggleProfileUpdate: (toggleUpdate: boolean) => void;
 	turboBalance: number | string | null;
 	getTurboBalance: () => void;
 }
@@ -42,12 +46,17 @@ const DEFAULT_CONTEXT = {
 	wallet: null,
 	walletAddress: null,
 	walletType: null,
-	availableBalance: null,
+	arBalance: null,
+	tokenBalances: null,
+	toggleTokenBalanceUpdate: false,
+	setToggleTokenBalanceUpdate(_toggleUpdate: boolean) {},
 	handleConnect() {},
 	handleDisconnect() {},
 	walletModalVisible: false,
 	setWalletModalVisible(_open: boolean) {},
 	profile: null,
+	toggleProfileUpdate: false,
+	setToggleProfileUpdate(_toggleUpdate: boolean) {},
 	turboBalance: null,
 	getTurboBalance() {},
 };
@@ -67,6 +76,14 @@ function WalletList(props: { handleConnect: any }) {
 					<span>{wallet.type.charAt(0).toUpperCase() + wallet.type.slice(1)}</span>
 				</S.WalletListItem>
 			))}
+			<S.WalletLink>
+				<span>
+					Don't have an Arweave Wallet? You can create one{' '}
+					<a href={REDIRECTS.arconnect} target={'_blank'}>
+						here.
+					</a>
+				</span>
+			</S.WalletLink>
 		</S.WalletListContainer>
 	);
 }
@@ -81,27 +98,41 @@ export function ArweaveProvider(props: ArweaveProviderProps) {
 	const [walletType, setWalletType] = React.useState<WalletEnum | null>(null);
 	const [walletModalVisible, setWalletModalVisible] = React.useState<boolean>(false);
 	const [walletAddress, setWalletAddress] = React.useState<string | null>(null);
-	const [availableBalance, setAvailableBalance] = React.useState<number | null>(null);
+
+	const [arBalance, setArBalance] = React.useState<number | null>(null);
 	const [turboBalance, setTurboBalance] = React.useState<number | string | null>(null);
-	const [profile, setProfile] = React.useState<ProfileType | null>(null);
+	const [tokenBalances, setTokenBalances] = React.useState<{ [address: string]: number } | null>({
+		[AO.defaultToken]: null,
+		[AO.pixl]: null,
+	});
+	const [toggleTokenBalanceUpdate, setToggleTokenBalanceUpdate] = React.useState<boolean>(false);
+
+	const [profile, setProfile] = React.useState<ProfileHeaderType | null>(null);
+	const [toggleProfileUpdate, setToggleProfileUpdate] = React.useState<boolean>(false);
 
 	React.useEffect(() => {
 		(async function () {
-			if (localStorage.getItem('walletType')) {
-				try {
-					await handleConnect(localStorage.getItem('walletType') as any);
-				} catch (e: any) {
-					console.error(e);
-				}
-			}
+			await handleWallet();
 		})();
+	}, []);
+
+	React.useEffect(() => {
+		handleWallet();
+
+		window.addEventListener('arweaveWalletLoaded', handleWallet);
+		window.addEventListener('walletSwitch', handleWallet);
+
+		return () => {
+			window.removeEventListener('arweaveWalletLoaded', handleWallet);
+			window.removeEventListener('walletSwitch', handleWallet);
+		};
 	}, []);
 
 	React.useEffect(() => {
 		(async function () {
 			if (walletAddress) {
 				try {
-					setAvailableBalance(await getARBalance(walletAddress));
+					setArBalance(await getARBalance(walletAddress));
 				} catch (e: any) {
 					console.error(e);
 				}
@@ -113,7 +144,7 @@ export function ArweaveProvider(props: ArweaveProviderProps) {
 		(async function () {
 			if (wallet && walletAddress) {
 				try {
-					setProfile(await getCurrentProfile({ address: walletAddress }));
+					setProfile(await getProfileByWalletAddress({ address: walletAddress }));
 				} catch (e: any) {
 					console.error(e);
 				}
@@ -121,88 +152,90 @@ export function ArweaveProvider(props: ArweaveProviderProps) {
 		})();
 	}, [wallet, walletAddress, walletType]);
 
-	async function handleConnect(walletType: WalletEnum.arConnect | WalletEnum.othent | WalletEnum.arweaveApp) {
-		let walletObj: any = null;
-		switch (walletType) {
-			case WalletEnum.arConnect:
-				handleArConnect();
-				break;
-			case WalletEnum.othent:
-				handleOthent();
-				break;
-			case WalletEnum.arweaveApp:
-				handleArweaveApp();
-				break;
-			default:
-				if (window.arweaveWallet || walletType === WalletEnum.arConnect) {
-					handleArConnect();
-					break;
-				} else {
-					handleArweaveApp();
-					break;
-				}
-		}
-		setWalletModalVisible(false);
-		return walletObj;
-	}
+	React.useEffect(() => {
+		(async function () {
+			if (wallet && walletAddress) {
+				const fetchProfileUntilChange = async () => {
+					let changeDetected = false;
+					let tries = 0;
+					const maxTries = 10;
 
-	async function handleArConnect() {
-		if (!walletAddress) {
-			if (window.arweaveWallet) {
-				try {
-					await global.window?.arweaveWallet?.connect(WALLET_PERMISSIONS as any);
-					setWalletAddress(await global.window.arweaveWallet.getActiveAddress());
-					setWallet(window.arweaveWallet);
-					setWalletType(WalletEnum.arConnect);
-					setWalletModalVisible(false);
-					localStorage.setItem('walletType', WalletEnum.arConnect);
-				} catch (e: any) {
-					alert(e);
-				}
-			} else {
-				alert(language.connectorNotFound);
+					while (!changeDetected && tries < maxTries) {
+						try {
+							const existingProfile = profile;
+							const newProfile = await getProfileByWalletAddress({ address: walletAddress });
+
+							if (JSON.stringify(existingProfile) !== JSON.stringify(newProfile)) {
+								setProfile(newProfile);
+								changeDetected = true;
+							} else {
+								await new Promise((resolve) => setTimeout(resolve, 1000));
+								tries++;
+							}
+						} catch (error) {
+							console.error(error);
+							break;
+						}
+					}
+
+					if (!changeDetected) {
+						console.warn(`No changes detected after ${maxTries} attempts`);
+					}
+				};
+
+				await fetchProfileUntilChange();
 			}
+		})();
+	}, [toggleProfileUpdate]);
+
+	React.useEffect(() => {
+		if (profile && profile.id) {
+			const fetchDefaultTokenBalance = async () => {
+				try {
+					const defaultTokenBalance = await readHandler({
+						processId: AO.defaultToken,
+						action: 'Balance',
+						tags: [{ name: 'Recipient', value: profile.id }],
+					});
+					setTokenBalances((prevBalances) => ({
+						...prevBalances,
+						[AO.defaultToken]: defaultTokenBalance || 0,
+					}));
+				} catch (e) {
+					console.error(e);
+				}
+			};
+
+			fetchDefaultTokenBalance();
+		} else {
+			setTokenBalances({
+				[AO.defaultToken]: 0,
+				[AO.pixl]: 0,
+			});
 		}
-	}
+	}, [profile, toggleTokenBalanceUpdate]);
 
-	async function handleOthent() {
-		Othent.init();
-		// @ts-ignore -- othent ignores permissions, so no point passing in
-		await window.arweaveWallet.connect();
-		setWallet(window.arweaveWallet);
-		setWalletAddress(Othent.getUserInfo().walletAddress);
-		setWalletType(WalletEnum.othent);
-		localStorage.setItem('walletType', WalletEnum.othent);
-	}
+	React.useEffect(() => {
+		if (profile && profile.id) {
+			const fetchPixlTokenBalance = async () => {
+				try {
+					const pixlTokenBalance = await readHandler({
+						processId: AO.pixl,
+						action: 'Balance',
+						tags: [{ name: 'Recipient', value: profile.id }],
+					});
+					setTokenBalances((prevBalances) => ({
+						...prevBalances,
+						[AO.pixl]: pixlTokenBalance || 0,
+					}));
+				} catch (e) {
+					console.error(e);
+				}
+			};
 
-	async function handleArweaveApp() {
-		const wallet = new ArweaveWebWallet({
-			name: APP.name,
-			logo: ASSETS.wallets.arweaveApp,
-		});
-		wallet.setUrl(WalletEnum.arweaveApp);
-		await wallet.connect();
-		wallet.on('disconnect', () => {
-			handleDisconnect();
-		});
-		setWallet(wallet);
-		setWalletType(WalletEnum.arweaveApp);
-		localStorage.setItem('walletType', WalletEnum.arweaveApp);
-	}
-
-	async function handleDisconnect() {
-		await global.window?.arweaveWallet?.disconnect();
-		setWallet(null);
-		setWalletAddress(null);
-		setProfile(null);
-		if (localStorage.getItem('walletType')) localStorage.removeItem('walletType');
-	}
-
-	async function getARBalance(walletAddress: string) {
-		const rawBalance = await fetch(getARBalanceEndpoint(walletAddress));
-		const jsonBalance = await rawBalance.json();
-		return jsonBalance / 1e12;
-	}
+			fetchPixlTokenBalance();
+		}
+	}, [profile, toggleTokenBalanceUpdate]);
 
 	async function getTurboBalance() {
 		if (wallet && walletType) {
@@ -244,10 +277,79 @@ export function ArweaveProvider(props: ArweaveProviderProps) {
 		}
 	}
 
+	async function handleWallet() {
+		if (localStorage.getItem('walletType')) {
+			try {
+				await handleConnect(localStorage.getItem('walletType') as any);
+			} catch (e: any) {
+				console.error(e);
+			}
+		}
+	}
+
+	async function handleConnect(walletType: WalletEnum.arConnect | WalletEnum.othent) {
+		let walletObj: any = null;
+		switch (walletType) {
+			case WalletEnum.arConnect:
+				handleArConnect();
+				break;
+			case WalletEnum.othent:
+				handleOthent();
+				break;
+			default:
+				if (window.arweaveWallet || walletType === WalletEnum.arConnect) {
+					handleArConnect();
+					break;
+				}
+		}
+		setWalletModalVisible(false);
+		return walletObj;
+	}
+
+	async function handleArConnect() {
+		if (!walletAddress) {
+			if (window.arweaveWallet) {
+				try {
+					await global.window?.arweaveWallet?.connect(WALLET_PERMISSIONS as any);
+					setWalletAddress(await global.window.arweaveWallet.getActiveAddress());
+					setWallet(window.arweaveWallet);
+					setWalletType(WalletEnum.arConnect);
+					setWalletModalVisible(false);
+					localStorage.setItem('walletType', WalletEnum.arConnect);
+				} catch (e: any) {
+					console.error(e);
+				}
+			}
+		}
+	}
+
+	async function handleOthent() {
+		Othent.init();
+		await window.arweaveWallet.connect(WALLET_PERMISSIONS as any);
+		setWallet(window.arweaveWallet);
+		setWalletAddress(Othent.getUserInfo().walletAddress);
+		setWalletType(WalletEnum.othent);
+		localStorage.setItem('walletType', WalletEnum.othent);
+	}
+
+	async function handleDisconnect() {
+		await global.window?.arweaveWallet?.disconnect();
+		setWallet(null);
+		setWalletAddress(null);
+		setProfile(null);
+		if (localStorage.getItem('walletType')) localStorage.removeItem('walletType');
+	}
+
+	async function getARBalance(walletAddress: string) {
+		const rawBalance = await fetch(getARBalanceEndpoint(walletAddress));
+		const jsonBalance = await rawBalance.json();
+		return jsonBalance / 1e12;
+	}
+
 	return (
 		<>
 			{walletModalVisible && (
-				<Modal header={language.connect} handleClose={() => setWalletModalVisible(false)}>
+				<Modal header={language.connectWallet} handleClose={() => setWalletModalVisible(false)}>
 					<WalletList handleConnect={handleConnect} />
 				</Modal>
 			)}
@@ -256,13 +358,18 @@ export function ArweaveProvider(props: ArweaveProviderProps) {
 					wallet,
 					walletAddress,
 					walletType,
-					availableBalance,
+					arBalance,
+					tokenBalances,
+					toggleTokenBalanceUpdate,
+					setToggleTokenBalanceUpdate,
 					handleConnect,
 					handleDisconnect,
 					wallets,
 					walletModalVisible,
 					setWalletModalVisible,
 					profile,
+					toggleProfileUpdate,
+					setToggleProfileUpdate,
 					turboBalance: turboBalance,
 					getTurboBalance: getTurboBalance,
 				}}

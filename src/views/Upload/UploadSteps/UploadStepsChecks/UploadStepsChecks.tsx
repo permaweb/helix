@@ -3,13 +3,13 @@ import { useSelector } from 'react-redux';
 
 import { getLicenseValuePayment } from 'gql';
 
-import { Button } from 'components/atoms/Button';
+// import { Button } from 'components/atoms/Button';
 import { AssetInfoLicense } from 'components/molecules/AssetInfoLicense';
 import { Modal } from 'components/molecules/Modal';
 import { TurboBalanceFund } from 'components/molecules/TurboBalanceFund';
 import { ASSETS, TAGS } from 'helpers/config';
-import { formatTurboAmount, getTurboBalance } from 'helpers/utils';
-import { useArweaveProvider } from 'providers/ArweaveProvider';
+// import { formatTurboAmount, getTurboBalance } from 'helpers/utils';
+// import { useArweaveProvider } from 'providers/ArweaveProvider';
 import { useLanguageProvider } from 'providers/LanguageProvider';
 import { RootState } from 'store';
 
@@ -18,7 +18,7 @@ import * as S from './styles';
 export default function UploadStepsChecks() {
 	const uploadReducer = useSelector((state: RootState) => state.uploadReducer);
 
-	const arProvider = useArweaveProvider();
+	// const arProvider = useArweaveProvider();
 
 	const languageProvider = useLanguageProvider();
 	const language = languageProvider.object[languageProvider.current];
@@ -56,9 +56,9 @@ export default function UploadStepsChecks() {
 							</S.InfoLine>
 						</>
 					)}
-					{uploadReducer.data.topics && uploadReducer.data.topics.length && (
-						<S.InfoLine>
-							<span>{language.topics}</span>
+					<S.InfoLine>
+						<span>{language.topics}</span>
+						{uploadReducer.data.topics && uploadReducer.data.topics.length > 0 ? (
 							<S.TWrapper>
 								{uploadReducer.data.topics.map((topic: string, index: number) => {
 									return (
@@ -69,8 +69,10 @@ export default function UploadStepsChecks() {
 									);
 								})}
 							</S.TWrapper>
-						</S.InfoLine>
-					)}
+						) : (
+							<p>-</p>
+						)}
+					</S.InfoLine>
 				</S.InfoWrapper>
 				<S.InfoHeader>
 					<span>{language.assets}</span>
@@ -110,7 +112,7 @@ export default function UploadStepsChecks() {
 								license: TAGS.values.license,
 								access: {
 									value: `${uploadReducer.data.license.accessFee.value}-${uploadReducer.data.license.accessFee.amount}`,
-									icon: ASSETS.u,
+									icon: ASSETS.wrappedAr,
 								},
 								derivations: getLicenseValuePayment(
 									`${uploadReducer.data.license.derivations.value}-${uploadReducer.data.license.derivations.terms.value}-${uploadReducer.data.license.derivations.terms.amount}`
@@ -127,7 +129,7 @@ export default function UploadStepsChecks() {
 						}}
 					/>
 				)}
-				{arProvider.wallet && (
+				{/* {arProvider.wallet && (
 					<>
 						<S.InfoHeader>
 							<span>{language.paymentInformation}</span>
@@ -170,7 +172,7 @@ export default function UploadStepsChecks() {
 							</S.InfoLine>
 						</S.InfoWrapper>
 					</>
-				)}
+				)} */}
 			</S.Wrapper>
 			{showPlayer && uploadReducer.data.content && (
 				<Modal header={language.previewContent} handleClose={() => setShowPlayer(false)}>

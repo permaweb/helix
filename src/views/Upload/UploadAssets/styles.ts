@@ -49,6 +49,7 @@ export const EIcon = styled.div`
 	svg {
 		height: 75px;
 		width: 75px;
+		padding: 5px 0 0 0;
 		fill: ${(props) => props.theme.colors.icon.primary.fill};
 	}
 `;
@@ -65,6 +66,7 @@ export const EInfo = styled.div`
 		font-weight: ${(props) => props.theme.typography.weight.bold};
 	}
 	span {
+		max-width: 330px;
 		color: ${(props) => props.theme.colors.font.alt1};
 		font-size: ${(props) => props.theme.typography.size.xSmall};
 		font-weight: ${(props) => props.theme.typography.weight.medium};
