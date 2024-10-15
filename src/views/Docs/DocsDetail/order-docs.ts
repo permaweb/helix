@@ -35,4 +35,8 @@ export const docsOrder = [
 		name: 'Why create atomic assets',
 		path: 'why-create-atomic-assets',
 	},
+	{
+		name: 'Contact',
+		path: 'contact',
+	},
 ];
