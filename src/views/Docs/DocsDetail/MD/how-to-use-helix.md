@@ -1,6 +1,6 @@
 ## How to use Helix
 
-Helix is an easy to use tool that allows creators to upload atomic assets and create tradeable collections for your existing atomic assets. Here are the steps for how to get started uploading to the permaweb with Helix.
+Helix is an easy to use tool that allows creators to upload atomic assets and create tradeable collections for your existing atomic assets. Here are the steps for how to get started uploading to the permaweb with Helix. **See the full Helix video tutorial [here](https://www.youtube.com/watch?v=bhLlFepA7LU&t=1s).**
 
 #### Connect your permaweb profile
 
