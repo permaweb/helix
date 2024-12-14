@@ -506,7 +506,7 @@ export default function Upload() {
 						});
 
 						if (evalResult) {
-							await aos.message({
+							const profileUpdateMessage = await aos.message({
 								process: processId,
 								signer: createDataItemSigner(globalThis.arweaveWallet),
 								tags: [
@@ -516,6 +516,8 @@ export default function Upload() {
 								],
 								data: JSON.stringify({ Id: processId, Quantity: balance }),
 							});
+
+							console.log(`Profile update: ${profileUpdateMessage}`);
 
 							uploadedAssetsList.push(processId);
 						}
