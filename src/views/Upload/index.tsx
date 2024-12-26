@@ -414,6 +414,7 @@ export default function Upload() {
 					const buffer: any = await fileToBuffer(data.file);
 
 					try {
+						console.log(`Asset src: ${AO.assetSrc}`);
 						const processSrcFetch = await fetch(getTxEndpoint(AO.assetSrc));
 						if (processSrcFetch.ok) {
 							processSrc = await processSrcFetch.text();
