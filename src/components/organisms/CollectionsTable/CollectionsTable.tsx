@@ -103,6 +103,7 @@ function CollectionDropdown(props: { id: string; title: string }) {
 								{ name: 'Recipient', value: recipient },
 								{ name: 'Quantity', value: quantity },
 								{ name: 'X-Order-Action', value: 'Create-Order' },
+								{ name: 'X-Dominant-Token', value: dominantToken },
 								{ name: 'X-Swap-Token', value: swapToken },
 								{ name: 'X-Price', value: unitPrice },
 							];
