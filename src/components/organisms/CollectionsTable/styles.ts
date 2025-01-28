@@ -105,12 +105,11 @@ export const MHeader = styled.div`
 `;
 
 export const MMessage = styled.div`
-	margin: 0 0 30px 0;
-	padding: 10px 12.5px;
+	margin: 20px 0 0 0;
 	display: flex;
 	flex-direction: column;
 	pre {
-		color: ${(props) => props.theme.colors.font.alt1};
+		color: ${(props) => props.theme.colors.font.primary};
 		font-size: ${(props) => props.theme.typography.size.xSmall};
 		font-weight: ${(props) => props.theme.typography.weight.bold};
 		font-family: ${(props) => props.theme.typography.family.alt1};

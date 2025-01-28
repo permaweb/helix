@@ -23,9 +23,30 @@ export const CollectionWrapper = styled(SectionWrapper)`
 	}
 `;
 
+export const AssetsCollectionWrapper = styled.div`
+	margin: 20px 0;
+`;
+
+export const AssetsCollectionHeader = styled.div`
+	p {
+		color: ${(props) => props.theme.colors.font.primary};
+		font-size: ${(props) => props.theme.typography.size.xSmall};
+		font-weight: ${(props) => props.theme.typography.weight.bold};
+		display: block;
+		margin: 0 0 10px 0;
+	}
+`;
+
+export const AssetsCollectionBody = styled.div`
+	width: 100%;
+
+	#collection-empty-wrapper {
+		margin: 15px 0 20px 0;
+	}
+`;
+
 export const COWrapper = styled.div`
-	padding: 15px;
-	margin: 0 0 25px 0;
+	margin: 25px 0;
 `;
 
 export const CWrapper = styled.div`
@@ -189,7 +210,7 @@ export const ROptionsWrapper = styled.div`
 
 export const ROption = styled.button<{ active: boolean; disabled: boolean }>`
 	background: ${(props) =>
-		props.active ? props.theme.colors.button.primary.active.background : props.theme.colors.button.primary.background};
+		props.active ? props.theme.colors.button.primary.active.background : props.theme.colors.container.primary.active};
 	border: 1px solid
 		${(props) =>
 			props.active ? props.theme.colors.button.primary.active.border : props.theme.colors.button.primary.border};

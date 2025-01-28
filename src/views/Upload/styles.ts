@@ -67,17 +67,41 @@ export const MWrapper = styled.div`
 `;
 
 export const MInfo = styled.div`
-	margin: 0 0 20px 0;
+	margin: 20px 0 0 0;
 	span {
 		color: ${(props) => props.theme.colors.font.primary};
 		font-size: ${(props) => props.theme.typography.size.small};
-		font-weight: ${(props) => props.theme.typography.weight.medium};
+		font-weight: ${(props) => props.theme.typography.weight.bold};
+		font-family: ${(props) => props.theme.typography.family.alt1};
 		line-height: 1.5;
 	}
 `;
 
+export const MLog = styled.div`
+	margin: 20px 0 0 0;
+	a,
+	p {
+		color: ${(props) => props.theme.colors.font.primary};
+		font-size: ${(props) => props.theme.typography.size.small};
+		font-weight: ${(props) => props.theme.typography.weight.bold};
+		font-family: ${(props) => props.theme.typography.family.alt1};
+	}
+	a {
+		text-decoration: underline;
+		text-decoration-thickness: 1.25px;
+
+		&:hover {
+			color: ${(props) => props.theme.colors.font.alt1};
+		}
+	}
+
+	#error-log-detail {
+		color: ${(props) => props.theme.colors.warning};
+	}
+`;
+
 export const MActions = styled.div`
-	margin: 10px 0 0 0;
+	margin: 20px 0 0 0;
 	display: flex;
 	justify-content: flex-end;
 	flex-wrap: wrap;
@@ -98,14 +122,15 @@ export const AGraphic = styled.div`
 `;
 
 export const ActionWrapper = styled.div<{ loading: boolean | string }>`
-	height: 37.5px;
-	width: 335px;
+	height: 45px;
+	width: 100%;
 	max-width: 90vw;
 	display: flex;
 	justify-content: center;
 	align-items: center;
-	margin: 40px auto 0 auto;
+	margin: 20px auto 0 auto;
 	position: relative;
+	background: ${(props) => props.theme.colors.container.alt1.background};
 	border: 1px solid ${(props) => props.theme.colors.border.primary};
 	border-radius: 20px;
 	overflow: hidden;
@@ -200,6 +225,13 @@ export const AMessage = styled.div`
 export const AMessageAlt = styled(AMessage)`
 	span {
 		color: ${(props) => props.theme.colors.font.primary};
+		font-family: ${(props) => props.theme.typography.family.alt1};
+	}
+`;
+
+export const AMessageAlt1 = styled(AMessageAlt)`
+	span {
+		color: ${(props) => props.theme.colors.font.alt1};
 		font-family: ${(props) => props.theme.typography.family.alt1};
 	}
 `;

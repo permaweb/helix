@@ -23,14 +23,14 @@ const nonProductionAddresses = {
 	MODULE: 'Pq2Zftrqut0hdisH_MC2pDOT6S4eQFoxGsFUzR6r350',
 	SCHEDULER: '_GQ33BkPtZrqxA84vM8Zk-N2aO0toNNu_C-l-rawrBA',
 	DEFAULT_TOKEN: 'xU9zFkq3X2ZQ6olwNVvr1vUWIjc3kXTWr7xKQD6dh10',
-	UCM: 'qtDwylCwyhhsGPKIYAi2Ao342mdhvFUPqdbDOudzaiM',
-	UCM_ACTIVITY: 'GC9M776w8UEZVkvAGcLqhrH10uumkbQUYrnIo1AiWHo',
+	UCM: 'CDxd81DDaJvpzxoyhXn-dVnZhYIFQEKU8FeUHdktFgQ',
+	UCM_ACTIVITY: 'W45ki8vJ0TcsxZAGZIbGj3k38595TA0HfZwCOaqhOa0',
 	PIXL: 'DM3FoZUq_yebASPhgd8pEIRIzDW6muXEhxz5-JwbZwo',
-	PROFILE_REGISTRY: 'jndJ0phxOaJJU6CHZVX7zo2Wl5vI2KQ1z4i3VnV4DrM',
+	PROFILE_REGISTRY: 'SNy4m-DrqxWl01YqGM4sxI8qCni-58re8uuJLvZPypY',
 	PROFILE_SRC: '9Tpz5_ZT4RRkF-6JUTdaaTMg0ARfkNuuM5zahXyCqZ4',
-	COLLECTIONS_REGISTRY: 'q0QVp2rPXOuqIj6mbRObaC-HMweexSv1Y_Nm9_t1brc',
-	COLLECTION_SRC: '2ZDuM2VUCN8WHoAKOOjiH4_7Apq0ZHKnTWdLppxCdGY',
-	ASSET_SRC: 'S_pkWJ68HXZESWC1ldr28QDTZgc7sQlwQvzGmgSQoH4',
+	COLLECTIONS_REGISTRY: '1oBtIRAmhLVJFABGKYlhcsACjyh36ahSJ-4lJEuvgzA',
+	VOUCH: 'ZTTO02BL2P-lseTLUgiIPD9d0CF1sc4LbMA2AQ7e9jo',
+	STAMPS: 'LaC2VtxqGekpRPuJh-TkI_ByAqCS2_KB3YuhMJ5yBtc',
 };
 
 const env = process.env.NODE_ENV || 'development';
@@ -46,7 +46,7 @@ module.exports = {
 		filename: 'bundle.js',
 	},
 	devtool: 'eval',
-	mode: isProduction || isStaging ? 'production' : 'development',
+	mode: isProduction ? 'production' : 'development',
 	devServer: {
 		static: {
 			directory: path.join(__dirname, 'dist'),
@@ -60,18 +60,17 @@ module.exports = {
 			overlay: true,
 		},
 	},
-	optimization:
-		isProduction || isStaging
-			? {
-					minimize: true,
-					minimizer: [
-						new TerserPlugin({
-							extractComments: false,
-						}),
-					],
-					usedExports: true,
-			  }
-			: {},
+	optimization: isProduction
+		? {
+				minimize: true,
+				minimizer: [
+					new TerserPlugin({
+						extractComments: false,
+					}),
+				],
+				usedExports: true,
+		  }
+		: {},
 	ignoreWarnings: [
 		{
 			message:

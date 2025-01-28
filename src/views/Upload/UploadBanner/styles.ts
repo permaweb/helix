@@ -114,7 +114,7 @@ export const TAction = styled.div`
 	}
 `;
 
-export const TWrapper = styled.button<{ active: boolean }>`
+export const TWrapper = styled.div<{ active: boolean; disabled: boolean }>`
 	height: 150px;
 	width: 100%;
 	border-radius: ${STYLING.dimensions.radius.alt2};
@@ -131,6 +131,7 @@ export const TWrapper = styled.button<{ active: boolean }>`
 		border-radius: ${STYLING.dimensions.radius.alt2};
 	}
 	&:hover {
+		cursor: pointer;
 		opacity: 0.85;
 		${TAction} {
 			display: block;

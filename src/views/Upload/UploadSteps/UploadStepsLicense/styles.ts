@@ -28,7 +28,7 @@ export const OptionsWrapper = styled.div`
 
 export const Option = styled.button<{ active: boolean; disabled: boolean }>`
 	background: ${(props) =>
-		props.active ? props.theme.colors.button.primary.active.background : props.theme.colors.button.primary.background};
+		props.active ? props.theme.colors.button.primary.active.background : props.theme.colors.container.primary.active};
 	border: 1px solid
 		${(props) =>
 			props.active ? props.theme.colors.button.primary.active.border : props.theme.colors.button.primary.border};

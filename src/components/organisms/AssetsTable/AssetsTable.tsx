@@ -23,7 +23,7 @@ import { CloseHandler } from 'wrappers/CloseHandler';
 
 import * as S from './styles';
 
-function AssetDropdown(props: { id: string; title: string; handleToggleUpdate: () => void }) {
+export function AssetDropdown(props: { id: string; title: string; handleToggleUpdate: () => void }) {
 	const arProvider = useArweaveProvider();
 
 	const languageProvider = useLanguageProvider();

@@ -12,7 +12,7 @@ import { TurboBalanceFund } from 'components/molecules/TurboBalanceFund';
 import { ALLOWED_ASSET_TYPES, ASSETS, MAX_UPLOAD_SIZE } from 'helpers/config';
 import { getTurboCostWincEndpoint } from 'helpers/endpoints';
 import { ActiveFieldAddType, AlignType, FileMetadataType, SequenceType } from 'helpers/types';
-import { formatTurboAmount, getARAmountFromWinc, getByteSizeDisplay, stripFileExtension } from 'helpers/utils';
+import { getARAmountFromWinc, getByteSizeDisplay, stripFileExtension } from 'helpers/utils';
 import { useArweaveProvider } from 'providers/ArweaveProvider';
 import { useLanguageProvider } from 'providers/LanguageProvider';
 import { RootState } from 'store';
@@ -377,11 +377,11 @@ export default function UploadAssets() {
 								: sequence.end + 1
 						}`}</span>
 					</S.TMessage>
-					{arProvider.walletAddress && uploadReducer.uploadCost !== null && (
+					{/* {arProvider.walletAddress && uploadReducer.uploadCost !== null && (
 						<S.TMessage>
 							<span>{`${language.uploadCost}: ${formatTurboAmount(uploadReducer.uploadCost)}`}</span>
 						</S.TMessage>
-					)}
+					)} */}
 				</>
 			);
 		} else {

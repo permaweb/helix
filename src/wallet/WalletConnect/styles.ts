@@ -53,7 +53,7 @@ export const FlexAction = styled.div`
 export const Dropdown = styled.ul`
 	width: 315px;
 	max-width: 90vw;
-	padding: 20px 0 10px 0;
+	padding: 20px 0 0 0;
 	position: absolute;
 	top: 57.5px;
 	right: 15.75px;
@@ -86,10 +86,8 @@ export const DHeader = styled.div`
 `;
 
 export const BWrapper = styled.div`
-	margin: 20px 0 0 0;
-	padding: 15px;
-	border-top: 1px solid ${(props) => props.theme.colors.border.alt4};
-	border-bottom: 1px solid ${(props) => props.theme.colors.border.alt4};
+	margin: 15px 0 0 0;
+	padding: 0 15px;
 	p {
 		color: ${(props) => props.theme.colors.font.primary};
 		font-size: ${(props) => props.theme.typography.size.small};
@@ -107,6 +105,25 @@ export const BWrapper = styled.div`
 		&:last-child {
 			margin: 0;
 		}
+	}
+`;
+
+export const BalanceLine = styled.div`
+	height: 40px;
+	display: flex;
+	align-items: center;
+	span {
+		font-size: ${(props) => props.theme.typography.size.base};
+		font-family: ${(props) => props.theme.typography.family.alt1};
+		font-weight: ${(props) => props.theme.typography.weight.bold};
+		color: ${(props) => props.theme.colors.font.primary};
+	}
+	svg {
+		height: 16.5px;
+		width: 16.5px;
+		margin: 2.5px 8.5px 0 0;
+		color: ${(props) => props.theme.colors.font.alt1};
+		fill: ${(props) => props.theme.colors.font.alt1};
 	}
 `;
 
@@ -134,28 +151,54 @@ export const BHeaderActions = styled.div`
 
 export const DBodyWrapper = styled.ul`
 	width: 100%;
-	padding: 10px 0;
+	padding: 0 7.5px 10px 7.5px;
 	li {
 		text-align: center;
-		height: 37.5px;
+		height: 40.5px;
 		display: flex;
 		align-items: center;
 		cursor: pointer;
-		font-size: ${(props) => props.theme.typography.size.small};
-		font-family: ${(props) => props.theme.typography.family.primary};
-		font-weight: ${(props) => props.theme.typography.weight.bold};
 		color: ${(props) => props.theme.colors.font.primary};
+		font-family: ${(props) => props.theme.typography.family.primary};
+		font-size: ${(props) => props.theme.typography.size.xSmall};
+		font-weight: ${(props) => props.theme.typography.weight.bold};
 		border: 1px solid transparent;
-		padding: 0 15px;
-		transition: all 75ms;
+		border-radius: ${STYLING.dimensions.radius.alt2};
+		transition: all 100ms;
+		padding: 0 7.5px;
+		svg {
+			height: 14.5px;
+			width: 14.5px;
+			margin: 2.5px 10.5px 0 0;
+			color: ${(props) => props.theme.colors.font.alt1};
+			fill: ${(props) => props.theme.colors.font.alt1};
+		}
 		&:hover {
-			background: ${(props) => props.theme.colors.button.primary.background};
+			color: ${(props) => props.theme.colors.font.primary};
+			background: ${(props) => props.theme.colors.container.primary.active};
+		}
+
+		a {
+			height: 100%;
+			width: 100%;
+			display: flex;
+			align-items: center;
+			border-radius: ${STYLING.dimensions.radius.primary};
+			&:hover {
+				color: ${(props) => props.theme.colors.font.primary};
+				background: ${(props) => props.theme.colors.container.primary.active};
+			}
 		}
 	}
 `;
 
 export const DFooterWrapper = styled(DBodyWrapper)`
-	padding: 10px 0 0 0;
-	border-top: 1px solid ${(props) => props.theme.colors.border.alt4};
 	border-bottom: none;
+	svg {
+		height: 15.5px;
+		width: 15.5px;
+		margin: 6.5px 8.5px 0 0;
+		color: ${(props) => props.theme.colors.font.alt1};
+		fill: ${(props) => props.theme.colors.font.alt1};
+	}
 `;

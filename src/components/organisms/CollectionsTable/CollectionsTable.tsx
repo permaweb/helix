@@ -1,15 +1,17 @@
 import React from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { ReactSVG } from 'react-svg';
+import { createOrder } from '@permaweb/ucm';
 
-import { messageResults, readHandler } from 'api';
+import { readHandler } from 'api';
 
 import { Button } from 'components/atoms/Button';
+import { Checkbox } from 'components/atoms/Checkbox';
 import { FormField } from 'components/atoms/FormField';
 import { IconButton } from 'components/atoms/IconButton';
 import { Loader } from 'components/atoms/Loader';
-import { Modal } from 'components/molecules/Modal';
+import { Panel } from 'components/molecules/Panel';
 import { Table } from 'components/molecules/Table';
 import { AO, ASSETS, PAGINATORS, REDIRECTS, URLS } from 'helpers/config';
 import { AlignType, CollectionType } from 'helpers/types';
@@ -17,6 +19,7 @@ import { checkValidAddress, formatAddress } from 'helpers/utils';
 import { useArweaveProvider } from 'providers/ArweaveProvider';
 import { useLanguageProvider } from 'providers/LanguageProvider';
 import { RootState } from 'store';
+import * as uploadActions from 'store/upload/actions';
 import { CloseHandler } from 'wrappers/CloseHandler';
 
 import * as S from './styles';
@@ -39,7 +42,7 @@ function CollectionDropdown(props: { id: string; title: string }) {
 	const [listingModalOpen, setListingModalOpen] = React.useState<boolean>(false);
 
 	const [loading, setLoading] = React.useState<boolean>(false);
-	const [response, setResponse] = React.useState<{ status: boolean; message: string }>(null);
+	const [listingLog, setListingLog] = React.useState<string | null>('');
 
 	React.useEffect(() => {
 		(async function () {
@@ -69,13 +72,8 @@ function CollectionDropdown(props: { id: string; title: string }) {
 			collection.Assets &&
 			collection.Assets.length
 		) {
-			let responseMessage = '';
 			setLoading(true);
 			try {
-				setResponse({
-					status: true,
-					message: responseMessage,
-				});
 				for (let i = 0; i < collection.Assets.length; i++) {
 					try {
 						const infoResponse = await readHandler({
@@ -83,64 +81,52 @@ function CollectionDropdown(props: { id: string; title: string }) {
 							action: 'Info',
 						});
 
-						const title = `(${i + 1}) ${infoResponse.Name || '-'}`;
+						const title = `(${i + 1}) ${infoResponse?.Name ?? '-'}`;
 						let balance = 0;
 						if (infoResponse && infoResponse.Balances && infoResponse.Balances[arProvider.profile.id]) {
 							balance = Number(infoResponse.Balances[arProvider.profile.id]);
 						}
 
 						if (balance > 0) {
-							const pair = [collection.Assets[i], AO.defaultToken];
-							const dominantToken = pair[0];
-							const swapToken = pair[1];
-							const recipient = AO.ucm;
-
+							const dominantToken = collection.Assets[i];
+							const swapToken = AO.defaultToken;
 							const quantity = Math.floor((percentage / 100) * balance).toString();
 							const unitPrice = (price * DENOMINATION).toString();
 
-							const transferTags = [
-								{ name: 'Target', value: dominantToken },
-								{ name: 'Recipient', value: recipient },
-								{ name: 'Quantity', value: quantity },
-								{ name: 'X-Order-Action', value: 'Create-Order' },
-								{ name: 'X-Dominant-Token', value: dominantToken },
-								{ name: 'X-Swap-Token', value: swapToken },
-								{ name: 'X-Price', value: unitPrice },
-							];
+							const data: any = {
+								orderbookId: AO.ucm,
+								creatorId: arProvider.profile.id,
+								dominantToken: dominantToken,
+								swapToken: swapToken,
+								quantity: quantity,
+							};
 
-							const orderResponse: any = await messageResults({
-								processId: arProvider.profile.id,
-								action: 'Transfer',
-								wallet: arProvider.wallet,
-								tags: transferTags,
-								data: null,
-								responses: ['Transfer-Success', 'Transfer-Error'],
-								handler: 'Create-Order',
-							});
-							if (orderResponse) {
-								responseMessage += `${title}: Listing created!\n`;
-								setResponse({
-									status: true,
-									message: responseMessage,
-								});
+							if (unitPrice) data.unitPrice = unitPrice.toString();
+
+							const orderId = await createOrder(
+								{ wallet: arProvider.wallet },
+								data,
+								(args: { processing: boolean; success: boolean; message: string }) => {
+									setListingLog((prev) => prev + `${args.message}\n`);
+								}
+							);
+
+							if (orderId) {
+								setListingLog((prev) => prev + `${title}: Listing created!\n`);
 							} else {
-								responseMessage += `${title}: ` + language.errorOccurred + '\n';
-								setResponse({ status: false, message: responseMessage });
+								setListingLog((prev) => prev + `${title} ${language.errorOccurred}\n`);
 							}
 						} else {
-							responseMessage += `${title}: Not enough tokens to create listing!\n`;
-							setResponse({
-								status: false,
-								message: responseMessage,
-							});
+							setListingLog((prev) => prev + `${title}: Not enough tokens to create listing!\n`);
 						}
 					} catch (e: any) {
-						setResponse({ status: false, message: e.message ? e.message : language.errorOccurred });
+						console.error(e);
+						setListingLog((prev) => prev + `${e.message ?? language.errorOccurred}\n`);
 					}
 				}
 			} catch (e: any) {
 				console.error(e);
-				setResponse({ status: false, message: e.message ? e.message : language.errorOccurred });
+				setListingLog((prev) => prev + `${e.message ?? language.errorOccurred}\n`);
 			}
 			setLoading(false);
 		}
@@ -188,7 +174,7 @@ function CollectionDropdown(props: { id: string; title: string }) {
 	function getListingModal() {
 		return (
 			<>
-				<Modal header={language.createListings} handleClose={() => setListingModalOpen(false)}>
+				<Panel open={true} width={600} header={language.createListings} handleClose={null}>
 					<S.MCWrapper>
 						<S.MBody>
 							<S.MHeader>
@@ -199,7 +185,7 @@ function CollectionDropdown(props: { id: string; title: string }) {
 								label={language.listingPrice}
 								value={isNaN(price) ? '' : price}
 								onChange={(e: React.ChangeEvent<HTMLInputElement>) => handlePriceInput(e, 'price')}
-								disabled={loading || response !== null || !collection}
+								disabled={loading || !collection}
 								invalid={getInvalidPrice()}
 								tooltip={language.listingPriceInfo}
 							/>
@@ -208,43 +194,34 @@ function CollectionDropdown(props: { id: string; title: string }) {
 								label={language.listingPercentage}
 								value={isNaN(percentage) ? '' : percentage}
 								onChange={(e: React.ChangeEvent<HTMLInputElement>) => handlePriceInput(e, 'percentage')}
-								disabled={loading || response !== null || !collection}
+								disabled={loading || !collection}
 								invalid={getInvalidPercentage()}
 								tooltip={language.listingPercentageInfo}
 							/>
-							{response && response.message && response.message.length && (
-								<S.MMessage className={'border-wrapper-alt1'}>{response && <pre>{response.message}</pre>}</S.MMessage>
-							)}
 						</S.MBody>
 						<S.MFooter>
 							<S.MFetchWrapper>{fetchingcCollection && <span>{`${language.fetching}...`}</span>}</S.MFetchWrapper>
 							<S.MActions>
 								<Button
 									type={'primary'}
-									label={response ? language.close : language.cancel}
+									label={listingLog ? language.close : language.cancel}
 									handlePress={() => setListingModalOpen(false)}
 									disabled={loading || !collection}
 									noMinWidth
 								/>
 								<Button
 									type={'alt1'}
-									label={response && response.status ? language.viewOnBazar : language.submit}
-									handlePress={() => (response ? window.open(REDIRECTS.bazar.collection(props.id)) : handleSubmit())}
-									disabled={
-										loading ||
-										price <= 0 ||
-										percentage <= 0 ||
-										percentage > 100 ||
-										(response && !response.status) ||
-										!collection
-									}
+									label={listingLog ? language.viewOnBazar : language.submit}
+									handlePress={() => (listingLog ? window.open(REDIRECTS.bazar.collection(props.id)) : handleSubmit())}
+									disabled={loading || price <= 0 || percentage <= 0 || percentage > 100 || !collection}
 									loading={loading}
 									noMinWidth
 								/>
 							</S.MActions>
 						</S.MFooter>
+						<S.MMessage>{listingLog && <pre>{listingLog}</pre>}</S.MMessage>
 					</S.MCWrapper>
-				</Modal>
+				</Panel>
 			</>
 		);
 	}
@@ -273,7 +250,12 @@ function CollectionDropdown(props: { id: string; title: string }) {
 	);
 }
 
-export default function CollectionsTable() {
+export default function CollectionsTable(props: {
+	useIdAction: boolean;
+	useActions: boolean;
+	hideCollectionAction?: boolean;
+}) {
+	const dispatch = useDispatch();
 	const navigate = useNavigate();
 
 	const arProvider = useArweaveProvider();
@@ -293,16 +275,16 @@ export default function CollectionsTable() {
 			if (arProvider.profile && arProvider.profile.id) {
 				setLoading(true);
 				try {
-					const response = await readHandler({
+					const listingLog = await readHandler({
 						processId: AO.collectionsRegistry,
 						action: 'Get-Collections-By-User',
 						tags: [{ name: 'Creator', value: arProvider.profile.id }],
 					});
 
-					if (response && response.Collections && response.Collections.length) {
-						setIdCount(response.Collections.length);
+					if (listingLog && listingLog.Collections && listingLog.Collections.length) {
+						setIdCount(listingLog.Collections.length);
 						setCollections(
-							response.Collections.map((collection: any) => {
+							listingLog.Collections.map((collection: any) => {
 								return {
 									id: collection.Id,
 									title: collection.Name,
@@ -326,20 +308,50 @@ export default function CollectionsTable() {
 		})();
 	}, [arProvider.profile, uploadReducer.uploadActive]);
 
+	function handleCollectionChange(id: string, name: string) {
+		const currentId = uploadReducer.data?.collectionId;
+		const currentName = uploadReducer.data?.collectionName;
+		dispatch(
+			uploadActions.setUpload([
+				{
+					field: 'collectionId',
+					data: currentId === id ? null : id,
+				},
+			])
+		);
+		dispatch(
+			uploadActions.setUpload([
+				{
+					field: 'collectionName',
+					data: currentName === name ? null : name,
+				},
+			])
+		);
+	}
+
 	function getTableHeader() {
 		const header: any = {};
 		header.collectionTitle = {
-			width: '85%',
+			width: props.useIdAction ? '85%' : '100%',
 			align: 'left' as AlignType,
 			display: language.title,
 		};
 
-		header.actions = {
-			width: '15%',
-			align: 'center' as AlignType,
-			display: language.actions,
-		};
+		if (props.useIdAction) {
+			header.select = {
+				width: '15%',
+				align: 'center' as AlignType,
+				display: language.select,
+			};
+		}
 
+		if (props.useActions) {
+			header.actions = {
+				width: '15%',
+				align: 'center' as AlignType,
+				display: language.actions,
+			};
+		}
 		return header;
 	}
 
@@ -355,7 +367,21 @@ export default function CollectionsTable() {
 					</a>
 				);
 
-				data.actions = <CollectionDropdown id={collection.id} title={title} />;
+				if (props.useIdAction) {
+					data.select = (
+						<S.CWrapper>
+							<Checkbox
+								checked={uploadReducer.data?.collectionId === collection.id}
+								handleSelect={() => handleCollectionChange(collection.id, collection.title)}
+								disabled={false}
+							/>
+						</S.CWrapper>
+					);
+				}
+
+				if (props.useActions) {
+					data.actions = <CollectionDropdown id={collection.id} title={title} />;
+				}
 
 				return {
 					data: data,
@@ -370,7 +396,7 @@ export default function CollectionsTable() {
 		if (!arProvider.walletAddress) {
 			return (
 				<S.MWrapper>
-					<span>{language.assetFetchConnectionRequired}</span>
+					<span>{language.collectionFetchConnectionRequired}</span>
 				</S.MWrapper>
 			);
 		}
@@ -397,12 +423,14 @@ export default function CollectionsTable() {
 				);
 			} else {
 				return (
-					<S.EmptyContainer className={'border-wrapper-alt1'}>
+					<S.EmptyContainer id={'collection-empty-wrapper'} className={'border-wrapper-alt1'}>
 						<S.EmptyLogo>
 							<ReactSVG src={ASSETS.collections} />
 						</S.EmptyLogo>
 						<p>{language.noCollectionsInfo}</p>
-						<Button type={'alt1'} label={language.upload} handlePress={() => navigate(URLS.upload)} />
+						{!props.hideCollectionAction && (
+							<Button type={'alt1'} label={language.upload} handlePress={() => navigate(URLS.upload)} />
+						)}
 					</S.EmptyContainer>
 				);
 			}

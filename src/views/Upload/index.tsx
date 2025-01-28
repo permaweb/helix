@@ -1,41 +1,24 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-
-import { connect, createDataItemSigner } from '@permaweb/aoconnect';
-
-import { createTransaction, messageResults } from 'api';
-import { getGQLData } from 'gql';
+import parse from 'html-react-parser';
 
 import { Button } from 'components/atoms/Button';
-import { Loader } from 'components/atoms/Loader';
-import { Modal } from 'components/molecules/Modal';
+import { Panel } from 'components/molecules/Panel';
 import { AssetsTable } from 'components/organisms/AssetsTable';
 import {
-	AO,
 	CONTENT_TYPES,
-	DEFAULT_UCM_BANNER,
-	DEFAULT_UCM_THUMBNAIL,
-	GATEWAYS,
 	MAX_COVER_IMAGE_SIZE,
 	MAX_THUMBNAIL_IMAGE_SIZE,
 	MAX_UPLOAD_SIZE,
 	REDIRECTS,
 	TAGS,
 } from 'helpers/config';
-import { getTxEndpoint } from 'helpers/endpoints';
 import { TagType, UploadType } from 'helpers/types';
-import {
-	base64ToUint8Array,
-	cleanProcessField,
-	cleanTagValue,
-	fileToBuffer,
-	getBase64Data,
-	getDataURLContentType,
-	stripFileExtension,
-} from 'helpers/utils';
+import { fileToBuffer, formatAddress, stripFileExtension } from 'helpers/utils';
 import { hideDocumentBody, showDocumentBody } from 'helpers/window';
 import { useArweaveProvider } from 'providers/ArweaveProvider';
 import { useLanguageProvider } from 'providers/LanguageProvider';
+import { usePermawebProvider } from 'providers/PermawebProvider';
 import { RootState } from 'store';
 import * as uploadActions from 'store/upload/actions';
 
@@ -49,18 +32,17 @@ export default function Upload() {
 	const uploadReducer = useSelector((state: RootState) => state.uploadReducer);
 
 	const arProvider = useArweaveProvider();
+	const permawebProvider = usePermawebProvider();
 	const languageProvider = useLanguageProvider();
 	const language = languageProvider.object[languageProvider.current];
 
 	const [uploadIndex, setUploadIndex] = React.useState<number>(0);
 	const [_uploadPercentage, setUploadPercentage] = React.useState<number>(0);
 
-	const [assetsResponse, setAssetsResponse] = React.useState<string | null>(null);
-	const [assetsResponseError, setAssetsResponseError] = React.useState<string | null>(null);
-
-	const [collectionProcessId, setCollectionProcessId] = React.useState<string | null>(null);
-	const [collectionResponse, setCollectionResponse] = React.useState<string | null>(null);
-	const [collectionResponseError, setCollectionResponseError] = React.useState<string | null>(null);
+	const [collectionResponseId, setCollectionResponseId] = React.useState<string | null>(null);
+	const [response, setResponse] = React.useState<string | null>(null);
+	const [uploadLog, setUploadLog] = React.useState<string | null>('');
+	const [errorLog, setErrorLog] = React.useState<string | null>('');
 
 	React.useEffect(() => {
 		const handleBeforeUnload = (e: any) => {
@@ -74,7 +56,7 @@ export default function Upload() {
 		return () => {
 			window.removeEventListener('beforeunload', handleBeforeUnload);
 		};
-	}, [uploadReducer]);
+	}, []);
 
 	React.useEffect(() => {
 		if (!arProvider.wallet) dispatch(uploadActions.setUploadDisabled(true));
@@ -112,427 +94,145 @@ export default function Upload() {
 			switch (uploadReducer.uploadType) {
 				case 'collection':
 					try {
-						const collectionId = await handleUploadCollection();
+						const collectionId = await permawebProvider.libs.createCollection(
+							{
+								title: uploadReducer.data.title,
+								description: uploadReducer.data.description,
+								creator: arProvider.profile.id,
+								thumbnail: uploadReducer.data.thumbnail,
+								banner: uploadReducer.data.banner,
+							},
+							(status: string) => setResponse(status)
+						);
 
 						if (collectionId) {
+							const log = `<p>Collection</p> <p><a href="${REDIRECTS.bazar.collection(collectionId)}" target="_blank">${
+								uploadReducer.data.title
+							}</a></p>`;
+							setUploadLog((prev) => prev + log);
+							console.log(`Collection ID: ${collectionId}`);
+							setResponse(`${language.collectionCreated}!`);
+
 							const assetIds = await handleUploadAssets(collectionId);
 							if (uploadReducer.data.idList) assetIds.push(...uploadReducer.data.idList);
 
-							const updateAssetsResponse = await messageResults({
-								processId: arProvider.profile.id,
-								action: 'Run-Action',
-								wallet: arProvider.wallet,
-								tags: null,
-								data: {
-									Target: collectionId,
-									Action: 'Update-Assets',
-									Input: JSON.stringify({
-										AssetIds: assetIds,
-										UpdateType: 'Add',
-									}),
-								},
-								handler: 'Update-Assets',
+							setResponse('Updating assets in collection...');
+
+							const updateAssetsResponse = await permawebProvider.libs.updateCollectionAssets({
+								collectionId: collectionId,
+								assetIds: assetIds,
+								creator: arProvider.profile.id,
+								updateType: 'Add',
 							});
 
 							if (updateAssetsResponse) {
-								setCollectionResponse(`${language.collectionCreated}!`);
-								setCollectionProcessId(collectionId);
+								setResponse(`${language.collectionCreated}!`);
+								setCollectionResponseId(collectionId);
 							}
-							setCollectionResponse('Error occurred');
+
+							setCollectionResponseId(collectionId);
 						} else {
-							console.error('Error creating collection');
+							setResponse('Error getting collection data');
 						}
 					} catch (e: any) {
 						console.error(e);
-						setCollectionResponse(e.message ?? 'Error occurred');
+						setResponse(e.message ?? 'Error occurred');
 					}
 					break;
 				case 'assets':
 					try {
-						const assetIds = await handleUploadAssets(null);
+						const collectionId = uploadReducer.data?.collectionId;
+
+						if (collectionId) {
+							const log = `<p>Collection</p> <p><a href="${REDIRECTS.bazar.collection(collectionId)}" target="_blank">${
+								uploadReducer.data.collectionName ?? formatAddress(uploadReducer.data.collectionId, false)
+							}</a></p>`;
+							setUploadLog((prev) => prev + log);
+							console.log(`Collection ID: ${collectionId}`);
+						}
+
+						const assetIds = await handleUploadAssets(collectionId);
+
 						if (assetIds.length > 0) {
-							setAssetsResponse(`${language.assetsCreated}!`);
+							setResponse(`${language.assetsCreated}!`);
 						} else {
-							setAssetsResponseError(`${language.errorOccurred}`);
+							setResponse(`${language.errorOccurred}`);
+						}
+
+						if (collectionId) {
+							const updateAssetsResponse = await permawebProvider.libs.updateCollectionAssets({
+								collectionId: collectionId,
+								assetIds: assetIds,
+								creator: arProvider.profile.id,
+								updateType: 'Add',
+							});
+
+							if (updateAssetsResponse) {
+								setResponse(`${language.collectionUpdated}!`);
+								setCollectionResponseId(collectionId);
+							}
 						}
 					} catch (e: any) {
 						console.error(e);
-						setAssetsResponseError(e.message ?? 'Error occurred');
+						setResponse(e.message ?? 'Error occurred');
 					}
 					break;
 			}
 
 			dispatch(uploadActions.setUploadActive(false));
-			dispatch(uploadActions.clearUpload());
 			setUploadPercentage(0);
-		}
-	}
-
-	async function handleUploadCollection() {
-		let bannerTx: any = null;
-		if (uploadReducer.data.banner) {
-			try {
-				const bannerContentType = getDataURLContentType(uploadReducer.data.banner);
-				const base64Data = getBase64Data(uploadReducer.data.banner);
-				const uint8ArrayData = base64ToUint8Array(base64Data);
-
-				bannerTx = await createTransaction({
-					content: uint8ArrayData,
-					contentType: bannerContentType,
-					tags: [{ name: TAGS.keys.contentType, value: bannerContentType }],
-				});
-			} catch (e: any) {
-				console.error(e);
-			}
-		}
-
-		let thumbnailTx: any = null;
-		if (uploadReducer.data.thumbnail) {
-			try {
-				const thumbnailContentType = getDataURLContentType(uploadReducer.data.thumbnail);
-				const base64Data = getBase64Data(uploadReducer.data.thumbnail);
-				const uint8ArrayData = base64ToUint8Array(base64Data);
-
-				thumbnailTx = await createTransaction({
-					content: uint8ArrayData,
-					contentType: thumbnailContentType,
-					tags: [{ name: TAGS.keys.contentType, value: thumbnailContentType }],
-				});
-			} catch (e: any) {
-				console.error(e);
-			}
-		}
-
-		try {
-			const dateTime = new Date().getTime().toString();
-
-			const collectionTags: TagType[] = [
-				{ name: TAGS.keys.contentType, value: CONTENT_TYPES.json },
-				{ name: TAGS.keys.creator, value: arProvider.walletAddress },
-				{ name: TAGS.keys.profileCreator, value: arProvider.profile.id },
-				{
-					name: TAGS.keys.ans110.title,
-					value: cleanTagValue(uploadReducer.data.title),
-				},
-				{
-					name: TAGS.keys.ans110.description,
-					value: cleanTagValue(uploadReducer.data.description),
-				},
-				{ name: TAGS.keys.ans110.type, value: TAGS.values.document },
-				{ name: TAGS.keys.dateCreated, value: dateTime },
-				{
-					name: TAGS.keys.name,
-					value: cleanTagValue(uploadReducer.data.title),
-				},
-				{ name: 'Action', value: 'Add-Collection' },
-			];
-
-			if (bannerTx) collectionTags.push({ name: TAGS.keys.banner, value: bannerTx });
-			if (thumbnailTx) collectionTags.push({ name: TAGS.keys.thumbnail, value: thumbnailTx });
-
-			const aos = connect();
-
-			let processSrc = null;
-
-			try {
-				const processSrcFetch = await fetch(getTxEndpoint(AO.collectionSrc));
-				if (processSrcFetch.ok) {
-					processSrc = await processSrcFetch.text();
-				}
-			} catch (e: any) {
-				console.error(e);
-			}
-
-			if (processSrc) {
-				processSrc = processSrc.replaceAll(`'<NAME>'`, cleanProcessField(uploadReducer.data.title));
-				processSrc = processSrc.replaceAll(`'<DESCRIPTION>'`, cleanProcessField(uploadReducer.data.description));
-				processSrc = processSrc.replaceAll('<CREATOR>', arProvider.profile.id);
-				processSrc = processSrc.replaceAll('<BANNER>', bannerTx ? bannerTx : DEFAULT_UCM_BANNER);
-				processSrc = processSrc.replaceAll('<THUMBNAIL>', thumbnailTx ? thumbnailTx : DEFAULT_UCM_THUMBNAIL);
-
-				processSrc = processSrc.replaceAll('<DATECREATED>', dateTime);
-				processSrc = processSrc.replaceAll('<LASTUPDATE>', dateTime);
-			}
-
-			let processId: string;
-			let retryCount = 0;
-			const maxRetries = 25;
-
-			while (!processId && retryCount < maxRetries) {
-				try {
-					processId = await aos.spawn({
-						module: AO.module,
-						scheduler: AO.scheduler,
-						signer: createDataItemSigner(globalThis.arweaveWallet),
-						tags: collectionTags,
-					});
-					console.log(`Collection process: ${processId}`);
-				} catch (e: any) {
-					console.error(`Spawn attempt ${retryCount + 1} failed:`, e);
-					retryCount++;
-					if (retryCount < maxRetries) {
-						await new Promise((r) => setTimeout(r, 1000));
-					} else {
-						throw new Error(`Failed to spawn process after ${maxRetries} attempts`);
-					}
-				}
-			}
-
-			let fetchedCollectionId: string;
-			retryCount = 0;
-			while (!fetchedCollectionId) {
-				await new Promise((r) => setTimeout(r, 2000));
-				const gqlResponse = await getGQLData({
-					gateway: GATEWAYS.goldsky,
-					ids: [processId],
-					tagFilters: null,
-					owners: null,
-					cursor: null,
-					reduxCursor: null,
-					cursorObjectKey: null,
-				});
-
-				if (gqlResponse && gqlResponse.data.length) {
-					console.log(`Fetched transaction`, gqlResponse.data[0].node.id, 0);
-					fetchedCollectionId = gqlResponse.data[0].node.id;
-				} else {
-					console.log(`Transaction not found`, processId, 0);
-					retryCount++;
-					if (retryCount >= 10) {
-						throw new Error(`Transaction not found after 10 attempts, process deployment retries failed`);
-					}
-				}
-			}
-
-			if (fetchedCollectionId) {
-				const evalMessage = await aos.message({
-					process: processId,
-					signer: createDataItemSigner(globalThis.arweaveWallet),
-					tags: [{ name: 'Action', value: 'Eval' }],
-					data: processSrc,
-				});
-
-				const evalResult = await aos.result({
-					message: evalMessage,
-					process: processId,
-				});
-
-				if (evalResult) {
-					const registryTags = [
-						{ name: 'Action', value: 'Add-Collection' },
-						{ name: 'CollectionId', value: processId },
-						{ name: 'Name', value: cleanTagValue(uploadReducer.data.title) },
-						{ name: 'Creator', value: arProvider.profile.id },
-						{ name: 'DateCreated', value: dateTime },
-					];
-
-					if (bannerTx) registryTags.push({ name: 'Banner', value: bannerTx });
-					if (thumbnailTx) registryTags.push({ name: 'Thumbnail', value: thumbnailTx });
-
-					await aos.message({
-						process: AO.collectionsRegistry,
-						signer: createDataItemSigner(globalThis.arweaveWallet),
-						tags: registryTags,
-					});
-
-					await aos.message({
-						process: processId,
-						signer: createDataItemSigner(globalThis.arweaveWallet),
-						tags: [
-							{ name: 'Action', value: 'Add-Collection-To-Profile' },
-							{ name: 'ProfileProcess', value: arProvider.profile.id },
-						],
-					});
-
-					return processId;
-				} else {
-					return null;
-				}
-			} else {
-				setCollectionResponseError('Error fetching from gateway');
-			}
-		} catch (e: any) {
-			console.error(e);
-			setCollectionResponseError(e.message);
-			dispatch(uploadActions.setUploadActive(false));
+		} else {
+			setResponse('Error preparing upload data');
 		}
 	}
 
 	async function handleUploadAssets(collectionId: string | null) {
 		if (uploadChecksPassed(arProvider, uploadReducer)) {
-			let index = 0;
-			let assetError = null;
 			let uploadedAssetsList: string[] = [];
-			for (const data of uploadReducer.data.contentList) {
-				index = index + 1;
-				setUploadIndex(index);
 
-				const dateTime = new Date().getTime().toString();
-
-				const title = data.title ? cleanTagValue(data.title) : stripFileExtension(data.file.name);
-				const description = data.description
-					? data.description
-					: uploadReducer.data.description
-					? uploadReducer.data.description
-					: stripFileExtension(data.file.name);
-				const balance = uploadReducer.data.useFractionalTokens ? Number(uploadReducer.data.contentTokens) : 1;
-
-				let contentType = data.file.type;
-				if (
-					(!contentType || !contentType.length) &&
-					uploadReducer.data.renderer &&
-					uploadReducer.data.renderer.includes('3d')
-				) {
-					contentType = CONTENT_TYPES.model;
-				}
+			setUploadLog((prev) => prev + '<br /><p>Assets\n</p>');
+			for (const element of uploadReducer.data.contentList) {
+				const assetName = element.title || stripFileExtension(element.file.name);
+				const assetDescription =
+					element.description || uploadReducer.data.description || stripFileExtension(element.file.name);
 
 				try {
-					const assetTags: TagType[] = [
-						{ name: TAGS.keys.contentType, value: contentType },
-						{ name: TAGS.keys.creator, value: arProvider.profile.id },
-						{ name: TAGS.keys.ans110.title, value: title },
-						{ name: TAGS.keys.ans110.description, value: description },
-						{ name: TAGS.keys.ans110.type, value: contentType },
-						{ name: TAGS.keys.ans110.implements, value: TAGS.values.ansVersion },
-						{ name: TAGS.keys.dateCreated, value: dateTime },
-						{ name: 'Action', value: 'Add-Uploaded-Asset' },
-					];
+					const buffer: any = await fileToBuffer(element.file);
 
-					uploadReducer.data.topics.forEach((topic: string) =>
-						assetTags.push({ name: TAGS.keys.topic(topic), value: topic })
-					);
+					let contentType = element.file.type;
+					if (
+						(!contentType || !contentType.length) &&
+						uploadReducer.data.renderer &&
+						uploadReducer.data.renderer.includes('3d')
+					) {
+						contentType = CONTENT_TYPES.model;
+					}
+
+					const asset: any = {
+						name: assetName,
+						description: assetDescription,
+						topics: uploadReducer.data.topics,
+						creator: arProvider.profile.id,
+						data: buffer,
+						contentType: contentType,
+						assetType: contentType,
+					};
+
+					if (collectionId) asset.metadata = { collectionId };
 
 					if (uploadReducer.data.hasLicense && uploadReducer.data.license)
-						assetTags.push(...buildLicenseTags(uploadReducer.data.license));
+						asset.tags = buildLicenseTags(uploadReducer.data.license);
 
-					if (uploadReducer.data.renderer)
-						assetTags.push({ name: TAGS.keys.renderWith, value: uploadReducer.data.renderer });
+					const assetId = await permawebProvider.libs.createAtomicAsset(asset, (status: string) => setResponse(status));
 
-					const aos = connect();
-
-					let processSrc = null;
-					const buffer: any = await fileToBuffer(data.file);
-
-					try {
-						console.log(`Asset src: ${AO.assetSrc}`);
-						const processSrcFetch = await fetch(getTxEndpoint(AO.assetSrc));
-						if (processSrcFetch.ok) {
-							processSrc = await processSrcFetch.text();
-						}
-					} catch (e: any) {
-						console.error(e);
-					}
-
-					if (processSrc) {
-						processSrc = processSrc.replaceAll('<CREATOR>', arProvider.profile.id);
-						processSrc = processSrc.replaceAll(`'<NAME>'`, cleanProcessField(title));
-						processSrc = processSrc.replaceAll('<TICKER>', 'ATOMIC');
-						processSrc = processSrc.replaceAll('<DENOMINATION>', '1');
-						processSrc = processSrc.replaceAll('<BALANCE>', balance.toString());
-
-						if (!uploadReducer.data.transferableTokens) {
-							processSrc = processSrc.replace('Transferable = true', 'Transferable = false');
-						}
-
-						if (collectionId) {
-							processSrc = processSrc.replaceAll('<COLLECTION>', collectionId);
-						}
-					}
-
-					let processId: string;
-					let retryCount = 0;
-					const maxSpawnRetries = 25;
-
-					while (!processId && retryCount < maxSpawnRetries) {
-						try {
-							processId = await aos.spawn({
-								module: AO.module,
-								scheduler: AO.scheduler,
-								signer: createDataItemSigner(globalThis.arweaveWallet),
-								tags: assetTags,
-								data: buffer,
-							});
-							console.log(`Asset process: ${processId}`);
-						} catch (e: any) {
-							console.error(`Spawn attempt ${retryCount + 1} failed:`, e);
-							retryCount++;
-							if (retryCount < maxSpawnRetries) {
-								await new Promise((r) => setTimeout(r, 1000));
-							} else {
-								throw new Error(`Failed to spawn process after ${maxSpawnRetries} attempts`);
-							}
-						}
-					}
-
-					let fetchedAssetId: string;
-					retryCount = 0;
-					const maxFetchRetries = 100;
-					while (!fetchedAssetId) {
-						await new Promise((r) => setTimeout(r, 2000));
-						const gqlResponse = await getGQLData({
-							gateway: GATEWAYS.goldsky,
-							ids: [processId],
-							tagFilters: null,
-							owners: null,
-							cursor: null,
-							reduxCursor: null,
-							cursorObjectKey: null,
-						});
-
-						if (gqlResponse && gqlResponse.data.length) {
-							console.log(`Fetched transaction:`, gqlResponse.data[0].node.id);
-							fetchedAssetId = gqlResponse.data[0].node.id;
-						} else {
-							console.log(`Transaction not found:`, processId);
-							retryCount++;
-							if (retryCount >= maxFetchRetries) {
-								throw new Error(
-									`Transaction not found after ${maxFetchRetries} attempts, process deployment retries failed`
-								);
-							}
-						}
-					}
-
-					if (fetchedAssetId) {
-						const evalMessage = await aos.message({
-							process: processId,
-							signer: createDataItemSigner(globalThis.arweaveWallet),
-							tags: [{ name: 'Action', value: 'Eval' }],
-							data: processSrc,
-						});
-
-						const evalResult = await aos.result({
-							message: evalMessage,
-							process: processId,
-						});
-
-						if (evalResult) {
-							const profileUpdateMessage = await aos.message({
-								process: processId,
-								signer: createDataItemSigner(globalThis.arweaveWallet),
-								tags: [
-									{ name: 'Action', value: 'Add-Asset-To-Profile' },
-									{ name: 'ProfileProcess', value: arProvider.profile.id },
-									{ name: 'Quantity', value: balance.toString() },
-								],
-								data: JSON.stringify({ Id: processId, Quantity: balance }),
-							});
-
-							console.log(`Profile update: ${profileUpdateMessage}`);
-
-							uploadedAssetsList.push(processId);
-						}
-
-						if (index < uploadReducer.data.contentList.length) setUploadPercentage(0);
-					} else {
-						setAssetsResponseError('Error fetching from gateway');
-					}
+					const log = `<p><a href="${REDIRECTS.bazar.asset(assetId)}" target="_blank">${assetName}</a></p>\n`;
+					setUploadIndex((prev) => prev + 1);
+					setUploadLog((prev) => prev + log);
+					console.log(`Asset ID: ${assetId}`);
+					uploadedAssetsList.push(assetId);
 				} catch (e: any) {
-					console.error(e.message);
-					assetError = e.message;
-					setAssetsResponseError(assetError);
-					setUploadPercentage(0);
-					dispatch(uploadActions.clearUpload());
+					setResponse(e.message ?? 'Error uploading asset');
+					setErrorLog((prev) => prev + `<p id="error-log-detail">Error creating ${assetName || '-'}</p>\n`);
 				}
 			}
 
@@ -541,13 +241,8 @@ export default function Upload() {
 	}
 
 	function handleClear() {
-		if (collectionResponse || assetsResponse) {
-			if (collectionResponse) setCollectionResponse(null);
-			if (assetsResponse) setAssetsResponse(null);
-			dispatch(uploadActions.clearUpload());
-		}
-		if (collectionResponseError) setCollectionResponseError(null);
-		if (assetsResponseError) setAssetsResponseError(null);
+		setResponse(null);
+		dispatch(uploadActions.clearUpload());
 	}
 
 	function handleUploadType(uploadType: UploadType) {
@@ -597,68 +292,48 @@ export default function Upload() {
 					</S.SWrapper>
 				</S.UploadWrapper>
 			</S.Wrapper>
-			{uploadReducer.uploadActive && (
-				<Modal header={language.uploading} handleClose={null}>
-					<S.AContainer>
-						{uploadReducer.data.contentList && uploadReducer.data.contentList.length ? (
-							<>
-								<S.AMessage>
-									<span>{language.assetUploadingInfo(uploadReducer.uploadType === 'collection')}</span>
-								</S.AMessage>
-								<S.AMessageAlt>
-									<span>{language.uploadingFileCount(uploadIndex, uploadReducer.data.contentList.length)}</span>
-								</S.AMessageAlt>
-								<S.ActionWrapper loading={'true'}>
-									<span>{`${language.inProgress}...`}</span>
-								</S.ActionWrapper>
-							</>
-						) : (
-							<Loader sm relative />
-						)}
-					</S.AContainer>
-				</Modal>
-			)}
-			{(collectionResponse || collectionResponseError) && (
-				<Modal
-					header={collectionResponse ? language.collectionCreated : language.errorOccurred}
-					handleClose={handleClear}
+			{(uploadReducer.uploadActive || response) && (
+				<Panel
+					open={true}
+					width={625}
+					header={uploadReducer.uploadType === 'collection' ? language.collectionUpload : language.assetUpload}
+					handleClose={null}
 				>
-					<S.MWrapper>
-						<S.MInfo>
-							<span>{collectionResponse ? language.collectionUploadedInfo : collectionResponseError}</span>
-						</S.MInfo>
-						<S.MActions>
-							<Button type={'primary'} label={language.close} handlePress={handleClear} noMinWidth />
-							{collectionProcessId && (
-								<Button
-									type={'alt1'}
-									label={language.viewCollection}
-									handlePress={() => window.open(REDIRECTS.bazar.collection(collectionProcessId), '_blank')}
-									disabled={false}
-									noMinWidth
-								/>
-							)}
-						</S.MActions>
-					</S.MWrapper>
-				</Modal>
-			)}
-			{(assetsResponse || assetsResponseError) && (
-				<Modal header={assetsResponse ? assetsResponse : language.errorOccurred} handleClose={handleClear}>
-					<S.MWrapper>
-						<S.MInfo>
+					<S.AContainer>
+						<S.AMessage>
 							<span>
-								{assetsResponse
-									? language.assetsCreatedInfo
-									: assetsResponseError
-									? assetsResponseError
-									: language.errorOccurred}
+								{uploadReducer.uploadActive
+									? language.assetUploadingInfo(uploadReducer.uploadType === 'collection')
+									: language.assetUploadingInfoComplete(uploadReducer.uploadType === 'collection')}
 							</span>
-						</S.MInfo>
-						<S.MActions>
-							<Button type={'primary'} label={language.close} handlePress={handleClear} noMinWidth />
-						</S.MActions>
-					</S.MWrapper>
-				</Modal>
+						</S.AMessage>
+						<S.AMessageAlt>
+							<span>{language.uploadingAssetCount(uploadIndex, uploadReducer.data.contentList.length)}</span>
+						</S.AMessageAlt>
+						<S.AMessageAlt1>
+							<span>{`Current status: ${response ?? '-'}`}</span>
+						</S.AMessageAlt1>
+						<S.ActionWrapper loading={uploadReducer.uploadActive.toString()}>
+							<span>{uploadReducer.uploadActive ? `${language.inProgress}...` : language.done}</span>
+						</S.ActionWrapper>
+						{!uploadReducer.uploadActive && (
+							<S.MActions>
+								<Button type={'primary'} label={language.close} handlePress={handleClear} noMinWidth />
+								{collectionResponseId && (
+									<Button
+										type={'alt1'}
+										label={language.viewCollection}
+										handlePress={() => window.open(REDIRECTS.bazar.collection(collectionResponseId), '_blank')}
+										disabled={false}
+										noMinWidth
+									/>
+								)}
+							</S.MActions>
+						)}
+						{uploadLog && <S.MLog>{parse(uploadLog)}</S.MLog>}
+						{errorLog && <S.MLog>{parse(errorLog)}</S.MLog>}
+					</S.AContainer>
+				</Panel>
 			)}
 		</>
 	);

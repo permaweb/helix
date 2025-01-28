@@ -9,6 +9,7 @@ import { Checkbox } from 'components/atoms/Checkbox';
 import { FormField } from 'components/atoms/FormField';
 import { TextArea } from 'components/atoms/TextArea';
 import { Modal } from 'components/molecules/Modal';
+import { CollectionsTable } from 'components/organisms/CollectionsTable';
 import { ASSETS, DEFAULT_ASSET_TOPICS, GATEWAYS, RENDERERS } from 'helpers/config';
 import { RendererType, ValidationType } from 'helpers/types';
 import { formatRequiredField } from 'helpers/utils';
@@ -229,9 +230,19 @@ export default function UploadStepsDetails() {
 						</S.IWrapper>
 					</>
 				)}
-				<S.SectionWrapper className={'border-wrapper-alt2'}>
+				<S.SectionWrapper className={'border-wrapper-primary'}>
 					<h4>{language.assetDetails}</h4>
-					<S.COWrapper className={'border-wrapper-alt1'}>
+					{uploadReducer.uploadType === 'assets' && (
+						<S.AssetsCollectionWrapper>
+							<S.AssetsCollectionHeader>
+								<p>{language.addAssetsToCollection}</p>
+							</S.AssetsCollectionHeader>
+							<S.AssetsCollectionBody>
+								<CollectionsTable useIdAction={true} useActions={false} hideCollectionAction />
+							</S.AssetsCollectionBody>
+						</S.AssetsCollectionWrapper>
+					)}
+					<S.COWrapper>
 						<S.CWrapper>
 							<span>{language.contentTokensCheckInfo}</span>
 							<Checkbox
@@ -256,7 +267,7 @@ export default function UploadStepsDetails() {
 					</S.COWrapper>
 					<S.TWrapper>
 						<S.THeader>
-							<span>{formatRequiredField(language.assetTopics)}</span>
+							<span>{formatRequiredField(language.topics)}</span>
 							<Button type={'alt2'} label={language.addTopic} handlePress={() => setShowTopicAdd(true)} />
 						</S.THeader>
 						<S.TInfo>
@@ -279,7 +290,7 @@ export default function UploadStepsDetails() {
 					</S.TWrapper>
 					<S.RWrapper>
 						<S.RHeader>
-							<span>{language.assetRenderer}</span>
+							<span>{language.renderer}</span>
 						</S.RHeader>
 						<S.RInfo>
 							<span>{language.rendererInfo}</span>

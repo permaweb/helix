@@ -23,6 +23,8 @@ const initStateUploadReducer = {
 		license: null,
 		title: '',
 		description: '',
+		collectionId: null,
+		collectionName: null,
 		collectionCode: '',
 		contentTokens: 100,
 		useFractionalTokens: true,
