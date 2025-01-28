@@ -20,6 +20,7 @@ import * as S from './styles';
 
 const MAX_DESCRIPTION_LENGTH = 500;
 
+// TODO: Collection option on asset upload
 export default function UploadStepsDetails() {
 	const dispatch = useDispatch();
 
@@ -229,9 +230,9 @@ export default function UploadStepsDetails() {
 						</S.IWrapper>
 					</>
 				)}
-				<S.SectionWrapper className={'border-wrapper-alt2'}>
+				<S.SectionWrapper className={'border-wrapper-primary'}>
 					<h4>{language.assetDetails}</h4>
-					<S.COWrapper className={'border-wrapper-alt1'}>
+					<S.COWrapper>
 						<S.CWrapper>
 							<span>{language.contentTokensCheckInfo}</span>
 							<Checkbox
@@ -256,7 +257,7 @@ export default function UploadStepsDetails() {
 					</S.COWrapper>
 					<S.TWrapper>
 						<S.THeader>
-							<span>{formatRequiredField(language.assetTopics)}</span>
+							<span>{formatRequiredField(language.topics)}</span>
 							<Button type={'alt2'} label={language.addTopic} handlePress={() => setShowTopicAdd(true)} />
 						</S.THeader>
 						<S.TInfo>
@@ -279,7 +280,7 @@ export default function UploadStepsDetails() {
 					</S.TWrapper>
 					<S.RWrapper>
 						<S.RHeader>
-							<span>{language.assetRenderer}</span>
+							<span>{language.renderer}</span>
 						</S.RHeader>
 						<S.RInfo>
 							<span>{language.rendererInfo}</span>

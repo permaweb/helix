@@ -21,7 +21,9 @@ export default function App() {
 			<Suspense fallback={<Loader />}>
 				<Navigation />
 				<S.View className={'scroll-wrapper'}>
-					<Routes />
+					<div className={'max-view-wrapper'}>
+						<Routes />
+					</div>
 				</S.View>
 			</Suspense>
 		</>

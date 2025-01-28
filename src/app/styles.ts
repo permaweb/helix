@@ -164,7 +164,7 @@ export const GlobalStyle = createGlobalStyle`
 
   .border-wrapper-primary {
     background: ${(props) => props.theme.colors.container.primary.background};
-    box-shadow: 0 5px 15px 0 ${(props) => props.theme.colors.shadow.primary};
+    box-shadow: 0 1px 2px 0.5px ${(props) => props.theme.colors.shadow.primary};
     border: 1px solid ${(props) => props.theme.colors.border.primary};
     border-radius: ${STYLING.dimensions.radius.primary};
   }
@@ -255,7 +255,7 @@ export const View = styled.div`
 	overflow-y: scroll;
 	border: 1px solid ${(props) => props.theme.colors.border.alt4};
 	background: ${(props) => props.theme.colors.view.background};
-	border-radius: ${STYLING.dimensions.radius.alt1};
+	border-radius: ${STYLING.dimensions.radius.primary};
 	animation: ${open} ${fadeIn1};
 	@media (max-width: ${STYLING.cutoffs.initial}) {
 		min-height: calc(100vh - ${STYLING.dimensions.nav.headerHeight});

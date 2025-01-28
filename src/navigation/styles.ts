@@ -175,12 +175,7 @@ export const BNavItem = styled.div<{ active: boolean }>`
 		top: 0;
 		bottom: 0;
 		width: 5px;
-		background: linear-gradient(
-			to bottom,
-			${(props) => props.theme.colors.gradient.start},
-			${(props) => props.theme.colors.gradient.middle},
-			${(props) => props.theme.colors.gradient.end}
-		);
+		background: ${(props) => props.theme.colors.border.alt1};
 		opacity: ${(props) => (props.active ? 1 : 0)};
 		transition: opacity 0.3s;
 	}

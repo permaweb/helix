@@ -60,6 +60,7 @@ function CollectionDropdown(props: { id: string; title: string }) {
 		})();
 	}, [props.id, listingModalOpen]);
 
+	// TODO: UCM SDK
 	async function handleSubmit() {
 		if (
 			arProvider.wallet &&

@@ -9,6 +9,7 @@ import { Loader } from 'components/atoms/Loader';
 import { ArweaveProvider } from 'providers/ArweaveProvider';
 import { CustomThemeProvider } from 'providers/CustomThemeProvider';
 import { LanguageProvider } from 'providers/LanguageProvider';
+import { PermawebProvider } from 'providers/PermawebProvider';
 import { persistor, store } from 'store';
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
@@ -17,10 +18,12 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
 			<CustomThemeProvider>
 				<LanguageProvider>
 					<ArweaveProvider>
-						<HashRouter>
-							<GlobalStyle />
-							<App />
-						</HashRouter>
+						<PermawebProvider>
+							<HashRouter>
+								<GlobalStyle />
+								<App />
+							</HashRouter>
+						</PermawebProvider>
 					</ArweaveProvider>
 				</LanguageProvider>
 			</CustomThemeProvider>

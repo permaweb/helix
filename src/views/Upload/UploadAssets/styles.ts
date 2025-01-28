@@ -43,7 +43,6 @@ export const EIcon = styled.div`
 	align-items: center;
 	background: ${(props) => props.theme.colors.container.alt4.background};
 	border: 1px solid ${(props) => props.theme.colors.border.primary};
-	box-shadow: 0 5px 15px 0 ${(props) => props.theme.colors.shadow.primary};
 	border-radius: 50%;
 	margin: 0 0 25px 0;
 	svg {

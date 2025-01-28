@@ -24,8 +24,7 @@ export const CollectionWrapper = styled(SectionWrapper)`
 `;
 
 export const COWrapper = styled.div`
-	padding: 15px;
-	margin: 0 0 25px 0;
+	margin: 25px 0;
 `;
 
 export const CWrapper = styled.div`
