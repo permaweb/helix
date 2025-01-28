@@ -164,7 +164,6 @@
 // 		if (customAmount) setAmount(Number(customAmount));
 // 	}, [customAmount]);
 
-// 	// TODO
 // 	// React.useEffect(() => {
 // 	// 	(async function () {
 // 	// 		if (checkoutStep === 'payment' && amount && !getInvalidAmount().status && currency && arProvider.walletAddress) {

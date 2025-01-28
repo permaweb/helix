@@ -94,6 +94,10 @@ export const MLog = styled.div`
 			color: ${(props) => props.theme.colors.font.alt1};
 		}
 	}
+
+	#error-log-detail {
+		color: ${(props) => props.theme.colors.warning};
+	}
 `;
 
 export const MActions = styled.div`

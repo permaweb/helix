@@ -2,8 +2,6 @@ import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import parse from 'html-react-parser';
 
-import { messageResults } from 'api';
-
 import { Button } from 'components/atoms/Button';
 import { Panel } from 'components/molecules/Panel';
 import { AssetsTable } from 'components/organisms/AssetsTable';
@@ -16,7 +14,7 @@ import {
 	TAGS,
 } from 'helpers/config';
 import { TagType, UploadType } from 'helpers/types';
-import { fileToBuffer, stripFileExtension } from 'helpers/utils';
+import { fileToBuffer, formatAddress, stripFileExtension } from 'helpers/utils';
 import { hideDocumentBody, showDocumentBody } from 'helpers/window';
 import { useArweaveProvider } from 'providers/ArweaveProvider';
 import { useLanguageProvider } from 'providers/LanguageProvider';
@@ -28,7 +26,6 @@ import * as S from './styles';
 import { UploadAssets } from './UploadAssets';
 import { UploadSteps } from './UploadSteps';
 
-// TODO: Error log
 export default function Upload() {
 	const dispatch = useDispatch();
 
@@ -43,9 +40,9 @@ export default function Upload() {
 	const [_uploadPercentage, setUploadPercentage] = React.useState<number>(0);
 
 	const [collectionResponseId, setCollectionResponseId] = React.useState<string | null>(null);
-	const [uploadComplete, setUploadComplete] = React.useState<boolean>(false);
 	const [response, setResponse] = React.useState<string | null>(null);
 	const [uploadLog, setUploadLog] = React.useState<string | null>('');
+	const [errorLog, setErrorLog] = React.useState<string | null>('');
 
 	React.useEffect(() => {
 		const handleBeforeUnload = (e: any) => {
@@ -104,18 +101,15 @@ export default function Upload() {
 								creator: arProvider.profile.id,
 								thumbnail: uploadReducer.data.thumbnail,
 								banner: uploadReducer.data.banner,
-								skipRegistry: true,
 							},
 							(status: string) => setResponse(status)
 						);
 
 						if (collectionId) {
-							setUploadLog(
-								(prev) =>
-									prev +
-									`<p>Collection</p> <p><a href='https://bazar.arweave.net/#/collection/${collectionId}' target="_blank"}>${uploadReducer.data.title}</a></p>`
-							);
-
+							const log = `<p>Collection</p> <p><a href="${REDIRECTS.bazar.collection(collectionId)}" target="_blank">${
+								uploadReducer.data.title
+							}</a></p>`;
+							setUploadLog((prev) => prev + log);
 							console.log(`Collection ID: ${collectionId}`);
 							setResponse(`${language.collectionCreated}!`);
 
@@ -123,20 +117,12 @@ export default function Upload() {
 							if (uploadReducer.data.idList) assetIds.push(...uploadReducer.data.idList);
 
 							setResponse('Updating assets in collection...');
-							const updateAssetsResponse = await messageResults({
-								processId: arProvider.profile.id,
-								action: 'Run-Action',
-								wallet: arProvider.wallet,
-								tags: null,
-								data: {
-									Target: collectionId,
-									Action: 'Update-Assets',
-									Input: JSON.stringify({
-										AssetIds: assetIds,
-										UpdateType: 'Add',
-									}),
-								},
-								handler: 'Update-Assets',
+
+							const updateAssetsResponse = await permawebProvider.libs.updateCollectionAssets({
+								collectionId: collectionId,
+								assetIds: assetIds,
+								creator: arProvider.profile.id,
+								updateType: 'Add',
 							});
 
 							if (updateAssetsResponse) {
@@ -155,11 +141,36 @@ export default function Upload() {
 					break;
 				case 'assets':
 					try {
-						const assetIds = await handleUploadAssets(null);
+						const collectionId = uploadReducer.data?.collectionId;
+
+						if (collectionId) {
+							const log = `<p>Collection</p> <p><a href="${REDIRECTS.bazar.collection(collectionId)}" target="_blank">${
+								uploadReducer.data.collectionName ?? formatAddress(uploadReducer.data.collectionId, false)
+							}</a></p>`;
+							setUploadLog((prev) => prev + log);
+							console.log(`Collection ID: ${collectionId}`);
+						}
+
+						const assetIds = await handleUploadAssets(collectionId);
+
 						if (assetIds.length > 0) {
 							setResponse(`${language.assetsCreated}!`);
 						} else {
 							setResponse(`${language.errorOccurred}`);
+						}
+
+						if (collectionId) {
+							const updateAssetsResponse = await permawebProvider.libs.updateCollectionAssets({
+								collectionId: collectionId,
+								assetIds: assetIds,
+								creator: arProvider.profile.id,
+								updateType: 'Add',
+							});
+
+							if (updateAssetsResponse) {
+								setResponse(`${language.collectionUpdated}!`);
+								setCollectionResponseId(collectionId);
+							}
 						}
 					} catch (e: any) {
 						console.error(e);
@@ -175,13 +186,16 @@ export default function Upload() {
 		}
 	}
 
-	// TODO: License
 	async function handleUploadAssets(collectionId: string | null) {
 		if (uploadChecksPassed(arProvider, uploadReducer)) {
 			let uploadedAssetsList: string[] = [];
 
 			setUploadLog((prev) => prev + '<br /><p>Assets\n</p>');
 			for (const element of uploadReducer.data.contentList) {
+				const assetName = element.title || stripFileExtension(element.file.name);
+				const assetDescription =
+					element.description || uploadReducer.data.description || stripFileExtension(element.file.name);
+
 				try {
 					const buffer: any = await fileToBuffer(element.file);
 
@@ -193,10 +207,6 @@ export default function Upload() {
 					) {
 						contentType = CONTENT_TYPES.model;
 					}
-
-					const assetName = element.title || stripFileExtension(element.file.name);
-					const assetDescription =
-						element.description || uploadReducer.data.description || stripFileExtension(element.file.name);
 
 					const asset: any = {
 						name: assetName,
@@ -210,29 +220,28 @@ export default function Upload() {
 
 					if (collectionId) asset.metadata = { collectionId };
 
+					if (uploadReducer.data.hasLicense && uploadReducer.data.license)
+						asset.tags = buildLicenseTags(uploadReducer.data.license);
+
 					const assetId = await permawebProvider.libs.createAtomicAsset(asset, (status: string) => setResponse(status));
 
+					const log = `<p><a href="${REDIRECTS.bazar.asset(assetId)}" target="_blank">${assetName}</a></p>\n`;
 					setUploadIndex((prev) => prev + 1);
-					setUploadLog(
-						(prev) =>
-							prev + `<p><a href='https://bazar.arweave.net/#/asset/${assetId}' target="_blank"}>${assetName}</a></p>\n`
-					);
-
+					setUploadLog((prev) => prev + log);
 					console.log(`Asset ID: ${assetId}`);
 					uploadedAssetsList.push(assetId);
 				} catch (e: any) {
 					setResponse(e.message ?? 'Error uploading asset');
+					setErrorLog((prev) => prev + `<p id="error-log-detail">Error creating ${assetName || '-'}</p>\n`);
 				}
 			}
 
-			setUploadComplete(true);
 			return uploadedAssetsList;
 		}
 	}
 
 	function handleClear() {
 		setResponse(null);
-		setUploadComplete(true);
 		dispatch(uploadActions.clearUpload());
 	}
 
@@ -322,6 +331,7 @@ export default function Upload() {
 							</S.MActions>
 						)}
 						{uploadLog && <S.MLog>{parse(uploadLog)}</S.MLog>}
+						{errorLog && <S.MLog>{parse(errorLog)}</S.MLog>}
 					</S.AContainer>
 				</Panel>
 			)}

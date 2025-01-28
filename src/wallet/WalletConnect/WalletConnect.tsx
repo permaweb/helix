@@ -1,10 +1,11 @@
 import React from 'react';
+import { ReactSVG } from 'react-svg';
 
 import { Avatar } from 'components/atoms/Avatar';
-// import { Button } from 'components/atoms/Button';
 import { Modal } from 'components/molecules/Modal';
 import { TurboBalanceFund } from 'components/molecules/TurboBalanceFund';
 import { ProfileManage } from 'components/organisms/ProfileManage';
+import { ASSETS } from 'helpers/config';
 import { formatAddress, formatARAmount } from 'helpers/utils';
 import { useArweaveProvider } from 'providers/ArweaveProvider';
 import { useLanguageProvider } from 'providers/LanguageProvider';
@@ -55,15 +56,15 @@ export default function WalletConnect(_props: { callback?: () => void }) {
 		}
 	}
 
-	const copyAddress = React.useCallback(async () => {
-		if (arProvider.walletAddress) {
-			if (arProvider.walletAddress.length > 0) {
-				await navigator.clipboard.writeText(arProvider.walletAddress);
+	const copyAddress = React.useCallback(async (address: string) => {
+		if (address) {
+			if (address.length > 0) {
+				await navigator.clipboard.writeText(address);
 				setCopied(true);
 				setTimeout(() => setCopied(false), 2000);
 			}
 		}
-	}, [arProvider.walletAddress]);
+	}, []);
 
 	function handleDisconnect() {
 		arProvider.handleDisconnect();
@@ -90,14 +91,13 @@ export default function WalletConnect(_props: { callback?: () => void }) {
 									<Avatar owner={arProvider.profile} dimensions={{ wrapper: 35, icon: 23.5 }} callback={null} />
 									<S.DHeader>
 										<p>{label}</p>
-										<span>{formatAddress(arProvider.walletAddress, false)}</span>
 									</S.DHeader>
 								</S.DHeaderFlex>
 								<S.BWrapper>
-									<div>
-										<p>{language.arBalance}</p>
+									<S.BalanceLine>
+										<ReactSVG src={ASSETS.ar} />
 										<span>{formatARAmount(arProvider.arBalance ? arProvider.arBalance : 0)}</span>
-									</div>
+									</S.BalanceLine>
 									{/* <div>
 										<S.BHeader>
 											<p>{language.turboBalance}</p>
@@ -126,11 +126,15 @@ export default function WalletConnect(_props: { callback?: () => void }) {
 								</S.BWrapper>
 							</S.DHeaderWrapper>
 							<S.DBodyWrapper>
-								<li onClick={copyAddress}>{copied ? `${language.copied}!` : language.copyWalletAddress}</li>
+								<li onClick={() => copyAddress(arProvider.profile?.id)}>
+									<ReactSVG src={ASSETS.copy} />
+									{copied ? `${language.copied}!` : language.copyProfileId}
+								</li>
+								<li onClick={handleDisconnect}>
+									<ReactSVG src={ASSETS.disconnect} />
+									{language.disconnect}
+								</li>
 							</S.DBodyWrapper>
-							<S.DFooterWrapper>
-								<li onClick={handleDisconnect}>{language.disconnect}</li>
-							</S.DFooterWrapper>
 						</S.Dropdown>
 					)}
 				</S.Wrapper>

@@ -148,7 +148,7 @@ export default function Profile(props: { address: string }) {
 										<AssetsTable useIdAction={false} useActions={true} />
 									</S.TWrapper>
 									<S.TWrapper>
-										<CollectionsTable />
+										<CollectionsTable useIdAction={false} useActions={true} />
 									</S.TWrapper>
 								</>
 							) : (

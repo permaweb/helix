@@ -3,13 +3,11 @@ import { useSelector } from 'react-redux';
 
 import { getLicenseValuePayment } from 'gql';
 
-// import { Button } from 'components/atoms/Button';
 import { AssetInfoLicense } from 'components/molecules/AssetInfoLicense';
 import { Modal } from 'components/molecules/Modal';
 import { TurboBalanceFund } from 'components/molecules/TurboBalanceFund';
 import { ASSETS, TAGS } from 'helpers/config';
-// import { formatTurboAmount, getTurboBalance } from 'helpers/utils';
-// import { useArweaveProvider } from 'providers/ArweaveProvider';
+import { formatAddress } from 'helpers/utils';
 import { useLanguageProvider } from 'providers/LanguageProvider';
 import { RootState } from 'store';
 
@@ -17,8 +15,6 @@ import * as S from './styles';
 
 export default function UploadStepsChecks() {
 	const uploadReducer = useSelector((state: RootState) => state.uploadReducer);
-
-	// const arProvider = useArweaveProvider();
 
 	const languageProvider = useLanguageProvider();
 	const language = languageProvider.object[languageProvider.current];
@@ -53,6 +49,14 @@ export default function UploadStepsChecks() {
 							<S.InfoLine>
 								<span>{language.description}</span>
 								<p>{uploadReducer.data.description || '-'}</p>
+							</S.InfoLine>
+						</>
+					)}
+					{uploadReducer.uploadType === 'assets' && uploadReducer.data?.collectionId && (
+						<>
+							<S.InfoLine>
+								<span>{language.collection}</span>
+								<p>{uploadReducer.data.collectionName ?? formatAddress(uploadReducer.data.collectionId, false)}</p>
 							</S.InfoLine>
 						</>
 					)}

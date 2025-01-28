@@ -140,7 +140,7 @@ export type CollectionType = {
 };
 
 export enum WalletEnum {
-	arConnect = 'arconnect',
+	arConnect = 'arConnect',
 	arweaveApp = 'arweave.app',
 	othent = 'othent',
 }
@@ -185,6 +185,8 @@ export type UploadPayloadType =
 	| 'license'
 	| 'title'
 	| 'description'
+	| 'collectionId'
+	| 'collectionName'
 	| 'collectionCode'
 	| 'contentTokens'
 	| 'useFractionalTokens'

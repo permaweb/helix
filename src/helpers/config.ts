@@ -1,5 +1,6 @@
 import actionMenu from 'assets/action-menu.svg';
 import add from 'assets/add.svg';
+import ar from 'assets/ar.svg';
 import arweaveApp from 'assets/ar-logo.svg';
 import arconnect from 'assets/arconnect-wallet-logo.png';
 import arrow from 'assets/arrow.svg';
@@ -14,6 +15,7 @@ import comments from 'assets/comments.svg';
 import copy from 'assets/copy.svg';
 import dark from 'assets/dark.svg';
 import details from 'assets/details.svg';
+import disconnect from 'assets/disconnect.svg';
 import docs from 'assets/docs.svg';
 import download from 'assets/download.svg';
 import following from 'assets/following.svg';
@@ -66,6 +68,7 @@ export const AO = {
 export const ASSETS = {
 	actionMenu: actionMenu,
 	add: add,
+	ar: ar,
 	arrow: arrow,
 	arrowNext: arrowNextSVG,
 	arrowPrevious: arrowPreviousSVG,
@@ -77,6 +80,7 @@ export const ASSETS = {
 	comments: comments,
 	copy: copy,
 	details: details,
+	disconnect: disconnect,
 	docs: docs,
 	download: download,
 	dark: dark,
