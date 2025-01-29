@@ -195,6 +195,7 @@ export default function Upload() {
 				const assetName = element.title || stripFileExtension(element.file.name);
 				const assetDescription =
 					element.description || uploadReducer.data.description || stripFileExtension(element.file.name);
+				const assetSupply = uploadReducer.data.useFractionalTokens ? Number(uploadReducer.data.contentTokens) : 1;
 
 				try {
 					const buffer: any = await fileToBuffer(element.file);
@@ -216,6 +217,7 @@ export default function Upload() {
 						data: buffer,
 						contentType: contentType,
 						assetType: contentType,
+						supply: assetSupply,
 					};
 
 					if (collectionId) asset.metadata = { collectionId };
