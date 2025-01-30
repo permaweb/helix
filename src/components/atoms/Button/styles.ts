@@ -10,9 +10,11 @@ function getHeight(height: number | undefined) {
 	}
 }
 
-function getWidth(_noMinWidth: boolean | undefined, _width: number | undefined, fullWidth: boolean | undefined) {
+function getWidth(_noMinWidth: boolean | undefined, width: number | undefined, fullWidth: boolean | undefined) {
 	if (fullWidth) {
 		return `100%`;
+	} else if (width) {
+		return `${width}px`;
 	} else return 'fit-content';
 }
 
@@ -59,27 +61,27 @@ export const Primary = styled.button<{
 	border: 1px solid
 		${(props) =>
 			props.active ? props.theme.colors.button.primary.active.border : props.theme.colors.button.primary.border};
-	border-radius: 36px;
+	border-radius: ${STYLING.dimensions.radius.primary};
 	&:hover {
 		background: ${(props) => props.theme.colors.button.primary.active.background};
 		border: 1px solid ${(props) => props.theme.colors.button.primary.active.border};
 		span {
-			color: ${(props) => props.theme.colors.font.light1} !important;
+			color: ${(props) => props.theme.colors.button.primary.active.color} !important;
 		}
 		svg {
-			fill: ${(props) => props.theme.colors.font.light1} !important;
-			color: ${(props) => props.theme.colors.font.light1} !important;
+			color: ${(props) => props.theme.colors.button.primary.active.color} !important;
+			fill: ${(props) => props.theme.colors.button.primary.active.color} !important;
 		}
 	}
 	&:focus {
 		background: ${(props) => props.theme.colors.button.primary.active.background};
 		border: 1px solid ${(props) => props.theme.colors.button.primary.active.border};
 		span {
-			color: ${(props) => props.theme.colors.font.light1} !important;
+			color: ${(props) => props.theme.colors.button.primary.active.color} !important;
 		}
 		svg {
-			fill: ${(props) => props.theme.colors.font.light1} !important;
-			color: ${(props) => props.theme.colors.font.light1} !important;
+			color: ${(props) => props.theme.colors.button.primary.active.color} !important;
+			fill: ${(props) => props.theme.colors.button.primary.active.color} !important;
 		}
 	}
 	&:disabled {
@@ -89,8 +91,8 @@ export const Primary = styled.button<{
 			color: ${(props) => props.theme.colors.button.primary.disabled.color} !important;
 		}
 		svg {
-			fill: ${(props) => props.theme.colors.button.primary.disabled.color} !important;
 			color: ${(props) => props.theme.colors.button.primary.disabled.color} !important;
+			fill: ${(props) => props.theme.colors.button.primary.disabled.color} !important;
 		}
 	}
 
@@ -101,7 +103,9 @@ export const Primary = styled.button<{
 		font-size: ${(props) => props.theme.typography.size.xSmall} !important;
 		font-weight: ${(props) => props.theme.typography.weight.bold} !important;
 		color: ${(props) =>
-			props.active ? props.theme.colors.font.light1 : props.theme.colors.button.primary.color} !important;
+			props.active
+				? props.theme.colors.button.primary.active.color
+				: props.theme.colors.button.primary.color} !important;
 	}
 `;
 
@@ -115,13 +119,13 @@ export const IconPrimary = styled.div<{
 		width: 15px;
 		padding: 1.5px 0 0 0;
 		margin: ${(props) => (props.leftAlign ? '0 7.5px 0 0' : '0 0 0 7.5px')};
-		fill: ${(props) =>
+		color: ${(props) =>
 			props.disabled
 				? props.theme.colors.button.primary.disabled.color
 				: props.active
 				? props.theme.colors.button.primary.active.color
 				: props.theme.colors.button.primary.color};
-		color: ${(props) =>
+		fill: ${(props) =>
 			props.disabled
 				? props.theme.colors.button.primary.disabled.color
 				: props.active
@@ -135,23 +139,18 @@ export const Alt1 = styled(Primary)`
 		props.active ? props.theme.colors.button.alt1.active.background : props.theme.colors.button.alt1.background};
 	border: 1px solid
 		${(props) => (props.active ? props.theme.colors.button.alt1.active.border : props.theme.colors.button.alt1.border)};
+
 	&:hover {
 		background: ${(props) => props.theme.colors.button.alt1.active.background};
 		border: 1px solid ${(props) => props.theme.colors.button.alt1.active.border};
 	}
+
 	&:focus {
 		background: ${(props) =>
 			props.active
 				? props.theme.colors.button.alt1.active.background
 				: props.theme.colors.button.alt1.active.background};
 		border: 1px solid ${(props) => props.theme.colors.button.alt1.active.border};
-	}
-	&:disabled {
-		background: ${(props) => props.theme.colors.button.alt1.disabled.background};
-		border: 1px solid ${(props) => props.theme.colors.button.alt1.disabled.border};
-		span {
-			color: ${(props) => props.theme.colors.button.alt1.disabled.color} !important;
-		}
 	}
 
 	span {
@@ -160,19 +159,52 @@ export const Alt1 = styled(Primary)`
 		overflow: hidden;
 		font-size: ${(props) => props.theme.typography.size.xSmall} !important;
 		font-weight: ${(props) => props.theme.typography.weight.bold} !important;
-		color: ${(props) => props.theme.colors.font.light1} !important;
+		color: ${(props) =>
+			props.active ? props.theme.colors.button.alt1.active.color : props.theme.colors.button.alt1.color} !important;
+	}
+
+	&:hover {
+		span {
+			color: ${(props) => props.theme.colors.button.alt1.active.color} !important;
+		}
+		svg {
+			color: ${(props) => props.theme.colors.button.alt1.active.color} !important;
+			fill: ${(props) => props.theme.colors.button.alt1.active.color} !important;
+		}
+	}
+
+	&:focus {
+		span {
+			color: ${(props) => props.theme.colors.button.alt1.active.color} !important;
+		}
+		svg {
+			color: ${(props) => props.theme.colors.button.alt1.active.color} !important;
+			fill: ${(props) => props.theme.colors.button.alt1.active.color} !important;
+		}
+	}
+
+	&:disabled {
+		background: ${(props) => props.theme.colors.button.alt1.disabled.background};
+		border: 1px solid ${(props) => props.theme.colors.button.alt1.disabled.border};
+		span {
+			color: ${(props) => props.theme.colors.button.alt1.disabled.color} !important;
+		}
+		svg {
+			color: ${(props) => props.theme.colors.button.alt1.disabled.color} !important;
+			fill: ${(props) => props.theme.colors.button.alt1.disabled.color} !important;
+		}
 	}
 `;
 
 export const IconAlt1 = styled(IconPrimary)`
 	svg {
-		fill: ${(props) =>
+		color: ${(props) =>
 			props.disabled
 				? props.theme.colors.button.alt1.disabled.color
 				: props.active
 				? props.theme.colors.button.alt1.active.color
 				: props.theme.colors.button.alt1.color};
-		color: ${(props) =>
+		fill: ${(props) =>
 			props.disabled
 				? props.theme.colors.button.alt1.disabled.color
 				: props.active
@@ -196,11 +228,13 @@ export const Alt2 = styled(Alt1)`
 			color: ${(props) => props.theme.colors.button.alt2.active.color} !important;
 		}
 	}
+
 	&:focus {
 		span {
 			color: ${(props) => props.theme.colors.button.alt2.active.color} !important;
 		}
 	}
+
 	&:disabled {
 		background: ${(props) => props.theme.colors.button.alt2.disabled.background};
 		border: 1px solid ${(props) => props.theme.colors.button.alt2.disabled.border};
@@ -222,13 +256,13 @@ export const Alt2 = styled(Alt1)`
 
 export const IconAlt2 = styled(IconAlt1)`
 	svg {
-		fill: ${(props) =>
+		color: ${(props) =>
 			props.disabled
 				? props.theme.colors.button.alt2.disabled.color
 				: props.active
 				? props.theme.colors.button.alt2.active.color
 				: props.theme.colors.button.alt2.color};
-		color: ${(props) =>
+		fill: ${(props) =>
 			props.disabled
 				? props.theme.colors.button.alt2.disabled.color
 				: props.active

@@ -56,7 +56,7 @@ export const LWrapper = styled.div`
 		font-size: ${(props) => props.theme.typography.size.lg};
 		font-weight: ${(props) => props.theme.typography.weight.xxBold};
 		display: block;
-		margin: -2.15px 0 0 12.5px;
+		margin: -3.15px 0 0 14.5px;
 	}
 	@media (max-width: ${STYLING.cutoffs.initial}) {
 		margin: 0 0 0 15px;
