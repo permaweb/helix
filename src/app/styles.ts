@@ -249,7 +249,7 @@ export const View = styled.div`
 	position: absolute;
 	top: ${STYLING.dimensions.nav.headerHeight};
 	left: calc(${STYLING.dimensions.nav.panelWidthClosed} + 10px);
-	padding: 25px 10px 25px 25px;
+	padding: 30px 30px 25px 35px;
 	overflow-y: scroll;
 	border: 1px solid ${(props) => props.theme.colors.border.alt4};
 	background: ${(props) => props.theme.colors.view.background};
