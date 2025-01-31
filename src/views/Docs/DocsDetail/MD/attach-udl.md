@@ -12,7 +12,7 @@ Since platforms built on the Universal Content Marketplace (UCM) protocol are in
 
 #### UDL early release
 
-Since UDL is in its "early" release, not all UDL parameters are currently supported on Helix. Stay tuned for more updates related to UDL capabilites on Helix and other permaweb applications.
+Since UDL is in its "early" release, not all UDL parameters are currently supported on Bazar. Stay tuned for more updates related to UDL capabilites on Bazar and other permaweb applications.
 
 Read the UDL v.02 release blog post [here](https://mirror.xyz/0x64eA438bd2784F2C52a9095Ec0F6158f847182d9/RPzz5-8jh_eWCdqn-K51DIkk5i_gQTTmRAwdvm7OihI).
 

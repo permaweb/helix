@@ -8,8 +8,8 @@ export const docsOrder = [
 		path: 'core-concepts',
 	},
 	{
-		name: 'How to use Helix',
-		path: 'how-to-use-helix',
+		name: 'How to use Bazar Studio',
+		path: 'how-to-use-bazar-studio',
 	},
 	{
 		name: 'Upload single atomic assets',

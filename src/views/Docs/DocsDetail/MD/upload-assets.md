@@ -17,3 +17,6 @@
 **Asset topics**
 
 - Select topics that best describe your atomic assets. Add as many custom topics as needed. These topics assist in discoverability on the permaweb. Learn more about asset discoverability tags (ANS-110) [here](https://specs.g8way.io/#/view/SYHBhGAmBo6fgAkINNoRtumOzxNB8-JFv2tPhBuNk5c).
+
+**Renderers**
+Render-With tags are used to specifiy a default way for an atomic asset to be rendered. Atomic assets may have metadata information which may be lost if the media is shared pre-rendered by applications built on top of Arweave. A standard way to specify a rendering application for such data allows directly sharing the Transaction ID of the raw data asset (which is atomically linked to its associated Metadata) and have it be rendered/experienced in the way it was meant to be viewed. Read more about [ANS-108: Render-With](https://specs.arweave.net/?tx=rF3z0U1rsUJyJLhKGzigoPZPuxuHn3HRT80SZdGQBd4).

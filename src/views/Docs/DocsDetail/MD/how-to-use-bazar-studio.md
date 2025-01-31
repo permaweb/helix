@@ -1,10 +1,10 @@
-## How to use Helix
+## How to use Bazar Studio
 
-Helix is an easy to use tool that allows creators to upload atomic assets and create tradeable collections for your existing atomic assets. Here are the steps for how to get started uploading to the permaweb with Helix. **See the full Helix video tutorial [here](https://www.youtube.com/watch?v=bhLlFepA7LU&t=1s).**
+Bazar Studio (FKA Helix) is an easy to use tool that allows creators to upload atomic assets and create tradeable collections for your existing atomic assets. Here are the steps for how to get started uploading to the permaweb with Bazar Studio. **See the full upload video tutorial [here](https://www.youtube.com/watch?v=bhLlFepA7LU&t=1s).**
 
 #### Connect your permaweb profile
 
-When entering Helix you will be asked to connect with your Arweave wallet. You will need a permaweb profile to be able to upload through Helix. To make a permaweb profile, you must connect your Arweave wallet on [Bazar](https://bazar.arweave.net/#/) and follow the profile creation steps.
+When entering Bazar you will be asked to connect with your Arweave wallet. You will need a permaweb profile to be able to upload. To make a permaweb profile, you must connect your Arweave wallet on [Bazar](https://bazar.arweave.net/#/) and follow the profile creation steps.
 
 You can create an Arweave wallet with [Arconnect](https://www.arconnect.io/) or [Othent](https://othent.io/).
 
