@@ -11,6 +11,10 @@ export const docsOrder = [
 				name: 'Core Concepts',
 				path: 'core-concepts',
 			},
+			{
+				name: 'Usage',
+				path: 'usage',
+			},
 		],
 	},
 	{

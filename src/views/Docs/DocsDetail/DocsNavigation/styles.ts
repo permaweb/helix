@@ -17,13 +17,14 @@ export const NWrapper = styled.div`
 `;
 
 export const NContent = styled.div`
-	height: calc(100vh - 130px);
+	height: calc(100vh - 140px);
 	width: 100%;
 	position: sticky;
 	z-index: 1;
 	overflow: auto;
 	border-right: 1px solid ${(props) => props.theme.colors.border.primary};
 	@media (max-width: ${STYLING.cutoffs.initial}) {
+		height: auto;
 		position: relative;
 		top: auto;
 		padding: 0 15px;
@@ -74,7 +75,7 @@ export const NTitleMobile = styled.button<{ open: boolean }>`
 		height: 12.5px;
 		width: 12.5px;
 		margin: 3.5px 0 0 0;
-		transform: rotate(${(props) => (props.open ? '270deg' : '90deg')});
+		transform: rotate(${(props) => (props.open ? '90deg' : '270deg')});
 		fill: ${(props) => props.theme.colors.font.primary};
 		color: ${(props) => props.theme.colors.font.primary};
 	}

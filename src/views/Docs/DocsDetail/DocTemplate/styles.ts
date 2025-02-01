@@ -8,7 +8,7 @@ export const Wrapper = styled.div<{ isView: boolean }>`
 	display: flex;
 	flex-direction: column;
 	gap: 30px;
-	padding: ${(props) => (props.isView ? '50px 80px 0 80px' : '0')};
+	padding: ${(props) => (props.isView ? '40px 10vw 25px 70px' : '0')};
 	animation: ${open} ${fadeIn2};
 	margin: 0 0 0 auto;
 
