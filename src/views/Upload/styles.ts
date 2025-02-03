@@ -163,10 +163,10 @@ export const ActionWrapper = styled.div<{ loading: boolean | string }>`
 	span {
 		position: relative;
 		z-index: 1;
-		color: ${(props) => props.theme.colors.font.light1};
+		color: ${(props) =>
+			props.loading === 'true' ? props.theme.colors.font.light1 : props.theme.colors.button.primary.disabled.color};
 		font-size: ${(props) => props.theme.typography.size.base} !important;
 		font-weight: ${(props) => props.theme.typography.weight.xxBold};
-		text-shadow: 0 0 20px ${(props) => props.theme.colors.font.dark1};
 		font-family: ${(props) => props.theme.typography.family.alt1};
 		text-transform: uppercase;
 		white-space: nowrap;

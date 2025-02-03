@@ -1,4 +1,4 @@
-## Creating best practices
+## Best practices for creating
 
 Creating atomic assets may seem daunting at first, but once you understand a few basic tools and concepts, you'll be well on your way to becoming a permaweb pro. Here are a few tips to keep in mind when creating on the permaweb.
 
@@ -20,8 +20,6 @@ Collections allow you to create your own custom branding with a header image, th
 **Collection assets**
 
 When uploading content to your collection, ensure you name the assets, provide a description, and include tags that represent the style and theme you are sharing.
-
-When uploading, your assets will be displayed in the collection from newest to oldest. So, the first asset that you upload to Helix will display first in the collection.
 
 **Single atomic assets**
 

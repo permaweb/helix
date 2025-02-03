@@ -84,7 +84,7 @@ export default function Navigation() {
 				<S.LWrapper>
 					<Link to={URLS.base} onClick={() => setPanelOpen(false)}>
 						<ReactSVG src={ASSETS.logo} />
-						<span>Helix</span>
+						<span>{language.siteTitle}</span>
 					</Link>
 				</S.LWrapper>
 			</S.MFlex>

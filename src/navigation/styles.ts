@@ -56,7 +56,7 @@ export const LWrapper = styled.div`
 		font-size: ${(props) => props.theme.typography.size.lg};
 		font-weight: ${(props) => props.theme.typography.weight.xxBold};
 		display: block;
-		margin: -2.15px 0 0 12.5px;
+		margin: -3.15px 0 0 15.5px;
 	}
 	@media (max-width: ${STYLING.cutoffs.initial}) {
 		margin: 0 0 0 15px;
@@ -184,9 +184,9 @@ export const BNavItem = styled.div<{ active: boolean }>`
 export const BNavItemFlex = styled(BNavItem)`
 	flex-direction: row;
 	border-radius: ${STYLING.dimensions.radius.primary};
-	padding: 0 15px 2.5px 15px;
+	padding: 0;
 	border-left: none;
-	border: 1px solid ${(props) => (props.active ? props.theme.colors.border.alt2 : props.theme.colors.border.primary)};
+	border: none;
 	a {
 		display: flex;
 		align-items: center;
@@ -199,7 +199,7 @@ export const BNavItemFlex = styled(BNavItem)`
 		font-size: ${(props) => props.theme.typography.size.small};
 	}
 	&:hover {
-		border: 1px solid ${(props) => props.theme.colors.border.alt2};
+		border-left: none;
 	}
 	&:before {
 		display: none;

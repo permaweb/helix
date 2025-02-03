@@ -17,18 +17,17 @@ export const NWrapper = styled.div`
 `;
 
 export const NContent = styled.div`
-	min-height: calc(100vh - 160px);
+	height: calc(100vh - 140px);
 	width: 100%;
 	position: sticky;
-	top: 10px;
 	z-index: 1;
 	overflow: auto;
-	margin: 10.5px 0 0 0;
+	border-right: 1px solid ${(props) => props.theme.colors.border.primary};
 	@media (max-width: ${STYLING.cutoffs.initial}) {
+		height: auto;
 		position: relative;
 		top: auto;
 		padding: 0 15px;
-		min-height: 0;
 		max-height: none;
 		background: ${(props) => props.theme.colors.container.alt3.background};
 		border: 1px solid ${(props) => props.theme.colors.border.primary};
@@ -68,7 +67,7 @@ export const NTitleMobile = styled.button<{ open: boolean }>`
 	}
 	p {
 		font-family: ${(props) => props.theme.typography.family.alt1};
-		font-size: ${(props) => props.theme.typography.size.base} !important;
+		font-size: ${(props) => props.theme.typography.size.small} !important;
 		font-weight: ${(props) => props.theme.typography.weight.bold} !important;
 		color: ${(props) => props.theme.colors.font.primary} !important;
 	}
@@ -78,12 +77,16 @@ export const NTitleMobile = styled.button<{ open: boolean }>`
 		margin: 3.5px 0 0 0;
 		transform: rotate(${(props) => (props.open ? '90deg' : '270deg')});
 		fill: ${(props) => props.theme.colors.font.primary};
+		color: ${(props) => props.theme.colors.font.primary};
 	}
 `;
 
 export const NList = styled.ul`
 	width: 100%;
 	overflow: auto;
+	display: flex;
+	flex-direction: column;
+	gap: 20px;
 	a {
 		width: fit-content;
 		text-decoration: none;
@@ -101,7 +104,7 @@ export const NListItem = styled.li<{ disabled: boolean; active: boolean }>`
 	align-items: center;
 	cursor: pointer;
 	font-size: ${(props) => props.theme.typography.size.small};
-	color: ${(props) => (props.active ? props.theme.colors.font.alt5 : props.theme.colors.font.primary)};
+	color: ${(props) => (props.active ? props.theme.colors.font.alt5 : props.theme.colors.font.alt1)};
 	font-weight: ${(props) => props.theme.typography.weight.bold};
 	margin: 0 0 7.5px 0;
 	line-height: 1.75;
@@ -110,13 +113,11 @@ export const NListItem = styled.li<{ disabled: boolean; active: boolean }>`
 	background: transparent;
 
 	&:hover {
-		color: ${(props) => (props.active ? props.theme.colors.font.alt5 : props.theme.colors.font.alt1)};
+		color: ${(props) => (props.active ? props.theme.colors.font.alt5 : props.theme.colors.font.primary)};
 	}
 `;
 
-export const NGroup = styled.div`
-	margin: 12.5px 0 20px 0;
-`;
+export const NGroup = styled.div``;
 
 export const NSubHeader = styled(NTitle)`
 	height: auto;
@@ -126,8 +127,8 @@ export const NSubHeader = styled(NTitle)`
 	border-top-right-radius: 0;
 	margin: 0 0 10px 0;
 	p {
-		font-size: ${(props) => props.theme.typography.size.small} !important;
-		color: ${(props) => props.theme.colors.font.alt1} !important;
+		font-size: ${(props) => props.theme.typography.size.base} !important;
+		color: ${(props) => props.theme.colors.font.primary} !important;
 	}
 `;
 

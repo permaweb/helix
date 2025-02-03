@@ -28,15 +28,14 @@ export const OptionsWrapper = styled.div`
 
 export const Option = styled.button<{ active: boolean; disabled: boolean }>`
 	background: ${(props) =>
-		props.active ? props.theme.colors.button.primary.active.background : props.theme.colors.container.primary.active};
+		props.active ? props.theme.colors.button.alt1.background : props.theme.colors.container.primary.active};
 	border: 1px solid
-		${(props) =>
-			props.active ? props.theme.colors.button.primary.active.border : props.theme.colors.button.primary.border};
+		${(props) => (props.active ? props.theme.colors.button.alt1.border : props.theme.colors.button.primary.border)};
 	border-radius: ${STYLING.dimensions.radius.primary};
 	padding: 15px;
 	&:hover {
-		background: ${(props) => props.theme.colors.button.primary.active.background};
-		border: 1px solid ${(props) => props.theme.colors.button.primary.active.border};
+		background: ${(props) => props.theme.colors.button.alt1.active.background};
+		border: 1px solid ${(props) => props.theme.colors.button.alt1.active.border};
 		p,
 		span {
 			color: ${(props) => props.theme.colors.font.light1} !important;

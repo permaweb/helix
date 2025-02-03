@@ -49,7 +49,7 @@ import x from 'assets/x.svg';
 import { UploadStepType, WalletEnum } from './types';
 
 export const APP = {
-	name: 'Helix',
+	name: 'Bazar Studio',
 };
 
 export const AO = {
