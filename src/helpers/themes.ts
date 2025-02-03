@@ -120,7 +120,7 @@ export const theme = (currentTheme: any): DefaultTheme => ({
 				disabled: {
 					background: currentTheme.neutral4,
 					border: currentTheme.neutral5,
-					color: currentTheme.neutralA2,
+					color: currentTheme.neutralA5,
 				},
 			},
 			alt1: {

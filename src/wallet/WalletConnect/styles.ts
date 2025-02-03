@@ -86,8 +86,9 @@ export const DHeader = styled.div`
 `;
 
 export const BWrapper = styled.div`
-	margin: 15px 0 0 0;
-	padding: 0 15px;
+	width: calc(100% - 30px);
+	margin: 10px auto 5px auto;
+	border-bottom: 1px solid ${(props) => props.theme.colors.border.primary};
 	p {
 		color: ${(props) => props.theme.colors.font.primary};
 		font-size: ${(props) => props.theme.typography.size.small};

@@ -5,7 +5,7 @@ import { Avatar } from 'components/atoms/Avatar';
 import { Modal } from 'components/molecules/Modal';
 import { TurboBalanceFund } from 'components/molecules/TurboBalanceFund';
 import { ProfileManage } from 'components/organisms/ProfileManage';
-import { ASSETS } from 'helpers/config';
+import { ASSETS, REDIRECTS } from 'helpers/config';
 import { formatAddress, formatARAmount } from 'helpers/utils';
 import { useArweaveProvider } from 'providers/ArweaveProvider';
 import { useLanguageProvider } from 'providers/LanguageProvider';
@@ -71,6 +71,13 @@ export default function WalletConnect(_props: { callback?: () => void }) {
 		setShowWalletDropdown(false);
 	}
 
+	function handleBazarRedirect() {
+		if (arProvider.profile?.id) {
+			window.open(REDIRECTS.bazar.profile(arProvider.profile.id), '_blank');
+			setShowWalletDropdown(false);
+		}
+	}
+
 	return (
 		<>
 			<CloseHandler
@@ -85,7 +92,7 @@ export default function WalletConnect(_props: { callback?: () => void }) {
 						<Avatar owner={arProvider.profile} dimensions={{ wrapper: 32.5, icon: 21.5 }} callback={handlePress} />
 					</S.PWrapper>
 					{showWalletDropdown && (
-						<S.Dropdown className={'border-wrapper-alt2'}>
+						<S.Dropdown className={'border-wrapper-primary'}>
 							<S.DHeaderWrapper>
 								<S.DHeaderFlex>
 									<Avatar owner={arProvider.profile} dimensions={{ wrapper: 35, icon: 23.5 }} callback={null} />
@@ -129,6 +136,10 @@ export default function WalletConnect(_props: { callback?: () => void }) {
 								<li onClick={() => copyAddress(arProvider.profile?.id)}>
 									<ReactSVG src={ASSETS.copy} />
 									{copied ? `${language.copied}!` : language.copyProfileId}
+								</li>
+								<li onClick={handleBazarRedirect}>
+									<ReactSVG src={ASSETS.bazar} />
+									{language.viewOnBazar}
 								</li>
 								<li onClick={handleDisconnect}>
 									<ReactSVG src={ASSETS.disconnect} />
