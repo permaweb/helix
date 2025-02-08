@@ -20,6 +20,10 @@ Creating on the permaweb provides an opportunity to capture value from your crea
 
 Creators can also set the terms for how their content can be used with the Universal Data License (UDL). Creators can upload atomic assets with UDL tags in the metadata, indicating how the media is licensed. This programmable data license gives creators full control over how their atomic assets are accessed and used.
 
-#### Conclusion
+#### UCM/Bazar “Early” Release
 
-Atomic assets on Arweave are about building a fairer and freer internet where creators own and control their content. By creating with Bazar, you're contributing to a decentralized ecosystem where creators are empowered to monetize their creativity on their own terms, free from the constraints of traditional platforms and advertisers. So, why wait? Create atomic assets and join us in shaping the future of digital ownership and expression.
+UCM and Bazar are currently in an **“early” release**, meaning they are considered functionally complete, though minor adjustments may still be necessary.
+
+Although AO is live on mainnet, Bazar is still running on AO testnet infrastructure until further notice. The Bazar team will provide updates on UCM/Bazar developments and the fair launch token to fund ongoing development.
+
+For questions or technical issues, reach out on [X](https://x.com/OurBazAR) or the Bazar channel in the Weavers [Discord](https://discord.gg/weavers). Your feedback is always welcome as we continue improving the platform.
