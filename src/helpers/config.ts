@@ -43,6 +43,7 @@ import user from 'assets/user.svg';
 import volumeActive from 'assets/volume-active.svg';
 import volumeInactive from 'assets/volume-inactive.svg';
 import wallet from 'assets/wallet.svg';
+import wander from 'assets/wander.png';
 import wrappedAr from 'assets/wrapped-ar.svg';
 import x from 'assets/x.svg';
 
@@ -113,6 +114,7 @@ export const ASSETS = {
 		arconnect: arconnect,
 		arweaveApp: arweaveApp,
 		othent: othent,
+		wander: wander,
 	},
 	x: x,
 };
@@ -260,7 +262,7 @@ export const CONTENT_TYPES = {
 	audio: 'audio/mpeg',
 };
 
-export const AR_WALLETS = [{ type: WalletEnum.arConnect, logo: ASSETS.wallets.arconnect }];
+export const AR_WALLETS = [{ type: WalletEnum.wander, logo: ASSETS.wallets.wander }];
 
 export const WALLET_PERMISSIONS = ['ACCESS_ADDRESS', 'ACCESS_PUBLIC_KEY', 'SIGN_TRANSACTION', 'DISPATCH', 'SIGNATURE'];
 
