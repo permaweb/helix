@@ -22,7 +22,7 @@
 		"@irys/sdk": "^0.1.0-a1",
 		"@othent/kms": "^1.0.12",
 		"@permaweb/aoconnect": "0.0.51",
-		"@permaweb/libs": "0.0.23",
+		"@permaweb/libs": "^0.0.23",
 		"@permaweb/stampjs": "0.6.1",
 		"@permaweb/ucm": "^0.0.6",
 		"@stripe/react-stripe-js": "^2.4.0",

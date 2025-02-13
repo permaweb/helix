@@ -212,12 +212,13 @@ export default function Upload() {
 					const asset: any = {
 						name: assetName,
 						description: assetDescription,
-						topics: uploadReducer.data.topics,
+						topics: [...uploadReducer.data.topics, 'permabrawl-test'],
 						creator: arProvider.profile.id,
 						data: buffer,
 						contentType: contentType,
 						assetType: contentType,
 						supply: assetSupply,
+						transferable: uploadReducer.data.transferableTokens,
 					};
 
 					if (collectionId) asset.metadata = { collectionId };
