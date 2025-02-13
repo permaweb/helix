@@ -1,14 +1,14 @@
-#### Bazar Studio (FKA Helix)
+# Bazar Studio (FKA Helix)
 
 Bazar Studio is an atomic asset uploader for the permaweb. Atomic assets uploaded through Bazar Studio can be traded on the [Universal Content Marketplace (UCM)](https://github.com/permaweb/ao-ucm) protocol and have real-world rights enforced by the [Universal Data License (UDL)](https://udlicense.arweave.net/).
 
 <a href="https://studio_bazar.arweave.net/">https://studio_bazar.arweave.net/</a>
 
-###### Requirements
+## Requirements
 
 - Node.js 18+ and npm
 
-###### Run local
+## Development
 
 ```
 npm install
