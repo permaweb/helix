@@ -212,7 +212,7 @@ export default function Upload() {
 					const asset: any = {
 						name: assetName,
 						description: assetDescription,
-						topics: [...uploadReducer.data.topics, 'permabrawl-test'],
+						topics: [...uploadReducer.data.topics, 'permabrawl'],
 						creator: arProvider.profile.id,
 						data: buffer,
 						contentType: contentType,
