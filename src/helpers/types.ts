@@ -143,6 +143,7 @@ export enum WalletEnum {
 	arConnect = 'arConnect',
 	arweaveApp = 'arweave.app',
 	othent = 'othent',
+	wander = 'wander',
 }
 
 export type TagType = { name: string; value: string };

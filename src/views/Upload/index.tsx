@@ -219,6 +219,7 @@ export default function Upload() {
 						contentType: contentType,
 						assetType: contentType,
 						supply: assetSupply,
+						transferable: uploadReducer.data.transferableTokens,
 					};
 
 					if (collectionId) asset.metadata = { collectionId };
@@ -245,6 +246,8 @@ export default function Upload() {
 
 	function handleClear() {
 		setResponse(null);
+		setUploadLog('');
+		setErrorLog('');
 		dispatch(uploadActions.clearUpload());
 	}
 
