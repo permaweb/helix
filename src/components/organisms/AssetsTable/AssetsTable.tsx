@@ -280,7 +280,11 @@ export default function AssetsTable(props: { useIdAction: boolean; useActions: b
 			return records.map((element: GQLNodeResponseType) => {
 				const data: any = {};
 
-				const titleTag = getTagValue(element.node.tags, TAGS.keys.ans110.title);
+				const titleTag =
+					getTagValue(element.node.tags, 'Bootloader-Name') ||
+					getTagValue(element.node.tags, TAGS.keys.ans110.title) ||
+					getTagValue(element.node.tags, TAGS.keys.name);
+
 				const title = titleTag !== STORAGE.none ? titleTag : formatAddress(element.node.id, false);
 				const displayTitle = title ? title : language.titleNotFound;
 
